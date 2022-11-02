@@ -72,9 +72,12 @@
    The positions of the points are updated for each frame of the animation. */
 
 			const POINT_COUNT = 100;
+			const MIN_POINT_SIZE = 16;
+			const MAX_POINT_SIZE = 64;
 			const pointCoords = new Float32Array(2 * POINT_COUNT);
 			const pointVelocities = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
+			const pointRandomRadius = new Float32Array(POINT_COUNT);
 
 			function createPointData() {
 				// called during initialization to fill the arrays with data.
@@ -87,6 +90,10 @@
 					let randomAngle = 2 * Math.PI * Math.random();
 					pointVelocities[2 * i] = randomVelocity * Math.cos(randomAngle);
 					pointVelocities[2 * i + 1] = randomVelocity * Math.sin(randomAngle);
+					pointRandomRadius[i] =
+						(MIN_POINT_SIZE +
+							(MAX_POINT_SIZE - MIN_POINT_SIZE) * Math.random()) /
+						2;
 				}
 				for (let i = 0; i < 3 * POINT_COUNT; i++) {
 					// The array contains color components, with three numbers per vertex.
@@ -157,11 +164,17 @@
 
 				/* Set the pointsize uniform variable */
 
-				gl.uniform1f(uniformPointsize, pointsize);
+				for (let i = 0; i <= POINT_COUNT; i += 1) {
+					gl.uniform1f(uniformPointsize, pointRandomRadius[i]);
+					gl.drawArrays(gl.POINTS, i, 1);
+				}
+
+				//gl.enableVertexAttribArray(attributePointsize);
+				//gl.uniform1f(uniformPointsize, pointsize);
 
 				/* Draw all the points with one command. */
 
-				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
+				//gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
 			}
 
 			/**
