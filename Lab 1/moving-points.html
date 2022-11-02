@@ -29,6 +29,7 @@
 				"attribute vec2 a_coords;\n" +
 				"attribute vec3 a_color;\n" +
 				"varying vec3 v_color;\n" +
+				"attribute float a_pointSize;\n" +
 				"uniform float u_pointsize;\n" +
 				"uniform float u_width;\n" +
 				"uniform float u_height;\n" +
@@ -37,7 +38,7 @@
 				"   float y = 1.0 - 2.0*(a_coords.y / u_height);\n" +
 				"   gl_Position = vec4(x, y, 0.0, 1.0);\n" +
 				"   v_color = a_color;\n" +
-				"   gl_PointSize = u_pointsize;\n" +
+				"   gl_PointSize = a_pointsize;\n" +
 				"}\n";
 
 			const fragmentShaderSource =
@@ -56,7 +57,9 @@
 
 			let uniformWidth; // Location of uniform named "u_width"
 			let uniformHeight; // Location of uniform named "u_height"
-			let uniformPointsize; // Location of uniform named "u_pointsize"
+
+			let attributePointsize; // Location of uniform named "a_pointsize"
+			let bufferPointsize; // A vertex buffer object to hold the values for sizes of points.
 
 			let attributeCoords; // Location of the attribute named "a_coords".
 			let bufferCoords; // A vertex buffer object to hold the values for coords.
@@ -77,7 +80,7 @@
 			const pointCoords = new Float32Array(2 * POINT_COUNT);
 			const pointVelocities = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
-			const pointRandomRadius = new Float32Array(POINT_COUNT);
+			const pointRandomPointsize = new Float32Array(POINT_COUNT);
 
 			function createPointData() {
 				// called during initialization to fill the arrays with data.
@@ -90,7 +93,7 @@
 					let randomAngle = 2 * Math.PI * Math.random();
 					pointVelocities[2 * i] = randomVelocity * Math.cos(randomAngle);
 					pointVelocities[2 * i + 1] = randomVelocity * Math.sin(randomAngle);
-					pointRandomRadius[i] =
+					pointRandomPointsize[i] =
 						(MIN_POINT_SIZE +
 							(MAX_POINT_SIZE - MIN_POINT_SIZE) * Math.random()) /
 						2;
@@ -150,6 +153,7 @@
 				gl.bufferData(gl.ARRAY_BUFFER, pointCoords, gl.STREAM_DRAW);
 				gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
 				gl.enableVertexAttribArray(attributeCoords);
+				gl.enableVertexAttribArray(attributePointsize);
 
 				/* Set up values for the "color" attribute */
 
@@ -164,17 +168,17 @@
 
 				/* Set the pointsize uniform variable */
 
-				for (let i = 0; i <= POINT_COUNT; i += 1) {
-					gl.uniform1f(uniformPointsize, pointRandomRadius[i]);
+				/*for (let i = 0; i <= POINT_COUNT; i += 1) {
+					gl.uniform1f(uniformPointsize, pointRandomPointsize[i]);
 					gl.drawArrays(gl.POINTS, i, 1);
-				}
+				}*/
 
 				//gl.enableVertexAttribArray(attributePointsize);
 				//gl.uniform1f(uniformPointsize, pointsize);
 
 				/* Draw all the points with one command. */
 
-				//gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
+				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
 			}
 
 			/**
@@ -227,8 +231,11 @@
 				uniformWidth = gl.getUniformLocation(prog, "u_width");
 				gl.uniform1f(uniformHeight, canvas.height);
 				gl.uniform1f(uniformWidth, canvas.width);
-				uniformPointsize = gl.getUniformLocation(prog, "u_pointsize");
+				attributePointsize = gl.getAttributeLocation(prog, "a_pointsize");
 				createPointData();
+				gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
+				gl.bufferData(gl.ARRAY_BUFFER, pointRandomPointsize, gl.STREAM_DRAW);
+				gl.vertexAttribPointer(attributePointsize, 1, gl.FLOAT, false, 0, 0);
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
 				gl.bufferData(gl.ARRAY_BUFFER, pointRandomColors, gl.STREAM_DRAW);
 				gl.vertexAttribPointer(attributeColor, 3, gl.FLOAT, false, 0, 0);
