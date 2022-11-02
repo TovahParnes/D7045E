@@ -29,7 +29,7 @@
 				"attribute vec2 a_coords;\n" +
 				"attribute vec3 a_color;\n" +
 				"varying vec3 v_color;\n" +
-				"attribute float a_pointSize;\n" +
+				"attribute float a_pointsize;\n" +
 				"uniform float u_pointsize;\n" +
 				"uniform float u_width;\n" +
 				"uniform float u_height;\n" +
@@ -231,7 +231,7 @@
 				uniformWidth = gl.getUniformLocation(prog, "u_width");
 				gl.uniform1f(uniformHeight, canvas.height);
 				gl.uniform1f(uniformWidth, canvas.width);
-				attributePointsize = gl.getAttributeLocation(prog, "a_pointsize");
+				attributePointsize = gl.getAttribLocation(prog, "a_pointsize");
 				createPointData();
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
 				gl.bufferData(gl.ARRAY_BUFFER, pointRandomPointsize, gl.STREAM_DRAW);
