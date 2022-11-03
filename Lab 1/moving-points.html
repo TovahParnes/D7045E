@@ -106,9 +106,10 @@
 
 			function updatePointCoordsForFrame() {
 				// called during an animation, before each frame.
-				let size = Number(document.getElementById("sizeChoice").value) / 2; // radius
+				//let size = Number(document.getElementById("sizeChoice").value) / 2; // radius
 				for (let i = 0; i < 2 * POINT_COUNT; i += 2) {
 					// x-coords
+					let size = pointRandomPointsize[i / 2] / 2;
 					pointCoords[i] += pointVelocities[i];
 					if (pointCoords[i] - size < 0) {
 						pointCoords[i] = size - (pointCoords[i] - size); // move coord back onto canvas
@@ -121,6 +122,7 @@
 				}
 				for (let i = 1; i < 2 * POINT_COUNT; i += 2) {
 					// y-coords
+					let size = pointRandomPointsize[(i - 1) / 2] / 2;
 					pointCoords[i] += pointVelocities[i];
 					if (pointCoords[i] - size < 0) {
 						pointCoords[i] = size - (pointCoords[i] - size); // move coord back onto canvas
