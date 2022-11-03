@@ -100,16 +100,14 @@
 					let x1, y1;
 					let end;
 					while (true) {
-						end = false;
+						end = true;
 						x1 = canvas.width * Math.random();
 						y1 = canvas.height * Math.random();
 						for (let j = 0; j < i; j++) {
 							let x2 = pointCoords[2 * j];
 							let y2 = pointCoords[2 * j + 1];
-							//let r1 = pointRandomPointsize[i] / 2;
-							//let r2 = pointRandomPointsize[j] / 2;
-							let r1 = 36;
-							let r2 = 36;
+							let r1 = pointRandomPointsize[i] / 2;
+							let r2 = pointRandomPointsize[j] / 2;
 							let areNotOverlapping = checkNotOverlappingCoordinates(
 								x1,
 								y1,
@@ -118,8 +116,8 @@
 								y2,
 								r2
 							);
-							if (areNotOverlapping) {
-								end = true;
+							if (!areNotOverlapping) {
+								end = false;
 							}
 						}
 						if (end || i == 0) {
