@@ -97,8 +97,8 @@
 					pointVelocities[2 * i] = randomVelocity * Math.cos(randomAngle);
 					pointVelocities[2 * i + 1] = randomVelocity * Math.sin(randomAngle);
 
-					pointVelocities[2 * i] = 0;
-					pointVelocities[2 * i + 1] = 0;
+					//pointVelocities[2 * i] = 0;
+					//pointVelocities[2 * i + 1] = 0;
 					// Each point has a random size
 					pointRandomPointsize[i] =
 						MIN_POINT_SIZE + (MAX_POINT_SIZE - MIN_POINT_SIZE) * Math.random();
@@ -183,32 +183,62 @@
 				}
 
 				for (let i = 0; i < POINT_COUNT; i++) {
+					// check for collisions
+					for (let j = i + 1; j < POINT_COUNT; j++) {
+						let x1 = pointCoords[2 * i];
+						let y1 = pointCoords[2 * i + 1];
+						let r1 = pointRandomPointsize[i] / 2;
+						let x2 = pointCoords[2 * j];
+						let y2 = pointCoords[2 * j + 1];
+						let r2 = pointRandomPointsize[j] / 2;
+						let areNotOverlapping = checkNotOverlappingCoordinates(
+							x1,
+							y1,
+							r1,
+							x2,
+							y2,
+							r2
+						);
+						if (!areNotOverlapping) {
+							// if the points are overlapping, then swap their velocities'
+							let temp = pointVelocities[2 * i];
+							pointVelocities[2 * i] = pointVelocities[2 * j];
+							pointVelocities[2 * j] = temp;
+							temp = pointVelocities[2 * i + 1];
+							pointVelocities[2 * i + 1] = pointVelocities[2 * j + 1];
+							pointVelocities[2 * j + 1] = temp;
+						}
+					}
+				}
+
+				for (let i = 0; i < POINT_COUNT; i++) {
 					// ball colistions
 					let r1 = pointRandomPointsize[i] / 2;
-					let point = new pointObject(
+					let point = new PointObject(
 						pointCoords[2 * i],
 						pointCoords[2 * i + 1],
 						pointVelocities[2 * i],
 						pointVelocities[2 * i + 1],
 						r1
 					);
-					//colistionTest(point, i);
+					//collisionTest(point, i);
 				}
 			}
 
-			function pointObject(x, y, vx, vy, r) {
+			function PointObject(x, y, vx, vy, r) {
 				this.x = x;
 				this.y = y;
 				this.vx = vx;
 				this.vy = vy;
 				this.r = r;
 				this.m = Math.PI * r * r;
+				return this;
 			}
 
-			function colisionTest(currentPoint, currentI) {
-				for (let i = 0; i < currentI; i++) {
-					let r = randomSize[i] / 2;
-					let targetPoint = new pointObject(
+			function collisionTest(currentPoint, currentI) {
+				for (let i = currentI + 1; i < POINT_COUNT; i++) {
+					let r = pointRandomPointsize[i] / 2;
+					let targetPoint = new PointObject(
 						pointCoords[2 * i],
 						pointCoords[2 * i + 1],
 						pointVelocities[2 * i],
@@ -229,6 +259,34 @@
 					}
 
 					let rtot = currentPoint.r + targetPoint.r;
+					let dx = targetPoint.x - currentPoint.x;
+					let dy = targetPoint.y - currentPoint.y;
+					let d = Math.sqrt(dx * dx + dy * dy);
+					if (d < rtot) {
+						// collision detected!
+						let nx = dx / d;
+						let ny = dy / d;
+						let tx = -ny;
+						let ty = nx;
+						let dpTan1 = currentPoint.vx * tx + currentPoint.vy * ty;
+						let dpTan2 = targetPoint.vx * tx + targetPoint.vy * ty;
+						let dpNorm1 = currentPoint.vx * nx + currentPoint.vy * ny;
+						let dpNorm2 = targetPoint.vx * nx + targetPoint.vy * ny;
+						let m1 = currentPoint.m;
+						let m2 = targetPoint.m;
+						let m21 = m2 / m1;
+						let m12 = m1 / m2;
+						let v1 = (dpNorm1 * (m1 - m2) + 2 * m2 * dpNorm2) / (m1 + m2);
+						let v2 = (dpNorm2 * (m2 - m1) + 2 * m1 * dpNorm1) / (m1 + m2);
+						currentPoint.vx = tx * dpTan1 + nx * v1;
+						currentPoint.vy = ty * dpTan1 + ny * v1;
+						targetPoint.vx = tx * dpTan2 + nx * v2;
+						targetPoint.vy = ty * dpTan2 + ny * v2;
+						pointVelocities[2 * i] = targetPoint.vx;
+						pointVelocities[2 * i + 1] = targetPoint.vy;
+						pointVelocities[2 * currentI] = currentPoint.vx;
+						pointVelocities[2 * currentI + 1] = currentPoint.vy;
+					}
 				}
 			}
 
