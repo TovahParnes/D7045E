@@ -53,7 +53,7 @@
 				"   }\n" +
 				"   gl_FragColor = vec4(v_color, 1.0);\n" +
 				"   if(distanceFromCenter <= 0.1) {\n" +
-				"       gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
+				//"       gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
 				"   }\n" +
 				"}\n";
 
@@ -80,12 +80,13 @@
 			The positions of the points are updated for each frame of the animation. */
 
 			const POINT_COUNT = 100;
-			const MIN_POINT_SIZE = 8;
+			const MIN_POINT_SIZE = 16;
 			const MAX_POINT_SIZE = 32;
 			const pointCoords = new Float32Array(2 * POINT_COUNT);
 			const pointVelocities = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
 			const pointRandomPointsize = new Float32Array(POINT_COUNT);
+			const pointRandomPointsizeDot = new Float32Array(POINT_COUNT);
 
 			function createPointData() {
 				// called during initialization to fill the arrays with data.
@@ -102,6 +103,7 @@
 					// Each point has a random size
 					pointRandomPointsize[i] =
 						MIN_POINT_SIZE + (MAX_POINT_SIZE - MIN_POINT_SIZE) * Math.random();
+					pointRandomPointsizeDot[i] = MIN_POINT_SIZE / 2;
 
 					// Each point has random coordinates.  The coordinates are checked so that there is no overlap
 					let x1, y1;
@@ -199,7 +201,11 @@
 							y2,
 							r2
 						);
+
 						if (!areNotOverlapping) {
+							//let overlap = overlap(x1, y1, r1, x2, y2, r2);
+							//pointCoords[2 * i] -= r1;
+							//pointCoords[2 * j] -= r1;
 							// if the points are overlapping, then swap their velocities'
 							let temp = pointVelocities[2 * i];
 							pointVelocities[2 * i] = pointVelocities[2 * j];
@@ -223,6 +229,12 @@
 					);
 					//collisionTest(point, i);
 				}
+			}
+
+			function overlap(x1, y1, r1, x2, y2, r2) {
+				let d = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+				let overlap = d - (r1 + r2);
+				return overlap;
 			}
 
 			function PointObject(x, y, vx, vy, r) {
@@ -328,6 +340,18 @@
 				}
 
 				/* Draw all the points with one command. */
+
+				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
+
+				/*Generate the dots in the middles of each dot*/
+
+				gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
+				gl.bufferData(gl.ARRAY_BUFFER, pointRandomPointsizeDot, gl.STREAM_DRAW);
+				gl.vertexAttribPointer(attributePointsize, 1, gl.FLOAT, false, 0, 0);
+				gl.enableVertexAttribArray(attributePointsize);
+
+				gl.disableVertexAttribArray(attributeColor);
+				gl.vertexAttrib3f(attributeColor, 0, 0, 0);
 
 				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
 			}
