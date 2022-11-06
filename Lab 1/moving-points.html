@@ -52,9 +52,6 @@
 				"       discard;  // don't draw this pixel!\n" +
 				"   }\n" +
 				"   gl_FragColor = vec4(v_color, 1.0);\n" +
-				"   if(distanceFromCenter <= 0.1) {\n" +
-				//"       gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
-				"   }\n" +
 				"}\n";
 
 			let canvas; // The canvas where WebGL draws.
@@ -86,7 +83,7 @@
 			const pointVelocities = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
 			const pointRandomPointsize = new Float32Array(POINT_COUNT);
-			const pointRandomPointsizeDot = new Float32Array(POINT_COUNT);
+			const pointsizeDot = new Float32Array(POINT_COUNT);
 
 			function createPointData() {
 				// called during initialization to fill the arrays with data.
@@ -103,7 +100,7 @@
 					// Each point has a random size
 					pointRandomPointsize[i] =
 						MIN_POINT_SIZE + (MAX_POINT_SIZE - MIN_POINT_SIZE) * Math.random();
-					pointRandomPointsizeDot[i] = MIN_POINT_SIZE / 2;
+					pointsizeDot[i] = MIN_POINT_SIZE / 2;
 
 					// Each point has random coordinates.  The coordinates are checked so that there is no overlap
 					let x1, y1;
@@ -346,7 +343,7 @@
 				/*Generate the dots in the middles of each dot*/
 
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
-				gl.bufferData(gl.ARRAY_BUFFER, pointRandomPointsizeDot, gl.STREAM_DRAW);
+				gl.bufferData(gl.ARRAY_BUFFER, pointsizeDot, gl.STREAM_DRAW);
 				gl.vertexAttribPointer(attributePointsize, 1, gl.FLOAT, false, 0, 0);
 				gl.enableVertexAttribArray(attributePointsize);
 
