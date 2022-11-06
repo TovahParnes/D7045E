@@ -72,9 +72,9 @@
 			let animating = false; // is the animation running?
 
 			/* Data for the points, including their coordinates, velocities and colors.
-			The values for the arrays are created during initialization.  The random
-			colors are used when the user selects colored rather than red points.
-			The positions of the points are updated for each frame of the animation. */
+				The values for the arrays are created during initialization.  The random
+				colors are used when the user selects colored rather than red points.
+				The positions of the points are updated for each frame of the animation. */
 
 			const POINT_COUNT = 100;
 			const MIN_POINT_SIZE = 16;
@@ -181,6 +181,7 @@
 					}
 				}
 
+				//Collision beteen points
 				for (let i = 0; i < POINT_COUNT; i++) {
 					// check for collisions
 					for (let j = i + 1; j < POINT_COUNT; j++) {
@@ -190,7 +191,7 @@
 						let x2 = pointCoords[2 * j];
 						let y2 = pointCoords[2 * j + 1];
 						let r2 = pointRandomPointsize[j] / 2;
-						let areNotOverlapping = checkNotOverlappingCoordinates(
+						let areOverlapping = !checkNotOverlappingCoordinates(
 							x1,
 							y1,
 							r1,
@@ -199,104 +200,87 @@
 							r2
 						);
 
-						if (!areNotOverlapping) {
-							//let overlap = overlap(x1, y1, r1, x2, y2, r2);
-							//pointCoords[2 * i] -= r1;
-							//pointCoords[2 * j] -= r1;
-							// if the points are overlapping, then swap their velocities'
-							let temp = pointVelocities[2 * i];
-							pointVelocities[2 * i] = pointVelocities[2 * j];
-							pointVelocities[2 * j] = temp;
-							temp = pointVelocities[2 * i + 1];
-							pointVelocities[2 * i + 1] = pointVelocities[2 * j + 1];
-							pointVelocities[2 * j + 1] = temp;
+						// Step A: overlapping
+						if (areOverlapping) {
+							var vx1 = pointVelocities[2 * i];
+							var vy1 = pointVelocities[2 * i + 1];
+							var vx2 = pointVelocities[2 * j];
+							var vy2 = pointVelocities[2 * j + 1];
+							var res = [vx1 - vx2, vy1 - vy2];
+							var count = 0;
+
+							// Step B: move poits apart untill they are not overlapping
+							while (areOverlapping) {
+								count++;
+								x1 -= vx1 / 100;
+								y1 -= vy1 / 100;
+								x2 -= vx2 / 100;
+								y2 -= vy2 / 100;
+								areOverlapping = !checkNotOverlappingCoordinates(
+									x1,
+									y1,
+									r1,
+									x2,
+									y2,
+									r2
+								);
+							}
+							//set the new coordinates
+							pointCoords[2 * i] = x1;
+							pointCoords[2 * i + 1] = y1;
+							pointCoords[2 * j] = x2;
+							pointCoords[2 * j + 1] = y2;
+
+							//Step C: calculate new velocities
+							var m1 = r1 * r1 * Math.PI;
+							var m2 = r2 * r2 * Math.PI;
+
+							var theta = -Math.atan2(y2 - y1, x2 - x1);
+							var v1 = rotate([vx1, vy1], theta);
+							var v2 = rotate([vx2, vy2], theta);
+							var u1 = rotate(
+								[
+									(v1[0] * (m1 - m2)) / (m1 + m2) +
+										(v2[0] * 2 * m2) / (m1 + m2),
+									v1[1],
+								],
+								-theta
+							);
+							var u2 = rotate(
+								[
+									(v2[0] * (m2 - m1)) / (m1 + m2) +
+										(v1[0] * 2 * m1) / (m1 + m2),
+									v2[1],
+								],
+								-theta
+							);
+
+							vx1 = u1[0];
+							vy1 = u1[1];
+							vx2 = u2[0];
+							vy2 = u2[1];
+
+							// set the new velocities
+							pointVelocities[2 * i] = vx1;
+							pointVelocities[2 * i + 1] = vy1;
+							pointVelocities[2 * j] = vx2;
+							pointVelocities[2 * j + 1] = vy2;
+
+							//Step D: move the points the removed distance
+							pointCoords[2 * i] += (vx1 * count) / 100;
+							pointCoords[2 * i + 1] += (vy1 * count) / 100;
+							pointCoords[2 * j] += (vx2 * count) / 100;
+							pointCoords[2 * j + 1] += (vy2 * count) / 100;
 						}
 					}
 				}
-
-				for (let i = 0; i < POINT_COUNT; i++) {
-					// ball colistions
-					let r1 = pointRandomPointsize[i] / 2;
-					let point = new PointObject(
-						pointCoords[2 * i],
-						pointCoords[2 * i + 1],
-						pointVelocities[2 * i],
-						pointVelocities[2 * i + 1],
-						r1
-					);
-					//collisionTest(point, i);
-				}
 			}
 
-			function overlap(x1, y1, r1, x2, y2, r2) {
-				let d = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-				let overlap = d - (r1 + r2);
-				return overlap;
-			}
-
-			function PointObject(x, y, vx, vy, r) {
-				this.x = x;
-				this.y = y;
-				this.vx = vx;
-				this.vy = vy;
-				this.r = r;
-				this.m = Math.PI * r * r;
-				return this;
-			}
-
-			function collisionTest(currentPoint, currentI) {
-				for (let i = currentI + 1; i < POINT_COUNT; i++) {
-					let r = pointRandomPointsize[i] / 2;
-					let targetPoint = new PointObject(
-						pointCoords[2 * i],
-						pointCoords[2 * i + 1],
-						pointVelocities[2 * i],
-						pointVelocities[2 * i + 1],
-						r
-					);
-
-					let notOverlapping = checkNotOverlappingCoordinates(
-						currentPoint.x,
-						currentPoint.y,
-						currentPoint.r,
-						targetPoint.x,
-						targetPoint.y,
-						targetPoint.r
-					);
-					if (notOverlapping) {
-						return;
-					}
-
-					let rtot = currentPoint.r + targetPoint.r;
-					let dx = targetPoint.x - currentPoint.x;
-					let dy = targetPoint.y - currentPoint.y;
-					let d = Math.sqrt(dx * dx + dy * dy);
-					if (d < rtot) {
-						// collision detected!
-						let nx = dx / d;
-						let ny = dy / d;
-						let tx = -ny;
-						let ty = nx;
-						let dpTan1 = currentPoint.vx * tx + currentPoint.vy * ty;
-						let dpTan2 = targetPoint.vx * tx + targetPoint.vy * ty;
-						let dpNorm1 = currentPoint.vx * nx + currentPoint.vy * ny;
-						let dpNorm2 = targetPoint.vx * nx + targetPoint.vy * ny;
-						let m1 = currentPoint.m;
-						let m2 = targetPoint.m;
-						let m21 = m2 / m1;
-						let m12 = m1 / m2;
-						let v1 = (dpNorm1 * (m1 - m2) + 2 * m2 * dpNorm2) / (m1 + m2);
-						let v2 = (dpNorm2 * (m2 - m1) + 2 * m1 * dpNorm1) / (m1 + m2);
-						currentPoint.vx = tx * dpTan1 + nx * v1;
-						currentPoint.vy = ty * dpTan1 + ny * v1;
-						targetPoint.vx = tx * dpTan2 + nx * v2;
-						targetPoint.vy = ty * dpTan2 + ny * v2;
-						pointVelocities[2 * i] = targetPoint.vx;
-						pointVelocities[2 * i + 1] = targetPoint.vy;
-						pointVelocities[2 * currentI] = currentPoint.vx;
-						pointVelocities[2 * currentI + 1] = currentPoint.vy;
-					}
-				}
+			function rotate(v, theta) {
+				return [
+					v[0] * Math.cos(theta) - v[1] * Math.sin(theta),
+					v[0] * Math.sin(theta) + v[1] * Math.cos(theta),
+				];
 			}
 
 			/**
