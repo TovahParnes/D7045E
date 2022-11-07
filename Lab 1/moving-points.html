@@ -85,7 +85,6 @@
 			const pointVelocities = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
 			const pointRandomPointsize = new Float32Array(POINT_COUNT);
-			const pointsizeDot = new Float32Array(POINT_COUNT);
 
 			function createPointData() {
 				// called during initialization to fill the arrays with data.
@@ -102,7 +101,6 @@
 					// Each point has a random size
 					pointRandomPointsize[i] =
 						MIN_POINT_SIZE + (MAX_POINT_SIZE - MIN_POINT_SIZE) * Math.random();
-					pointsizeDot[i] = MIN_POINT_SIZE / 2;
 
 					// Each point has random coordinates.  The coordinates are checked so that there is no overlap
 					let x1, y1;
@@ -296,6 +294,8 @@
 				/* Get options from the user interface. */
 
 				let randomColors = document.getElementById("colorCheckbox").checked;
+				let randomSize = document.getElementById("sizeCheckbox").checked;
+				let centerDots = document.getElementById("dotsCheckbox").checked;
 
 				/* Set up values for the "coords" attribute, giving point's positions */
 
@@ -303,13 +303,6 @@
 				gl.bufferData(gl.ARRAY_BUFFER, pointCoords, gl.STREAM_DRAW);
 				gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
 				gl.enableVertexAttribArray(attributeCoords);
-
-				/* Set up values for the "pointsize" attribute, giving point's sizes */
-
-				gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
-				gl.bufferData(gl.ARRAY_BUFFER, pointRandomPointsize, gl.STREAM_DRAW);
-				gl.vertexAttribPointer(attributePointsize, 1, gl.FLOAT, false, 0, 0);
-				gl.enableVertexAttribArray(attributePointsize);
 
 				/* Set up values for the "color" attribute */
 
@@ -322,21 +315,35 @@
 					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0);
 				}
 
+				if (randomSize) {
+					/* Set up values for the "pointsize" attribute, giving point's sizes */
+					gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
+					gl.bufferData(gl.ARRAY_BUFFER, pointRandomPointsize, gl.STREAM_DRAW);
+					gl.vertexAttribPointer(attributePointsize, 1, gl.FLOAT, false, 0, 0);
+					gl.enableVertexAttribArray(attributePointsize);
+				} else {
+					gl.disableVertexAttribArray(attributePointsize);
+					gl.vertexAttrib1f(
+						attributePointsize,
+						(MIN_POINT_SIZE + MAX_POINT_SIZE) / 2
+					);
+				}
+
 				/* Draw all the points with one command. */
 
 				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
 
 				/*Generate the dots in the middles of each dot*/
 
-				gl.bindBuffer(gl.ARRAY_BUFFER, bufferPointsize);
-				gl.bufferData(gl.ARRAY_BUFFER, pointsizeDot, gl.STREAM_DRAW);
-				gl.vertexAttribPointer(attributePointsize, 1, gl.FLOAT, false, 0, 0);
-				gl.enableVertexAttribArray(attributePointsize);
+				if (centerDots) {
+					gl.disableVertexAttribArray(attributePointsize);
+					gl.vertexAttrib1f(attributePointsize, MIN_POINT_SIZE / 2);
 
-				gl.disableVertexAttribArray(attributeColor);
-				gl.vertexAttrib3f(attributeColor, 0, 0, 0);
+					gl.disableVertexAttribArray(attributeColor);
+					gl.vertexAttrib3f(attributeColor, 0, 0, 0);
 
-				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
+					gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
+				}
 			}
 
 			/**
@@ -451,7 +458,9 @@
 				}
 				document.getElementById("animateCheckbox").checked = true;
 				document.getElementById("colorCheckbox").checked = true;
-				document.getElementById("sizeChoice").value = "32";
+				document.getElementById("sizeCheckbox").checked = true;
+				document.getElementById("dotsCheckbox").checked = true;
+
 				document.getElementById("animateCheckbox").onchange =
 					doAnimationCheckbox;
 				document.getElementById("colorCheckbox").onchange = function () {
@@ -459,7 +468,12 @@
 						draw();
 					}
 				};
-				document.getElementById("sizeChoice").onchange = function () {
+				document.getElementById("sizeCheckbox").onchange = function () {
+					if (!animating) {
+						draw();
+					}
+				};
+				document.getElementById("dotsCheckbox").onchange = function () {
 					if (!animating) {
 						draw();
 					}
@@ -492,11 +506,14 @@
 				></label
 			>
 			<label
-				><b>Point Size:</b>&nbsp;<select id="sizeChoice">
-					<option value="16">Small</option>
-					<option value="32">Medium</option>
-					<option value="64">Large</option>
-				</select></label
+				><b
+					><input type="checkbox" id="sizeCheckbox" />&nbsp;Random&nbsp;Size</b
+				></label
+			>
+			<label
+				><b
+					><input type="checkbox" id="dotsCheckbox" />&nbsp;Center&nbsp;Dots</b
+				></label
 			>
 		</p>
 
