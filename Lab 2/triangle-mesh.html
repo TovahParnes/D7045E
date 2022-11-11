@@ -55,20 +55,53 @@
 			let bufferColor; // A vertex buffer object to hold the values for color.
 
 			const POINT_COUNT = 100;
+			const POINT_SIZE = 8;
 			const pointCoords = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
 
 			function createPointData() {
 				// called during initialization to fill the arrays with data.
 				for (let i = 0; i < POINT_COUNT; i++) {
-					pointCoords[2 * i] = canvas.width * Math.random(); // x-coordinate of point
-					pointCoords[2 * i + 1] = canvas.height * Math.random(); // y-coordinate of point
+					// Each point has random coordinates.  The coordinates are checked so that there is no overlap
+					let x1, y1;
+					let end;
+					while (true) {
+						end = true;
+						x1 = (canvas.width - POINT_SIZE * 2) * Math.random() + POINT_SIZE;
+						y1 = (canvas.height - POINT_SIZE * 2) * Math.random() + POINT_SIZE;
+						for (let j = 0; j < i; j++) {
+							let x2 = pointCoords[2 * j];
+							let y2 = pointCoords[2 * j + 1];
+							let distance = POINT_SIZE;
+							let areNotOverlapping = checkNotOverlappingCoordinates(
+								x1,
+								y1,
+								distance,
+								x2,
+								y2,
+								distance
+							);
+							if (!areNotOverlapping) {
+								end = false;
+							}
+						}
+						if (end || i == 0) {
+							break;
+						}
+					}
+
+					pointCoords[2 * i] = x1; // x-coordinate of point
+					pointCoords[2 * i + 1] = y1; // y-coordinate of point
 				}
-				for (let i = 0; i < 3 * POINT_COUNT; i++) {
-					// The array contains color components, with three numbers per vertex.
-					// The color components are just random numbers in the range zero to 1.
-					pointRandomColors[i] = Math.random();
+			}
+
+			function checkNotOverlappingCoordinates(x1, y1, r1, x2, y2, r2) {
+				// returns true if the point at (x,y) is too close to another point
+				let d = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+				if (d > r1 + r2) {
+					return true;
 				}
+				return false;
 			}
 
 			/**
@@ -78,10 +111,6 @@
 			function draw() {
 				gl.clearColor(0, 0, 0, 1); // specify the color to be used for clearing
 				gl.clear(gl.COLOR_BUFFER_BIT); // clear the canvas (to black)
-
-				/* Get options from the user interface. */
-
-				let pointsize = Number(document.getElementById("sizeChoice").value);
 
 				/* Set up values for the "coords" attribute, giving point's positions */
 
@@ -96,7 +125,7 @@
 
 				/* Set the pointsize uniform variable */
 
-				gl.uniform1f(uniformPointsize, pointsize);
+				gl.uniform1f(uniformPointsize, POINT_SIZE);
 
 				/* Draw all the points with one command. */
 
@@ -190,7 +219,6 @@
 						"</p>";
 					return;
 				}
-				document.getElementById("sizeChoice").value = "32";
 				draw();
 			}
 
@@ -205,13 +233,7 @@
 		>
 
 		<p>
-			<label
-				><b>Point Size:</b>&nbsp;<select id="sizeChoice">
-					<option value="16">Small</option>
-					<option value="32">Medium</option>
-					<option value="64">Large</option>
-				</select></label
-			>
+			<input type="range" min="3" max="100" value="50" id="numPoints" />
 		</p>
 
 		<div id="canvas-holder">
