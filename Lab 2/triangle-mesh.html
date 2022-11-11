@@ -81,7 +81,6 @@
 
 				/* Get options from the user interface. */
 
-				let randomColors = document.getElementById("colorCheckbox").checked;
 				let pointsize = Number(document.getElementById("sizeChoice").value);
 
 				/* Set up values for the "coords" attribute, giving point's positions */
@@ -92,15 +91,8 @@
 				gl.enableVertexAttribArray(attributeCoords);
 
 				/* Set up values for the "color" attribute */
-
-				if (randomColors) {
-					// use the attribute values from the color VBO, filled during initialization
-					gl.enableVertexAttribArray(attributeColor);
-				} else {
-					// turn off vertexAttribArray and set a constant attribute color
-					gl.disableVertexAttribArray(attributeColor);
-					gl.vertexAttrib3f(attributeColor, 1, 0, 0);
-				}
+				gl.disableVertexAttribArray(attributeColor);
+				gl.vertexAttrib3f(attributeColor, 1, 1, 1);
 
 				/* Set the pointsize uniform variable */
 
@@ -198,7 +190,6 @@
 						"</p>";
 					return;
 				}
-				document.getElementById("colorCheckbox").checked = true;
 				document.getElementById("sizeChoice").value = "32";
 				draw();
 			}
@@ -214,14 +205,6 @@
 		>
 
 		<p>
-			<label
-				><b
-					><input
-						type="checkbox"
-						id="colorCheckbox"
-					/>&nbsp;Random&nbsp;Colors</b
-				></label
-			>
 			<label
 				><b>Point Size:</b>&nbsp;<select id="sizeChoice">
 					<option value="16">Small</option>
