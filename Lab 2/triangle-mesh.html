@@ -1,16 +1,6 @@
-<!DOCTYPE html>
+<!-- Tovah Parnes - tovpar-9@student.ltu.se -->
 
-<!--
-   This page shows an animation of colored disks moving around
-   in a canvas, bouncing off the edges.  The program uses WebGL.
-   All of the points are drawn as single primitive of type POINTS.
-   The color is an attribute in the vertex shader, allowing
-   each point to be a different primitive.  The user can decide
-   whether to have randomly colored points or to make all the
-   points red.  The point size is a uniform variable, so all
-   the points are the same size.  However, the user can select
-   whether the size is large or small.
--->
+<!DOCTYPE html>
 
 <html>
 	<head>
@@ -63,13 +53,6 @@
 
 			let attributeColor; // Location of the attribute named "a_color".
 			let bufferColor; // A vertex buffer object to hold the values for color.
-
-			let animating = false; // is the animation running?
-
-			/* Data for the points to be drawn.
-			The values for the arrays are created during initialization.  The random
-			colors are used when the user selects colored rather than red points.
-			The positions of the points are updated for each frame of the animation. */
 
 			const POINT_COUNT = 100;
 			const pointCoords = new Float32Array(2 * POINT_COUNT);
@@ -185,27 +168,6 @@
 				gl.vertexAttribPointer(attributeColor, 3, gl.FLOAT, false, 0, 0);
 			}
 
-			/*------------ Animation support ------------*/
-
-			function doFrame() {
-				if (animating) {
-					draw();
-					requestAnimationFrame(doFrame);
-				}
-			}
-
-			function doAnimationCheckbox() {
-				let anim = document.getElementById("animateCheckbox").checked;
-				if (anim !== animating) {
-					animating = anim;
-					if (animating) {
-						doFrame();
-					}
-				}
-			}
-
-			/*-------------------------------------------*/
-
 			/**
 			 * Initialize the program.  This function is called after the page has been loaded.
 			 */
@@ -236,22 +198,9 @@
 						"</p>";
 					return;
 				}
-				document.getElementById("animateCheckbox").checked = true;
 				document.getElementById("colorCheckbox").checked = true;
 				document.getElementById("sizeChoice").value = "32";
-				document.getElementById("animateCheckbox").onchange =
-					doAnimationCheckbox;
-				document.getElementById("colorCheckbox").onchange = function () {
-					if (!animating) {
-						draw();
-					}
-				};
-				document.getElementById("sizeChoice").onchange = function () {
-					if (!animating) {
-						draw();
-					}
-				};
-				doAnimationCheckbox();
+				draw();
 			}
 
 			window.onload = init; // Arrange for init() to be called after page has loaded.
@@ -265,11 +214,6 @@
 		>
 
 		<p>
-			<label
-				><b
-					><input type="checkbox" id="animateCheckbox" />&nbsp;Animate</b
-				></label
-			>
 			<label
 				><b
 					><input
