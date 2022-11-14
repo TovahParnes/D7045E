@@ -57,7 +57,7 @@
 
 			let POINT_COUNT = 100;
 			const POINT_SIZE = 8;
-			const pointCoords = new Float32Array(2 * POINT_COUNT);
+			let pointCoords = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
 
 			function createPointData() {
@@ -95,7 +95,9 @@
 					pointCoords[2 * i + 1] = y1; // y-coordinate of point
 				}
 
+				console.log(pointCoords);
 				pointCoords = mergeSort(pointCoords);
+				console.log(pointCoords);
 			}
 
 			function checkNotOverlappingCoordinates(x1, y1, r1, x2, y2, r2) {

@@ -1,26 +1,49 @@
 function merge(left, right) {
-	let sortedArr = []; // the sorted items will go here
-	while (left.length && right.length) {
-		// Insert the smallest item into sortedArr
-		if (left[0] == right[0]) {
-			if (left[1] < right[1]) {
-				sortedArr.push(left.shift());
-				sortedArr.push(left.shift());
+	let arr = new Float32Array(left.length + right.length); // the sorted items will go here
+	let i = 0,
+		l = 0,
+		r = 0;
+	//The while loops check the conditions for merging
+	while (l < left.length && r < right.length) {
+		if (left[l] == right[r]) {
+			if (left[l + 1] < right[r + 1]) {
+				arr[i] = left[l];
+				arr[i + 1] = left[l + 1];
+				l += 2;
+				i += 2;
 			} else {
-				sortedArr.push(right.shift());
-				sortedArr.push(right.shift());
+				arr[i] = right[r];
+				arr[i + 1] = right[r + 1];
+				r += 2;
+				i += 2;
 			}
 		}
-		if (left[0] < right[0]) {
-			sortedArr.push(left.shift());
-			sortedArr.push(left.shift());
+		if (left[l] < right[r]) {
+			arr[i] = left[l];
+			arr[i + 1] = left[l + 1];
+			l += 2;
+			i += 2;
 		} else {
-			sortedArr.push(right.shift());
-			sortedArr.push(right.shift());
+			arr[i] = right[r];
+			arr[i + 1] = right[r + 1];
+			r += 2;
+			i += 2;
 		}
 	}
+	while (l < left.length) {
+		arr[i] = left[l];
+		arr[i + 1] = left[l + 1];
+		l += 2;
+		i += 2;
+	}
+	while (r < right.length) {
+		arr[i] = right[r];
+		arr[i + 1] = right[r + 1];
+		r += 2;
+		i += 2;
+	}
 	// Use spread operators to create a new array, combining the three arrays
-	return [...sortedArr, ...left, ...right];
+	return arr;
 }
 
 function mergeSort(arr) {
@@ -33,10 +56,3 @@ function mergeSort(arr) {
 	let right = mergeSort(arr.slice(mid));
 	return merge(left, right);
 }
-
-//pointCoords = new Float32Array(2 * 6);
-//pointCoords = [3.0, 5.0, 5.0, 1.0, 8.0, 9.0, 5.0, 2.0, 99.0, 68.0, 1.0, 8.0];
-//console.log(pointCoords);
-
-//pointCoords = mergeSort(pointCoords); // [1, 8, 3, 5, 5, 1, 5, 2, 8, 9, 99, 68]
-//console.log(pointCoords);
