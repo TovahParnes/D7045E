@@ -35,10 +35,6 @@
 				"precision mediump float;\n" +
 				"varying vec3 v_color;\n" +
 				"void main() {\n" +
-				"   float distanceFromCenter = distance( gl_PointCoord, vec2(0.5,0.5) );\n" +
-				"   if ( distanceFromCenter >= 0.5 ) {\n" +
-				"       discard;  // don't draw this pixel!\n" +
-				"   }\n" +
 				"   gl_FragColor = vec4(v_color, 1.0);\n" +
 				"}\n";
 
@@ -55,7 +51,7 @@
 			let attributeColor; // Location of the attribute named "a_color".
 			let bufferColor; // A vertex buffer object to hold the values for color.
 
-			let POINT_COUNT = 100;
+			let POINT_COUNT = 20;
 			const POINT_SIZE = 8;
 			let pointCoords = new Float32Array(2 * POINT_COUNT);
 			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
@@ -95,9 +91,7 @@
 					pointCoords[2 * i + 1] = y1; // y-coordinate of point
 				}
 
-				console.log(pointCoords);
 				pointCoords = mergeSort(pointCoords);
-				console.log(pointCoords);
 			}
 
 			function checkNotOverlappingCoordinates(x1, y1, r1, x2, y2, r2) {
@@ -135,6 +129,13 @@
 				/* Draw all the points with one command. */
 
 				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
+				drawLineLoop();
+			}
+
+			function drawLineLoop() {
+				for (let i = 0; i < POINT_COUNT - 2; i++) {
+					gl.drawArrays(gl.LINE_LOOP, i, 3);
+				}
 			}
 
 			/**
@@ -224,12 +225,8 @@
 						"</p>";
 					return;
 				}
-				//var output = document.getElementById("numPointsRange");
-				//output.innerHTML = slider.value;
 
 				document.getElementById("numPointsRange").onchange = function () {
-					//var output = document.getElementById("numPointsOutput");
-					//output.innerHTML = this.value;
 					POINT_COUNT = this.value;
 					createPointData();
 					draw();
