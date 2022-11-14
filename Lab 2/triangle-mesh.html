@@ -12,6 +12,7 @@
 			}
 		</style>
 
+		<script src="mergeSort.js"></script>
 		<script>
 			"use strict";
 
@@ -93,6 +94,8 @@
 					pointCoords[2 * i] = x1; // x-coordinate of point
 					pointCoords[2 * i + 1] = y1; // y-coordinate of point
 				}
+
+				pointCoords = mergeSort(pointCoords);
 			}
 
 			function checkNotOverlappingCoordinates(x1, y1, r1, x2, y2, r2) {
@@ -219,8 +222,12 @@
 						"</p>";
 					return;
 				}
+				//var output = document.getElementById("numPointsRange");
+				//output.innerHTML = slider.value;
 
 				document.getElementById("numPointsRange").onchange = function () {
+					//var output = document.getElementById("numPointsOutput");
+					//output.innerHTML = this.value;
 					POINT_COUNT = this.value;
 					createPointData();
 					draw();
@@ -240,6 +247,7 @@
 
 		<p>
 			<input type="range" min="3" max="100" value="50" id="numPointsRange" />
+			Value: <span if="numPointsOutput"></span>
 		</p>
 
 		<div id="canvas-holder">
