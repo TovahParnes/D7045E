@@ -231,18 +231,24 @@
 				}
 
 				document.getElementById("numPointsRange").onchange = function () {
-					POINT_COUNT = this.value;
+					getNumPoints();
 					createPointData();
 					draw();
 				};
 				draw();
+				getNumPoints();
 			}
 
 			function randomiseNumPoints() {
 				document.getElementById("numPointsRange").value =
 					Math.floor(Math.random() * 97) + 3;
 				createPointData();
-				draw();
+				getNumPoints();
+			}
+
+			function getNumPoints() {
+				let x = document.getElementById("numPointsRange").value;
+				document.getElementById("numPointsOutput").innerHTML = x;
 			}
 
 			window.onload = init; // Arrange for init() to be called after page has loaded.
@@ -257,7 +263,7 @@
 
 		<p>
 			<input type="range" min="3" max="100" value="50" id="numPointsRange" />
-			Value: <span if="numPointsRange"></span>
+			Value: <span id="numPointsOutput"></span>
 			<button onclick="randomiseNumPoints()">Randomise</button>
 		</p>
 
