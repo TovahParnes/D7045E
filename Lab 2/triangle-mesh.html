@@ -107,6 +107,78 @@
 				return false;
 			}
 
+			function colorTriangles() {
+				let coloring = document.getElementById("coloring").value;
+				if (coloring == "same") {
+					gl.disableVertexAttribArray(attributeColor);
+					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0); // gold
+
+					/*
+					for (let i = 0; i < POINT_COUNT; i++) {
+						pointRandomColors[3 * i] = 1;
+						pointRandomColors[3 * i + 1] = 0;
+						pointRandomColors[3 * i + 2] = 0;
+					}*/
+				} else if (coloring == "distance") {
+					/*
+					for (let i = 0; i < POINT_COUNT; i++) {
+						let x1 = pointCoords[2 * i];
+						let y1 = pointCoords[2 * i + 1];
+						let distance = POINT_SIZE;
+						let x2 = pointCoords[2 * i + 2];
+						let y2 = pointCoords[2 * i + 3];
+						let distance2 = POINT_SIZE;
+						let areNotOverlapping = checkNotOverlappingCoordinates(
+							x1,
+							y1,
+							distance,
+							x2,
+							y2,
+							distance2
+						);
+						if (areNotOverlapping) {
+							pointRandomColors[3 * i] = 1;
+							pointRandomColors[3 * i + 1] = 1;
+							pointRandomColors[3 * i + 2] = 1;
+							pointCoords[2 * i + 2] = x2;
+							pointCoords[2 * i + 3] = y2;
+						}
+					}
+					//pointCoords = mergeSort(pointCoords);
+					*/
+				} else if (coloring == "4coloring") {
+					/*
+					for (let i = 0; i < POINT_COUNT; i++) {
+						let x1 = pointCoords[2 * i];
+						let y1 = pointCoords[2 * i + 1];
+						let distance = POINT_SIZE;
+						let x2 = pointCoords[2 * i + 2];
+						let y2 = pointCoords[2 * i + 3];
+						let distance2 = POINT_SIZE;
+						let areNotOverlapping = checkNotOverlappingCoordinates(
+							x1,
+							y1,
+							distance,
+							x2,
+							y2,
+							distance2
+						);
+						if (areNotOverlapping) {
+							pointRandomColors[3 * i] = 1;
+							pointRandomColors[3 * i + 1] = 1;
+							pointRandomColors[3 * i + 2] = 1;
+							pointCoords[2 * i + 2] = x2;
+							pointCoords[2 * i + 3] = y2;
+						}
+					}
+					*/
+					// TODO: implement coloring
+				}
+				gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
+				gl.bufferData(gl.ARRAY_BUFFER, pointRandomColors, gl.STREAM_DRAW);
+				gl.vertexAttribPointer(attributeColor, 3, gl.FLOAT, false, 0, 0);
+			}
+
 			/**
 			 *  Draws the content of the canvas, in this case, one primitive ot
 			 *  type gl.POINTS, which represents all of the disks in the image.
@@ -122,12 +194,15 @@
 				gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
 				gl.enableVertexAttribArray(attributeCoords);
 
+				/* Color the triangles first so they are behind the points */
+				colorTriangles();
+				drawTriangles();
+
 				/* Set up values for the "color" attribute */
 				gl.disableVertexAttribArray(attributeColor);
 				gl.vertexAttrib3f(attributeColor, 1, 1, 1);
 
 				/* Set the pointsize uniform variable */
-
 				gl.uniform1f(uniformPointsize, POINT_SIZE);
 
 				/* Draw all the points with one command. */
@@ -139,6 +214,12 @@
 			function drawLineLoop() {
 				for (let i = 0; i < POINT_COUNT - 2; i++) {
 					gl.drawArrays(gl.LINE_LOOP, i, 3);
+				}
+			}
+
+			function drawTriangles() {
+				for (let i = 0; i < POINT_COUNT - 2; i++) {
+					gl.drawArrays(gl.TRIANGLES, i, 3);
 				}
 			}
 
@@ -237,7 +318,7 @@
 				};
 
 				document.getElementById("coloring").onchange = function () {
-					colorElements(); //TODO: implement coloring
+					colorTriangles(); //TODO: implement coloring
 					draw();
 				};
 
