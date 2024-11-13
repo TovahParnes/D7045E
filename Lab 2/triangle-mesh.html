@@ -235,8 +235,14 @@
 					createPointData();
 					draw();
 				};
-				draw();
+
+				document.getElementById("coloring").onchange = function () {
+					colorElements(); //TODO: implement coloring
+					draw();
+				};
+
 				getNumPoints();
+				draw();
 			}
 
 			function randomiseNumPoints() {
@@ -262,9 +268,29 @@
 		>
 
 		<p>
-			<input type="range" min="3" max="100" value="50" id="numPointsRange" />
-			Value: <span id="numPointsOutput"></span>
+			<label>
+				<b>
+					<input
+						type="range"
+						min="3"
+						max="100"
+						value="50"
+						id="numPointsRange"
+					/>
+					Value: <span id="numPointsOutput"></span>
+				</b>
+			</label>
 			<button onclick="randomiseNumPoints()">Randomise</button>
+			<label>
+				<b>
+					Coloring:
+					<select id="coloring">
+						<option value="same">Same</option>
+						<option value="distance">Distance</option>
+						<option value="4coloring">4 Coloring</option>
+					</select>
+				</b>
+			</label>
 		</p>
 
 		<div id="canvas-holder">
