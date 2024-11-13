@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Moving Disks in WebGL</title>
+		<title>Creating meshes by triangulating point sets</title>
 		<style>
 			label {
 				margin-left: 30px;
@@ -238,11 +238,18 @@
 				draw();
 			}
 
+			function randomiseNumPoints() {
+				document.getElementById("numPointsRange").value =
+					Math.floor(Math.random() * 97) + 3;
+				createPointData();
+				draw();
+			}
+
 			window.onload = init; // Arrange for init() to be called after page has loaded.
 		</script>
 	</head>
 	<body>
-		<h2>Moving Points with the WebGL POINTS primitive</h2>
+		<h2>Creating meshes by triangulating point sets</h2>
 
 		<noscript
 			><p><b>Sorry, but this page requires JavaScript.</b></p></noscript
@@ -250,7 +257,8 @@
 
 		<p>
 			<input type="range" min="3" max="100" value="50" id="numPointsRange" />
-			Value: <span if="numPointsOutput"></span>
+			Value: <span if="numPointsRange"></span>
+			<button onclick="randomiseNumPoints()">Randomise</button>
 		</p>
 
 		<div id="canvas-holder">
