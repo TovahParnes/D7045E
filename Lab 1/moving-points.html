@@ -225,6 +225,7 @@
 									r2
 								);
 							}
+
 							//set the new coordinates
 							pointCoords[2 * i] = x1;
 							pointCoords[2 * i + 1] = y1;
@@ -288,7 +289,7 @@
 			 *  type gl.POINTS, which represents all of the disks in the image.
 			 */
 			function draw() {
-				gl.clearColor(0.5, 0.5, 0.5, 1); // specify the color to be used for clearing
+				gl.clearColor(0.5, 0.5, 0.5, 1); // specify the color to be used for clearing, grey
 				gl.clear(gl.COLOR_BUFFER_BIT); // clear the canvas (to black)
 
 				/* Get options from the user interface. */
@@ -312,7 +313,7 @@
 				} else {
 					// turn off vertexAttribArray and set a constant attribute color
 					gl.disableVertexAttribArray(attributeColor);
-					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0);
+					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0); // gold
 				}
 
 				if (randomSize) {
