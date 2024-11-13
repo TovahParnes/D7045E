@@ -51,12 +51,16 @@
 			let attributeColor; // Location of the attribute named "a_color".
 			let bufferColor; // A vertex buffer object to hold the values for color.
 
-			let POINT_COUNT = 20;
+			let POINT_COUNT; // Number of points to draw
 			const POINT_SIZE = 8;
-			let pointCoords = new Float32Array(2 * POINT_COUNT);
-			const pointRandomColors = new Float32Array(3 * POINT_COUNT);
+			let pointCoords; // Location of the attribute named "a_coords".
+			let pointRandomColors; // Location of the attribute named "a_color".
 
 			function createPointData() {
+				POINT_COUNT = document.getElementById("numPointsRange").value;
+				pointCoords = new Float32Array(2 * POINT_COUNT);
+				pointRandomColors = new Float32Array(3 * POINT_COUNT);
+
 				// called during initialization to fill the arrays with data.
 				for (let i = 0; i < POINT_COUNT; i++) {
 					// Each point has random coordinates.  The coordinates are checked so that there is no overlap
