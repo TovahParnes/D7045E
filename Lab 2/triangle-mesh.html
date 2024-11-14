@@ -13,6 +13,7 @@
 		</style>
 
 		<script src="mergeSort.js"></script>
+		<script src="triangulation.js"></script>
 		<script>
 			"use strict";
 
@@ -53,12 +54,14 @@
 
 			let POINT_COUNT; // Number of points to draw
 			const POINT_SIZE = 8;
-			let pointCoords; // Location of the attribute named "a_coords".
+			let pointCoords;
+			let triangleCoords;
 			let pointRandomColors; // Location of the attribute named "a_color".
 
 			function createPointData() {
 				POINT_COUNT = document.getElementById("numPointsRange").value;
 				pointCoords = new Float32Array(2 * POINT_COUNT);
+				triangleCoords = new Float32Array(6 * POINT_COUNT);
 				pointRandomColors = new Float32Array(3 * POINT_COUNT);
 
 				// called during initialization to fill the arrays with data.
@@ -96,6 +99,10 @@
 				}
 
 				pointCoords = mergeSort(pointCoords);
+				// print point coords
+				console.log(pointCoords);
+				triangleCoords = triangulate(pointCoords, triangleCoords);
+				console.log(triangleCoords);
 			}
 
 			function checkNotOverlappingCoordinates(x1, y1, r1, x2, y2, r2) {
@@ -112,13 +119,6 @@
 				if (coloring == "same") {
 					gl.disableVertexAttribArray(attributeColor);
 					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0); // gold
-
-					/*
-					for (let i = 0; i < POINT_COUNT; i++) {
-						pointRandomColors[3 * i] = 1;
-						pointRandomColors[3 * i + 1] = 0;
-						pointRandomColors[3 * i + 2] = 0;
-					}*/
 				} else if (coloring == "distance") {
 					/*
 					for (let i = 0; i < POINT_COUNT; i++) {
@@ -187,25 +187,29 @@
 				gl.clearColor(0, 0, 0, 1); // specify the color to be used for clearing
 				gl.clear(gl.COLOR_BUFFER_BIT); // clear the canvas (to black)
 
-				/* Set up values for the "coords" attribute, giving point's positions */
+				/* --- Triangles --- */
+				gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoords);
+				gl.bufferData(gl.ARRAY_BUFFER, triangleCoords, gl.STREAM_DRAW);
+				gl.vertexAttribPointer(attributeCoords, 3, gl.FLOAT, false, 0, 0);
+				gl.enableVertexAttribArray(attributeCoords);
 
+				colorTriangles();
+				drawTriangles();
+
+				gl.disableVertexAttribArray(attributeCoords);
+
+				/* --- Lines --- */
+
+				/* --- Points --- */
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoords);
 				gl.bufferData(gl.ARRAY_BUFFER, pointCoords, gl.STREAM_DRAW);
 				gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
 				gl.enableVertexAttribArray(attributeCoords);
 
-				/* Color the triangles first so they are behind the points */
-				colorTriangles();
-				drawTriangles();
-
-				/* Set up values for the "color" attribute */
 				gl.disableVertexAttribArray(attributeColor);
 				gl.vertexAttrib3f(attributeColor, 1, 1, 1);
 
-				/* Set the pointsize uniform variable */
 				gl.uniform1f(uniformPointsize, POINT_SIZE);
-
-				/* Draw all the points with one command. */
 
 				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
 				drawLineLoop();
@@ -218,7 +222,7 @@
 			}
 
 			function drawTriangles() {
-				for (let i = 0; i < POINT_COUNT - 2; i++) {
+				for (let i = 0; i < triangleCoords.length / 3; i += 3) {
 					gl.drawArrays(gl.TRIANGLES, i, 3);
 				}
 			}
