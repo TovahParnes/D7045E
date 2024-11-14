@@ -1,52 +1,38 @@
-function triangulateNextPoint(curInd, points, triangles) {
-	let point1 = points[curInd];
-	let point2 = points[curInd - 1];
-	let point3 = points[curInd - 2];
+/*
+function triangulate(points, triangles) {
+	//let triangles = new Float32Array(3 * (points.length - 2)); // Allocate space for each triangle (3 vertices per triangle)
 
-	triangles.push([point1, point2, point3]);
-
-	/*let trianglesToAdd = [];
-	for (let i = 0; i < points.length; i++) {
-		let point1 = points[i];
-		let point2 = points[(i + 1) % points.length];
-		let point3 = points[(i + 2) % points.length];
-		if (point1.x == point.x && point1.y == point.y) {
-			trianglesToAdd.push([point1, point2, point3]);
-		}
+	let tIndex = 0; // Track index in triangles array
+	for (let i = 5; i < points.length; i = i + 2) {
+		// Loop through points to create triangles
+		triangles[tIndex++] = points[i - 5];
+		triangles[tIndex++] = points[i - 4];
+		triangles[tIndex++] = points[i - 3];
+		triangles[tIndex++] = points[i - 2];
+		triangles[tIndex++] = points[i - 1];
+		triangles[tIndex++] = points[i];
 	}
 
-	for (let i = 0; i < trianglesToAdd.length; i++) {
-		let triangle = trianglesToAdd[i];
-		triangles.push(triangle);
-	}*/
+	return triangles;
 }
+*/
 
 function triangulate(points) {
-	let triangles = [[points[0], points[1], points[2]]];
-	for (let i = 3; i < points.length; i++) {
-		triangulateNextPoint(i, points, triangles);
-	}
-	return triangles;
-}
+	const triangleCount = points.length / 2 - 2; // Number of triangles we can form
+	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 
-/*
-function triangulateNextPoint(curInd, points, triangles) {
-	let point1 = points[curInd];
-	let point2 = points[curInd - 1];
-	let point3 = points[curInd - 2];
+	let tIndex = 0; // Track index in triangles array
+	for (let i = 0; i < triangleCount; i++) {
+		// Fill triangles in the order: (1, 2, 3), (2, 3, 4), (3, 4, 5), ...
+		triangles[tIndex++] = points[2 * i];
+		triangles[tIndex++] = points[2 * i + 1];
 
-	triangles.push(point1, point2, point3);
-}
+		triangles[tIndex++] = points[2 * (i + 1)];
+		triangles[tIndex++] = points[2 * (i + 1) + 1];
 
-function triangulate(points, triangles) {
-	for (let i = 0; i < triangles.length; i + 3) {
-		for (let j = 3; j < points.length; j++) {
-			triangles[i] = points[j - 2];
-			triangles[i + 1] = points[j - 1];
-			triangles[i + 2] = points[j];
-		}
+		triangles[tIndex++] = points[2 * (i + 2)];
+		triangles[tIndex++] = points[2 * (i + 2) + 1];
 	}
 
 	return triangles;
 }
-    */
