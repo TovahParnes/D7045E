@@ -61,7 +61,6 @@
 			function createPointData() {
 				POINT_COUNT = document.getElementById("numPointsRange").value;
 				pointCoords = new Float32Array(2 * POINT_COUNT);
-				triangleCoords = new Float32Array(6 * POINT_COUNT - 6);
 				pointRandomColors = new Float32Array(3 * POINT_COUNT);
 
 				// called during initialization to fill the arrays with data.
