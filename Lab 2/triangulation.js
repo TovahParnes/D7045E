@@ -19,7 +19,7 @@ function triangulateWrong(points) {
 }
 
 function triangulate(points) {
-	const triangleCount = points.length / 2 - 2; // Number of triangles we can form
+	const triangleCount = points.length - 2; // Number of triangles we can form
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	const convexHull = new Float32Array(points.length);
 	var lower = [];
