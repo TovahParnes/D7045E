@@ -140,7 +140,12 @@
 				colorTriangles();
 				gl.drawArrays(gl.TRIANGLES, 0, triangleCoords.length / 2);
 
-				/* --- Lines and Points --- */
+				/* --- Lines --- */
+				gl.disableVertexAttribArray(attributeColor);
+				gl.vertexAttrib3f(attributeColor, 1, 0, 0);
+				drawTriangleLines();
+
+				/* --- Points --- */
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoords);
 				gl.bufferData(gl.ARRAY_BUFFER, pointCoords, gl.STREAM_DRAW);
 				gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
@@ -152,12 +157,17 @@
 				gl.uniform1f(uniformPointsize, POINT_SIZE);
 
 				gl.drawArrays(gl.POINTS, 0, POINT_COUNT);
-				drawLineLoop();
 			}
 
 			function drawLineLoop() {
 				for (let i = 0; i < POINT_COUNT - 2; i++) {
 					gl.drawArrays(gl.LINE_LOOP, i, 3);
+				}
+			}
+
+			function drawTriangleLines() {
+				for (let i = 0; i < triangleCoords.length / 6; i++) {
+					gl.drawArrays(gl.LINE_LOOP, i * 3, 3);
 				}
 			}
 
