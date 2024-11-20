@@ -127,21 +127,20 @@
 
 					for (let i = 0; i < TRIANGLE_COUNT; i++) {
 						let cx =
-							(triangleCoords[i * 3] +
-								triangleCoords[i * 3 + 2] +
-								triangleCoords[i * 3 + 4]) /
+							(triangleCoords[i * 6] +
+								triangleCoords[i * 6 + 2] +
+								triangleCoords[i * 6 + 4]) /
 							3;
 						let cy =
-							(triangleCoords[i * 3 + 1] +
-								triangleCoords[i * 3 + 3] +
-								triangleCoords[i * 3 + 5]) /
+							(triangleCoords[i * 6 + 1] +
+								triangleCoords[i * 6 + 3] +
+								triangleCoords[i * 6 + 5]) /
 							3;
 						let dist = distance(cx, cy, px, py) / canvas.width;
+						dist = Math.min(1.0, Math.max(0.0, dist));
 
-						for (let j = 0; j < 3; j++) {
-							triangleColors[i * 9 + j * 3] = dist; // R
-							triangleColors[i * 9 + j * 3 + 1] = dist; // G
-							triangleColors[i * 9 + j * 3 + 2] = dist; // B
+						for (let j = 0; j < 9; j++) {
+							triangleColors[i * 9 + j] = dist;
 						}
 					}
 
