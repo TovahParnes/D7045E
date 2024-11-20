@@ -35,8 +35,11 @@
 			const fragmentShaderSource =
 				"precision mediump float;\n" +
 				"varying vec3 v_color;\n" +
+				"uniform vec3 u_color;\n" +
+				"uniform bool u_useUniformColor;\n" +
 				"void main() {\n" +
-				"   gl_FragColor = vec4(v_color, 1.0);\n" +
+				"	vec3 finalColor = u_useUniformColor ? u_color : v_color; \n" +
+				"   gl_FragColor = vec4(finalColor, 1.0);\n" +
 				"}\n";
 
 			let canvas; // The canvas where WebGL draws.
@@ -45,6 +48,8 @@
 			let uniformWidth; // Location of uniform named "u_width"
 			let uniformHeight; // Location of uniform named "u_height"
 			let uniformPointsize; // Location of uniform named "u_pointsize"
+			let uniformColor; // Location of uniform named "u_color"
+			let uniformUseUniformColor; // Location of uniform named "u_useUniformColor"
 
 			let attributeCoords; // Location of the attribute named "a_coords".
 			let bufferCoords; // A vertex buffer object to hold the values for coords.
@@ -117,7 +122,8 @@
 				let coloring = document.getElementById("coloring").value;
 				if (coloring == "same") {
 					gl.disableVertexAttribArray(attributeColor);
-					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0); // gold
+					gl.uniform1f(uniformUseUniformColor, 1);
+					gl.uniform3f(uniformColor, 1, 0.84, 0); // gold
 				} else if (coloring == "distance") {
 					let [px, py] = getRandomTrianglePoint();
 
@@ -139,7 +145,7 @@
 							triangleColors[i * 9 + j] = dist;
 						}
 					}
-
+					gl.uniform1f(uniformUseUniformColor, 0);
 					gl.enableVertexAttribArray(attributeColor);
 				} else if (coloring == "4coloring") {
 					// TODO: Implement 4-coloring
@@ -198,7 +204,8 @@
 
 				/* --- Lines --- */
 				gl.disableVertexAttribArray(attributeColor);
-				gl.vertexAttrib3f(attributeColor, 1, 0, 0);
+				gl.uniform1f(uniformUseUniformColor, 1);
+				gl.uniform3f(uniformColor, 1, 0, 0);
 				drawTriangleLines();
 
 				/* --- Points --- */
@@ -208,7 +215,10 @@
 				gl.enableVertexAttribArray(attributeCoords);
 
 				gl.disableVertexAttribArray(attributeColor);
-				gl.vertexAttrib3f(attributeColor, 1, 1, 1);
+				gl.uniform1f(uniformUseUniformColor, 1);
+				gl.uniform3f(uniformColor, 1, 1, 1);
+
+				//gl.vertexAttrib3f(attributeColor, 1, 1, 1);
 
 				gl.uniform1f(uniformPointsize, POINT_SIZE);
 
@@ -272,6 +282,11 @@
 				gl.uniform1f(uniformHeight, canvas.height);
 				gl.uniform1f(uniformWidth, canvas.width);
 				uniformPointsize = gl.getUniformLocation(prog, "u_pointsize");
+				uniformColor = gl.getUniformLocation(prog, "u_color");
+				uniformUseUniformColor = gl.getUniformLocation(
+					prog,
+					"u_useUniformColor"
+				);
 				createPointData();
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
 				gl.bufferData(gl.ARRAY_BUFFER, triangleColors, gl.STREAM_DRAW);
