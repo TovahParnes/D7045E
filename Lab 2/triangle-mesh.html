@@ -101,7 +101,6 @@
 
 				pointCoords = mergeSort(pointCoords);
 				triangleCoords = triangulate(pointCoords);
-				console.log(triangleCoords);
 				console.log(triangleCoords.length / 6);
 			}
 
@@ -120,10 +119,7 @@
 					gl.disableVertexAttribArray(attributeColor);
 					gl.vertexAttrib3f(attributeColor, 1, 0.84, 0); // gold
 				} else if (coloring == "distance") {
-					const px =
-						(canvas.width - POINT_SIZE * 2) * Math.random() + POINT_SIZE;
-					const py =
-						(canvas.height - POINT_SIZE * 2) * Math.random() + POINT_SIZE;
+					let [px, py] = getRandomTrianglePoint();
 
 					for (let i = 0; i < TRIANGLE_COUNT; i++) {
 						let cx =
@@ -137,7 +133,7 @@
 								triangleCoords[i * 6 + 5]) /
 							3;
 						let dist = distance(cx, cy, px, py) / canvas.width;
-						dist = Math.min(1.0, Math.max(0.0, dist));
+						dist = Math.min(1.0, Math.max(0.0, dist)); // Clamp to [0, 1], in case of errors
 
 						for (let j = 0; j < 9; j++) {
 							triangleColors[i * 9 + j] = dist;
@@ -155,6 +151,35 @@
 
 			function distance(x1, y1, x2, y2) {
 				return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+			}
+
+			function getRandomTrianglePoint() {
+				let t = Math.random() * TRIANGLE_COUNT;
+				t = Math.floor(t * 6);
+				let x1, y1, x2, y2, x3, y3;
+				x1 = triangleCoords[t];
+				y1 = triangleCoords[t + 1];
+				x2 = triangleCoords[t + 2];
+				y2 = triangleCoords[t + 3];
+				x3 = triangleCoords[t + 4];
+				y3 = triangleCoords[t + 5];
+
+				if (x1 == 0 || y1 == 0 || x2 == 0 || y2 == 0 || x3 == 0 || y3 == 0) {
+					return getRandomTrianglePoint();
+				}
+
+				const a = Math.random();
+				const b = Math.random();
+
+				if (a + b > 1) {
+					return getRandomTrianglePoint();
+				}
+
+				const px = a * x1 + b * x2 + (1 - a - b) * x3;
+				const py = a * y1 + b * y2 + (1 - a - b) * y3;
+
+				console.log(t);
+				return [px, py];
 			}
 
 			function draw() {
