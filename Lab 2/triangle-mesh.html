@@ -175,6 +175,7 @@
 					return getRandomTrianglePoint();
 				}
 
+				// Barycentric coordinates
 				const px = a * x1 + b * x2 + (1 - a - b) * x3;
 				const py = a * y1 + b * y2 + (1 - a - b) * y3;
 
@@ -315,7 +316,7 @@
 				};
 
 				document.getElementById("coloring").onchange = function () {
-					colorTriangles(); //TODO: implement coloring
+					colorTriangles();
 					draw();
 				};
 
@@ -328,6 +329,7 @@
 					Math.floor(Math.random() * 97) + 3;
 				createPointData();
 				getNumPoints();
+				draw();
 			}
 
 			function getNumPoints() {
