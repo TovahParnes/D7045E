@@ -88,6 +88,7 @@ function triangulateSoup(triangles) {
 		edges[ind++] = createEdge(x2, y2, x3, y3, i);
 		edges[ind++] = createEdge(x3, y3, x1, y1, i);
 	}
+	edges = mergeSortEdges(edges);
 	return edges;
 }
 

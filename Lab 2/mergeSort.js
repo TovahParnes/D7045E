@@ -65,14 +65,7 @@ function mergeEdges(left, right) {
 	//The while loops check the conditions for merging
 
 	while (l < left.length && r < right.length) {
-		if (left[l] == right[r]) {
-			compare = "equal";
-		}
-		if (left[l] < right[r]) {
-			compare = "left";
-		} else {
-			compare = "right";
-		}
+		compareElements(left[l], right[l]);
 
 		switch (compare) {
 			case "equal":
@@ -129,4 +122,15 @@ function mergeSortEdges(arr) {
 	let left = mergeSortEdges(arr.slice(0, mid));
 	let right = mergeSort(arr.slice(mid));
 	return merge(left, right);
+}
+
+function compareElements(leftItem, rightItem) {
+	for (let i = 0; i < 4; i++) {
+		if (leftItem[i] < rightItem[i]) {
+			return "left";
+		} else if (leftItem[i] > rightItem[i]) {
+			return "right";
+		}
+	}
+	return "equal";
 }
