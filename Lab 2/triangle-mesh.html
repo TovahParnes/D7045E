@@ -149,6 +149,28 @@
 					gl.enableVertexAttribArray(attributeColor);
 				} else if (coloring == "4coloring") {
 					let edges = triangulateSoup(triangleCoords);
+					const green = [0, 1, 0];
+					const blue = [0, 0, 1];
+					const red = [1, 0, 0];
+					const yellow = [1, 1, 0];
+					const colors = [red, green, blue, yellow];
+
+					let currColor = 0;
+
+					/*
+					for (let i = 0; i < edges.length / 3; i++) {
+						for (let j = 0; j < 3; j++) {
+							triangleColors[i * 9 + j] = colors[currColor][j];
+						}
+						currColor = (currColor + 1) % 4;
+					}*/
+					for (let i = 0; i < TRIANGLE_COUNT; i++) {
+						colorTriangle(i, colors[currColor]);
+						currColor = (currColor + 1) % 4;
+					}
+
+					gl.uniform1f(uniformUseUniformColor, 0);
+					gl.enableVertexAttribArray(attributeColor);
 				}
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
 				gl.bufferData(gl.ARRAY_BUFFER, triangleColors, gl.STREAM_DRAW);
@@ -187,6 +209,12 @@
 
 				console.log(t);
 				return [px, py];
+			}
+
+			function colorTriangle(triangleInd, color) {
+				for (let j = 0; j < 9; j++) {
+					triangleColors[triangleInd * 9 + j] = color[j % 3];
+				}
 			}
 
 			function draw() {
@@ -380,9 +408,9 @@
 				<b>
 					Coloring:
 					<select id="coloring">
+						<option value="4coloring">4 Coloring</option>
 						<option value="distance">Distance</option>
 						<option value="same">Same</option>
-						<option value="4coloring">4 Coloring</option>
 					</select>
 				</b>
 			</label>
