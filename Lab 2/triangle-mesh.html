@@ -105,7 +105,7 @@
 				}
 
 				pointCoords = mergeSort(pointCoords);
-				triangleCoords = triangulate(pointCoords);
+				triangleCoords = triangleSoup(pointCoords);
 				console.log(triangleCoords.length / 6);
 			}
 
@@ -142,7 +142,7 @@
 						dist = Math.min(1.0, Math.max(0.0, dist)); // Clamp to [0, 1], in case of errors
 
 						for (let j = 0; j < 9; j++) {
-							triangleColors[i * 9 + j] = dist;
+							triangleColors[i * 9 + j] = 1 - dist;
 						}
 					}
 					gl.uniform1f(uniformUseUniformColor, 0);

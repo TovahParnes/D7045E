@@ -1,4 +1,4 @@
-function triangulate(points) {
+function triangleSoup(points) {
 	const triangleCount = points.length - 5; // Number of triangles we can form
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	var lower = [];
