@@ -148,7 +148,7 @@
 					gl.uniform1f(uniformUseUniformColor, 0);
 					gl.enableVertexAttribArray(attributeColor);
 				} else if (coloring == "4coloring") {
-					// TODO: Implement 4-coloring
+					let edges = triangulateSoup(triangleCoords);
 				}
 				gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
 				gl.bufferData(gl.ARRAY_BUFFER, triangleColors, gl.STREAM_DRAW);

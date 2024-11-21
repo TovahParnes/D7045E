@@ -1,8 +1,8 @@
 function triangleSoup(points) {
 	const triangleCount = points.length - 5; // Number of triangles we can form
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
-	var lower = [];
-	var upper = [];
+	let lower = [];
+	let upper = [];
 
 	ind = 0;
 
@@ -63,4 +63,45 @@ function triangleSoup(points) {
 
 function cross(ax, ay, bx, by, ox, oy) {
 	return (ax - ox) * (by - oy) - (ay - oy) * (bx - ox);
+}
+
+function triangulateSoup(triangles) {
+	const triangleCount = triangles.length / 6;
+	let edges = new Array(triangleCount * 3);
+	ind = 0;
+
+	for (let i = 0; i < triangleCount; i++) {
+		let x1, y1, x2, y2, x3, y3;
+		x1 = triangles[i * 6 + 0];
+		y1 = triangles[i * 6 + 1];
+		x2 = triangles[i * 6 + 2];
+		y2 = triangles[i * 6 + 3];
+		x3 = triangles[i * 6 + 4];
+		y3 = triangles[i * 6 + 5];
+
+		if (x1 == 0 || y1 == 0 || x2 == 0 || y2 == 0 || x3 == 0 || y3 == 0) {
+			continue;
+		}
+
+		// Create edges
+		edges[ind++] = createEdge(x1, y1, x2, y2, i);
+		edges[ind++] = createEdge(x2, y2, x3, y3, i);
+		edges[ind++] = createEdge(x3, y3, x1, y1, i);
+	}
+	return edges;
+}
+
+function createEdge(x1, y1, x2, y2, pointer) {
+	xmin = Math.min(x1, x2);
+	xmax = Math.max(x1, x2);
+	ymin = Math.min(y1, y2);
+	ymax = Math.max(y1, y2);
+
+	edge = new Float32Array(5);
+	edge[0] = xmin;
+	edge[1] = ymin;
+	edge[2] = xmax;
+	edge[3] = ymax;
+	edge[4] = pointer;
+	return edge;
 }
