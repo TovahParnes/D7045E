@@ -106,16 +106,67 @@ function createEdge(x1, y1, x2, y2, pointer) {
 	return edge;
 }
 
-function triangulatePoints(points, triangleCount) {
-	console.log("points:" + points);
-	let triangles = triangleSoup(points, triangleCount);
-	console.log("triangles:" + triangles);
-	let edges = triangulateSoup(triangles, triangleCount);
-	console.log("edges:" + edges);
-	edges = mergeSortEdges(edges);
-	console.log("edges:" + edges);
-	//const triangleGraph = triangleGraph(edges, points.length / 2 - 2);
-	//console.log("triangleGraph:" + triangleGraph);
+function triangleGraph(edges, triangleCount) {
+	// Initialize graph: each triangle has a list of neighbors
+	const triangleGraph = Array.from({ length: triangleCount }, () => []);
+	console.log("triangleCount:" + triangleCount);
+	console.log("triangleGraph length:" + triangleGraph.length);
 
-	//return triangleGraph;
+	// Traverse edges to find shared edges between triangles
+	for (let i = 0; i < edges.length - 1; i += 1) {
+		let edge1 = edges[i];
+		let edge2 = edges[i + 1];
+
+		if (!equalEdges(edge1, edge2)) {
+			continue;
+		}
+
+		let t1 = edge1[4]; // Pointer to triangle 1
+		let t2 = edge2[4]; // Pointer to triangle 2
+		//console.log(edge1, edge2);
+
+		if (t1 < 0 || t1 >= triangleCount || t2 < 0 || t2 >= triangleCount) {
+			console.error(`Invalid triangle index: t1=${t1}, t2=${t2}`);
+			continue; // Skip invalid edges
+		}
+
+		if (t1 == t2) {
+			continue; // Skip self-edges
+		}
+
+		if (!triangleGraph[t1].includes(t2)) {
+			triangleGraph[t1].push(t2);
+		}
+		if (!triangleGraph[t2].includes(t1)) {
+			triangleGraph[t2].push(t1);
+		}
+	}
+
+	return triangleGraph;
+}
+
+function equalEdges(edge1, edge2) {
+	for (let i = 0; i < 4; i++) {
+		if (edge1[i] != edge2[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function triangulatePoints(points, triangleCount) {
+	//console.log("points:" + points);
+	let triangles = triangleSoup(points, triangleCount);
+	//console.log("triangles:" + triangles);
+	let edges = triangulateSoup(triangles, triangleCount);
+	//console.log("edges:" + edges);
+	edges = mergeSortEdges(edges);
+	//console.log("edges:" + edges);
+	let graph = triangleGraph(edges, triangleCount);
+	console.log("triangleGraph:");
+	for (i = 0; i < graph.length; i++) {
+		console.log(i, graph[i]);
+	}
+
+	//return graph;
 }

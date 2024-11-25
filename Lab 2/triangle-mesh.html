@@ -67,6 +67,7 @@
 			function createPointData() {
 				POINT_COUNT = document.getElementById("numPointsRange").value;
 				TRIANGLE_COUNT = 2 * POINT_COUNT - 5;
+				console.log("TRIANGLE_COUNT:" + TRIANGLE_COUNT);
 				pointCoords = new Float32Array(2 * POINT_COUNT);
 				triangleColors = new Float32Array(9 * TRIANGLE_COUNT);
 
@@ -393,13 +394,7 @@
 		<p>
 			<label>
 				<b>
-					<input
-						type="range"
-						min="3"
-						max="100"
-						value="50"
-						id="numPointsRange"
-					/>
+					<input type="range" min="3" max="100" value="4" id="numPointsRange" />
 					Value: <span id="numPointsOutput"></span>
 				</b>
 			</label>
