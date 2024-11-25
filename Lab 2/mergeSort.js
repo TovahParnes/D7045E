@@ -58,77 +58,72 @@ function mergeSort(arr) {
 }
 
 function mergeEdges(left, right) {
-	let arr = new Float32Array(left.length + right.length); // the sorted items will go here
-	let i = 0,
-		l = 0,
+	const arr = []; // Result array
+	let l = 0,
 		r = 0;
-	//The while loops check the conditions for merging
 
 	while (l < left.length && r < right.length) {
-		compareElements(left[l], right[l]);
+		if (left[l] === undefined) {
+			//throw new Error("Left or right edge is undefined");
+			l++;
+			continue;
+		}
+		if (right[r] === undefined) {
+			//throw new Error("Left or right edge is undefined");
+			r++;
+			continue;
+		}
+		const compare = compareElements(left[l], right[r]);
 
 		switch (compare) {
 			case "equal":
-				if (left[l + 1] < right[r + 1]) {
-					arr[i] = left[l];
-					arr[i + 1] = left[l + 1];
-					l += 2;
-					i += 2;
+				if (left[l][4] < right[r][4]) {
+					arr.push(left[l]);
+					l++;
 				} else {
-					arr[i] = right[r];
-					arr[i + 1] = right[r + 1];
-					r += 2;
-					i += 2;
+					arr.push(right[r]);
+					r++;
 				}
 				break;
 			case "left":
-				arr[i] = left[l];
-				arr[i + 1] = left[l + 1];
-				l += 2;
-				i += 2;
+				arr.push(left[l]);
+				l++;
 				break;
 			case "right":
-				arr[i] = right[r];
-				arr[i + 1] = right[r + 1];
-				r += 2;
-				i += 2;
-			default:
+				arr.push(right[r]);
+				r++;
 				break;
 		}
 	}
 
+	// Add remaining edges
 	while (l < left.length) {
-		arr[i] = left[l];
-		arr[i + 1] = left[l + 1];
-		l += 2;
-		i += 2;
+		arr.push(left[l]);
+		l++;
+	}
+	while (r < right.length) {
+		arr.push(right[r]);
+		r++;
 	}
 
-	while (r < right.length) {
-		arr[i] = right[r];
-		arr[i + 1] = right[r + 1];
-		r += 2;
-		i += 2;
-	}
-	// Use spread operators to create a new array, combining the three arrays
 	return arr;
 }
 
 function mergeSortEdges(arr) {
-	if (arr.length <= 2) return arr;
-	let mid = Math.floor(arr.length / 2);
-	mid = mid % 2 === 0 ? mid : mid + 1;
+	if (arr.length <= 1) return arr; // A single edge is already sorted
+	const mid = Math.floor(arr.length / 2);
+
 	// Recursive calls
-	let left = mergeSortEdges(arr.slice(0, mid));
-	let right = mergeSort(arr.slice(mid));
-	return merge(left, right);
+	const left = mergeSortEdges(arr.slice(0, mid));
+	const right = mergeSortEdges(arr.slice(mid));
+	return mergeEdges(left, right);
 }
 
-function compareElements(leftItem, rightItem) {
+function compareElements(leftEdge, rightEdge) {
 	for (let i = 0; i < 4; i++) {
-		if (leftItem[i] < rightItem[i]) {
+		if (leftEdge[i] < rightEdge[i]) {
 			return "left";
-		} else if (leftItem[i] > rightItem[i]) {
+		} else if (leftEdge[i] > rightEdge[i]) {
 			return "right";
 		}
 	}
