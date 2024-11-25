@@ -1,7 +1,4 @@
-function triangleSoup(points, test) {
-	console.log("triangleSoup test:" + test);
-	const triangleCount = points.length - 5; // Number of triangles we can form
-	//let triangleCount = test;
+function triangleSoup(points, triangleCount) {
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	let lower = [];
 	let upper = [];
@@ -67,8 +64,7 @@ function cross(ax, ay, bx, by, ox, oy) {
 	return (ax - ox) * (by - oy) - (ay - oy) * (bx - ox);
 }
 
-function triangulateSoup(triangles) {
-	const triangleCount = triangles.length / 6;
+function triangulateSoup(triangles, triangleCount) {
 	let edges = new Array(triangleCount * 3);
 	ind = 0;
 
