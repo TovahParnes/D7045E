@@ -1,4 +1,4 @@
-function triangleSoup(points, triangleCount) {
+function calcTriangleCoords(points, triangleCount) {
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	let lower = [];
 	let upper = [];
