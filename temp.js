@@ -1,5 +1,4 @@
-function triangleSoup(points) {
-	const triangleCount = points.length - 5; // Number of triangles we can form
+function triangleSoup(points, triangleCount) {
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	let lower = [];
 	let upper = [];
@@ -65,8 +64,7 @@ function cross(ax, ay, bx, by, ox, oy) {
 	return (ax - ox) * (by - oy) - (ay - oy) * (bx - ox);
 }
 
-function triangulateSoup(triangles) {
-	const triangleCount = triangles.length / 6;
+function triangulateSoup(triangles, triangleCount) {
 	let edges = new Array(triangleCount * 3);
 	ind = 0;
 
@@ -105,6 +103,78 @@ function createEdge(x1, y1, x2, y2, pointer) {
 	edge[4] = pointer;
 	return edge;
 }
+/*
+function triangleGraph(edges, triangleCount) {
+	// Initialize graph: each triangle has a list of neighbors
+	let triangleGraph = Array.from({ length: triangleCount }, () => ({
+		neighbors: [],
+	}));
+
+	// Traverse edges to find shared edges between triangles
+	for (let i = 0; i < edges.length; i += 2) {
+		let edge1 = edges[i];
+		let edge2 = edges[i + 1];
+
+		/// Validate that the edges exist and have triangle pointers
+		if (!edge1 || !edge2 || edge1[4] === undefined || edge2[4] === undefined) {
+			console.error(`Invalid edges at index ${i}:`, edge1, edge2);
+			continue; // Skip invalid edges
+		}
+
+		let t1 = edge1[4]; // Pointer to triangle 1
+		let t2 = edge2[4]; // Pointer to triangle 2
+
+		triangleGraph[0].neighbors.push(t1);
+		triangleGraph[t2].neighbors.push(t1);
+
+		if (!triangleGraph[t1].neighbors.includes(t2)) {
+			triangleGraph[t1].neighbors.push(t2);
+		}
+		if (!triangleGraph[t2].neighbors.includes(t1)) {
+			triangleGraph[t2].neighbors.push(t1);
+		}
+	}
+
+	return triangleGraph;
+}*/
+
+function triangleGraph(edges, triangleCount) {
+	// Initialize graph: each triangle has a list of neighbors
+	const triangleGraph = Array.from({ length: triangleCount }, () => []);
+
+	// Traverse edges to find shared edges between triangles
+	for (let i = 0; i < edges.length - 1; i += 1) {
+		let edge1 = edges[i];
+		let edge2 = edges[i + 1];
+
+		if (!equalEdges(edge1, edge2)) {
+			continue;
+		}
+
+		let t1 = edge1[4]; // Pointer to triangle 1
+		let t2 = edge2[4]; // Pointer to triangle 2
+		console.log(edge1, edge2);
+
+		if (t1 < 0 || t1 >= triangleCount || t2 < 0 || t2 >= triangleCount) {
+			console.error(`Invalid triangle index: t1=${t1}, t2=${t2}`);
+			continue; // Skip invalid edges
+		}
+
+		triangleGraph[t1].push(t2);
+		triangleGraph[t2].push(t1);
+	}
+
+	return triangleGraph;
+}
+
+function equalEdges(edge1, edge2) {
+	for (let i = 0; i < 4; i++) {
+		if (edge1[i] != edge2[i]) {
+			return false;
+		}
+	}
+	return true;
+}
 
 function triangulatePoints(points, triangleCount) {
 	console.log("points:" + points);
@@ -114,8 +184,8 @@ function triangulatePoints(points, triangleCount) {
 	console.log("edges:" + edges);
 	edges = mergeSortEdges(edges);
 	console.log("edges:" + edges);
-	//const triangleGraph = triangleGraph(edges, points.length / 2 - 2);
-	//console.log("triangleGraph:" + triangleGraph);
+	const triangleGraph = triangleGraph(edges, points.length / 2 - 2);
+	console.log("triangleGraph:" + triangleGraph);
 
-	//return triangleGraph;
+	return triangleGraph;
 }

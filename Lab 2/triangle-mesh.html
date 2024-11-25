@@ -148,7 +148,7 @@
 					gl.uniform1f(uniformUseUniformColor, 0);
 					gl.enableVertexAttribArray(attributeColor);
 				} else if (coloring == "4coloring") {
-					let edges = triangulateSoup(triangleCoords);
+					let edges = triangulatePoints(triangleCoords, TRIANGLE_COUNT);
 					const green = [0, 1, 0];
 					const blue = [0, 0, 1];
 					const red = [1, 0, 0];
