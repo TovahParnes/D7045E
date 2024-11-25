@@ -147,12 +147,9 @@ function equalEdges(edge1, edge2) {
 	return true;
 }
 
-function triangulatePoints(triangles, triangleCount) {
-	console.log("triangulatePoints triangleCount:" + triangleCount);
+function triangulation(triangles, triangleCount) {
 	let edges = triangulateSoup(triangles, triangleCount);
-	//console.log("edges:" + edges);
 	edges = mergeSortEdges(edges);
-	//console.log("edges:" + edges);
 	let graph = triangleGraph(edges, triangleCount);
 	console.log("triangleGraph:");
 	for (i = 0; i < graph.length; i++) {

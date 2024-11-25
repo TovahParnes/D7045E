@@ -149,26 +149,11 @@
 					gl.uniform1f(uniformUseUniformColor, 0);
 					gl.enableVertexAttribArray(attributeColor);
 				} else if (coloring == "4coloring") {
-					let edges = triangulatePoints(triangleCoords, TRIANGLE_COUNT);
-					const green = [0, 1, 0];
-					const blue = [0, 0, 1];
-					const red = [1, 0, 0];
-					const yellow = [1, 1, 0];
-					const colors = [red, green, blue, yellow];
-
+					let triangleGraph = triangulation(triangleCoords, TRIANGLE_COUNT);
 					let currColor = 0;
+					var colorArray = new Array(TRIANGLE_COUNT);
 
-					/*
-					for (let i = 0; i < edges.length / 3; i++) {
-						for (let j = 0; j < 3; j++) {
-							triangleColors[i * 9 + j] = colors[currColor][j];
-						}
-						currColor = (currColor + 1) % 4;
-					}*/
-					for (let i = 0; i < TRIANGLE_COUNT; i++) {
-						colorTriangle(i, colors[currColor]);
-						currColor = (currColor + 1) % 4;
-					}
+					fourColorTriangles(triangleGraph, 0, colorArray, currColor);
 
 					gl.uniform1f(uniformUseUniformColor, 0);
 					gl.enableVertexAttribArray(attributeColor);
@@ -212,7 +197,42 @@
 				return [px, py];
 			}
 
-			function colorTriangle(triangleInd, color) {
+			function fourColorTriangles(
+				triangleGraph,
+				triangleInd,
+				colorArray,
+				color
+			) {
+				if (colorArray[triangleInd] !== undefined) {
+					return;
+				}
+
+				if (triangleGraph[triangleInd].length == 0) {
+					colorArray[triangleInd] = color;
+					colorTriangle(triangleInd, color);
+					return color;
+				}
+
+				neighborColors = new Array(triangleGraph[triangleInd].length);
+				for (let i = 0; i < triangleGraph[triangleInd].length; i++) {
+					neighborColors[i] = color;
+				}
+
+				for (let i = 0; i < triangleGraph[triangleInd].length; i++) {
+					if (colorArray[triangleGraph[triangleInd][i]] == undefined) {
+						fourColorTriangles(triangleGraph, i, colorArray, color);
+					}
+				}
+			}
+
+			function colorTriangle(triangleInd, colorInd) {
+				const green = [0, 1, 0];
+				const blue = [0, 0, 1];
+				const red = [1, 0, 0];
+				const yellow = [1, 1, 0];
+				const colors = [red, green, blue, yellow];
+				let color = colors[colorInd];
+
 				for (let j = 0; j < 9; j++) {
 					triangleColors[triangleInd * 9 + j] = color[j % 3];
 				}
