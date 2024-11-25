@@ -106,7 +106,7 @@
 				}
 
 				pointCoords = mergeSort(pointCoords);
-				triangleCoords = triangleSoup(pointCoords);
+				triangleCoords = triangleSoup(pointCoords, TRIANGLE_COUNT);
 				console.log(triangleCoords.length / 6);
 			}
 
@@ -394,7 +394,13 @@
 		<p>
 			<label>
 				<b>
-					<input type="range" min="3" max="100" value="4" id="numPointsRange" />
+					<input
+						type="range"
+						min="3"
+						max="100"
+						value="50"
+						id="numPointsRange"
+					/>
 					Value: <span id="numPointsOutput"></span>
 				</b>
 			</label>

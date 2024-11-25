@@ -1,5 +1,7 @@
-function triangleSoup(points) {
+function triangleSoup(points, test) {
+	console.log("triangleSoup test:" + test);
 	const triangleCount = points.length - 5; // Number of triangles we can form
+	//let triangleCount = test;
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	let lower = [];
 	let upper = [];
@@ -125,11 +127,6 @@ function triangleGraph(edges, triangleCount) {
 		let t2 = edge2[4]; // Pointer to triangle 2
 		//console.log(edge1, edge2);
 
-		if (t1 < 0 || t1 >= triangleCount || t2 < 0 || t2 >= triangleCount) {
-			console.error(`Invalid triangle index: t1=${t1}, t2=${t2}`);
-			continue; // Skip invalid edges
-		}
-
 		if (t1 == t2) {
 			continue; // Skip self-edges
 		}
@@ -154,10 +151,8 @@ function equalEdges(edge1, edge2) {
 	return true;
 }
 
-function triangulatePoints(points, triangleCount) {
-	//console.log("points:" + points);
-	let triangles = triangleSoup(points, triangleCount);
-	//console.log("triangles:" + triangles);
+function triangulatePoints(triangles, triangleCount) {
+	console.log("triangulatePoints triangleCount:" + triangleCount);
 	let edges = triangulateSoup(triangles, triangleCount);
 	//console.log("edges:" + edges);
 	edges = mergeSortEdges(edges);
@@ -168,5 +163,5 @@ function triangulatePoints(points, triangleCount) {
 		console.log(i, graph[i]);
 	}
 
-	//return graph;
+	return graph;
 }
