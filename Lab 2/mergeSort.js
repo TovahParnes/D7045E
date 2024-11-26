@@ -1,3 +1,16 @@
+//TIME COMPLEXITY: O(n log n) - divides the array in two halves and takes linear time to merge two halves
+function mergeSort(arr) {
+	// Base case
+	if (arr.length <= 2) return arr;
+	let mid = Math.floor(arr.length / 2);
+	mid = mid % 2 === 0 ? mid : mid + 1;
+	// Recursive calls
+	let left = mergeSort(arr.slice(0, mid));
+	let right = mergeSort(arr.slice(mid));
+	return merge(left, right);
+}
+
+//TIME COMPLEXITY: O(n) - merging to the sorted array takes linear time
 function merge(left, right) {
 	let arr = new Float32Array(left.length + right.length); // the sorted items will go here
 	let i = 0,
@@ -46,17 +59,19 @@ function merge(left, right) {
 	return arr;
 }
 
-function mergeSort(arr) {
-	// Base case
-	if (arr.length <= 2) return arr;
-	let mid = Math.floor(arr.length / 2);
-	mid = mid % 2 === 0 ? mid : mid + 1;
+//TIME COMPLEXITY: O(n log n) - divides the array in two halves and takes linear time to merge two halves,
+//this time a more complex comparison but each comparison is 0(1)
+function mergeSortEdges(arr) {
+	if (arr.length <= 1) return arr; // A single edge is already sorted
+	const mid = Math.floor(arr.length / 2);
+
 	// Recursive calls
-	let left = mergeSort(arr.slice(0, mid));
-	let right = mergeSort(arr.slice(mid));
-	return merge(left, right);
+	const left = mergeSortEdges(arr.slice(0, mid));
+	const right = mergeSortEdges(arr.slice(mid));
+	return mergeEdges(left, right);
 }
 
+//TIME COMPLEXITY: 0(n) - merging to the sorted array takes linear time
 function mergeEdges(left, right) {
 	const arr = []; // Result array
 	let l = 0,
@@ -109,16 +124,7 @@ function mergeEdges(left, right) {
 	return arr;
 }
 
-function mergeSortEdges(arr) {
-	if (arr.length <= 1) return arr; // A single edge is already sorted
-	const mid = Math.floor(arr.length / 2);
-
-	// Recursive calls
-	const left = mergeSortEdges(arr.slice(0, mid));
-	const right = mergeSortEdges(arr.slice(mid));
-	return mergeEdges(left, right);
-}
-
+//TIME COMPLEXITY: 0(1)
 function compareElements(leftEdge, rightEdge) {
 	for (let i = 0; i < 4; i++) {
 		if (leftEdge[i] < rightEdge[i]) {

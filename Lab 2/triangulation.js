@@ -1,3 +1,4 @@
+//TIME COMPLEXITY: O(n) - each point is added to the upper or lower array once, and removed once.
 function calcTriangleCoords(points, triangleCount) {
 	const triangles = new Float32Array(triangleCount * 6); // Each triangle has 3 points (6 coordinates)
 	let lower = [];
@@ -64,6 +65,7 @@ function cross(ax, ay, bx, by, ox, oy) {
 	return (ax - ox) * (by - oy) - (ay - oy) * (bx - ox);
 }
 
+//TIME COMPLEXITY: O(n) - each triangle has 3 edges that get added to the output array once.
 function triangulateSoup(triangles, triangleCount) {
 	let edges = new Array(triangleCount * 3);
 	ind = 0;
@@ -89,6 +91,7 @@ function triangulateSoup(triangles, triangleCount) {
 	return edges;
 }
 
+//TIME COMPLEXITY: O(1) - each edge is created once.
 function createEdge(x1, y1, x2, y2, pointer) {
 	xmin = Math.min(x1, x2);
 	xmax = Math.max(x1, x2);
@@ -104,6 +107,7 @@ function createEdge(x1, y1, x2, y2, pointer) {
 	return edge;
 }
 
+//TIME COMPLEXITY: O(n) - each edge is checked against it's neighbor once.
 function triangleGraph(edges, triangleCount) {
 	// Initialize graph: each triangle has a list of neighbors
 	const triangleGraph = Array.from({ length: triangleCount }, () => []);
@@ -144,6 +148,7 @@ function equalEdges(edge1, edge2) {
 	return true;
 }
 
+//TIME COMPLEXITY: O(n) + 0(n) + 0(n log n) + 0(n) = 0(n log n)
 function triangulation(triangles, triangleCount) {
 	let edges = triangulateSoup(triangles, triangleCount);
 	edges = mergeSortEdges(edges);
