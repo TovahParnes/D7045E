@@ -148,10 +148,6 @@ function triangulation(triangles, triangleCount) {
 	let edges = triangulateSoup(triangles, triangleCount);
 	edges = mergeSortEdges(edges);
 	let graph = triangleGraph(edges, triangleCount);
-	console.log("triangleGraph:");
-	for (i = 0; i < graph.length; i++) {
-		console.log(i, graph[i]);
-	}
 
 	return graph;
 }

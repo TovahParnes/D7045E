@@ -67,7 +67,6 @@
 			function createPointData() {
 				POINT_COUNT = document.getElementById("numPointsRange").value;
 				TRIANGLE_COUNT = 2 * POINT_COUNT - 5;
-				console.log("TRIANGLE_COUNT:" + TRIANGLE_COUNT);
 				pointCoords = new Float32Array(2 * POINT_COUNT);
 				triangleColors = new Float32Array(9 * TRIANGLE_COUNT);
 
@@ -197,7 +196,6 @@
 			function fourColorTriangles(triangleGraph, triangleInd, colorArray) {
 				//save neighbors
 				const neighbors = triangleGraph[triangleInd];
-				console.log("fourColorTriangles: " + triangleInd + ", " + neighbors);
 				//remove self from triangleGraph
 				triangleGraph[triangleInd] = "visited";
 
@@ -208,13 +206,10 @@
 
 				let neighborsColors = [];
 				for (let i = 0; i < neighbors.length; i++) {
-					console.log("triangle: " + neighbors[i]) +
-						", " +
-						triangleGraph[neighbors[i]];
+					//if neighbor has a color, add it to neighborsColors
 					if (colorArray[neighbors[i]] !== undefined) {
 						neighborsColors.push(colorArray[neighbors[i]]);
 					} else {
-						console.log("triangle " + i + " is not visited");
 						let col = fourColorTriangles(
 							triangleGraph,
 							neighbors[i],
