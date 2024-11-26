@@ -219,7 +219,9 @@
 					console.log("triangle: " + neighbors[i]) +
 						", " +
 						triangleGraph[neighbors[i]];
-					if (triangleGraph[neighbors[i]] != "visited") {
+					if (colorArray[neighbors[i]] !== undefined) {
+						neighborsColors.push(colorArray[neighbors[i]]);
+					} else {
 						console.log("triangle " + i + " is not visited");
 						let col = fourColorTriangles(
 							triangleGraph,
@@ -236,8 +238,7 @@
 				// Calculate the color of the current triangle
 				let colors = [0, 1, 2, 3];
 				colors = colors.filter((value) => !neighborsColors.includes(value));
-				//let col = colors[Math.floor(Math.random() * colors.length)];
-				let col = colors[0];
+				let col = colors[Math.floor(Math.random() * colors.length)];
 
 				//color current triangle
 				colorArray[triangleInd] = col;
@@ -274,7 +275,7 @@
 				/* --- Lines --- */
 				gl.disableVertexAttribArray(attributeColor);
 				gl.uniform1f(uniformUseUniformColor, 1);
-				gl.uniform3f(uniformColor, 1, 0, 0);
+				gl.uniform3f(uniformColor, 0, 0, 0); //TODO variable for line color
 				drawTriangleLines();
 
 				/* --- Points --- */
