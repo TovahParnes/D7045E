@@ -205,15 +205,7 @@
 				if (neighbors == "visited") {
 					return colorArray[triangleInd];
 				}
-				//if (neighbors == "visited" || neighbors.length == 0) {
-				if (neighbors.length == 0) {
-					console.log("triangle " + triangleInd + " has no neighbors");
-					colorArray[triangleInd] = 0;
-					colorTriangle(triangleInd, 0);
-					return 0;
-				}
 
-				//neighbors to check
 				let neighborsColors = [];
 				for (let i = 0; i < neighbors.length; i++) {
 					console.log("triangle: " + neighbors[i]) +
