@@ -203,6 +203,61 @@
 				colorArray,
 				color
 			) {
+				//save neighbors
+				const neighbors = triangleGraph[triangleInd];
+				//remove self from triangleGraph
+				triangleGraph[triangleInd] = undefined;
+
+				//if no neighbors, color the triangle
+				if (neighbors == undefined) {
+					colorArray[triangleInd] = 0;
+					colorTriangle(triangleInd, 0);
+					return 0;
+				}
+
+				//neighbors to check
+				let toBeVisited = [];
+				for (let i = 0; i < neighbors.length; i++) {
+					if (triangleGraph[neighbors[i]] != undefined) {
+						toBeVisited.push(neighbors[i]);
+					}
+				}
+
+				let neighborsColors = [];
+				for (let i = 0; i < toBeVisited.length; i++) {
+					//visit neighbor
+					let col = fourColorTriangles(triangleGraph, i, colorArray, 0);
+
+					//save neighbors color
+					colorArray[toBeVisited[i]] = col;
+					neighborsColors.push(colorArray[toBeVisited[i]]);
+				}
+
+				// Calculate the color of the current triangle
+				let colors = [0, 1, 2, 3];
+
+				colors = colors.filter((value) => !neighborsColors.includes(value));
+				let col = colors[Math.floor(Math.random() * colors.length)];
+
+				//color current triangle
+				colorArray[triangleInd] = color;
+				colorTriangle(triangleInd, color);
+				return color;
+
+				/*
+				if (toBeVisited.length == 0) {
+					colorArray[triangleInd] = color;
+					colorTriangle(triangleInd, color);
+				}
+
+				// if all neighbors are visited, color the triangle
+				let neighbors = triangleGraph[triangleInd];
+				for (let i = 0; i < neighbors.length; i++) {
+					if (visitedArray[neighbors[i]] === undefined) {
+						return;
+					}
+				}
+
 				if (colorArray[triangleInd] !== undefined) {
 					return;
 				}
@@ -223,6 +278,7 @@
 						fourColorTriangles(triangleGraph, i, colorArray, color);
 					}
 				}
+				*/
 			}
 
 			function colorTriangle(triangleInd, colorInd) {
