@@ -107,8 +107,6 @@ function createEdge(x1, y1, x2, y2, pointer) {
 function triangleGraph(edges, triangleCount) {
 	// Initialize graph: each triangle has a list of neighbors
 	const triangleGraph = Array.from({ length: triangleCount }, () => []);
-	console.log("triangleCount:" + triangleCount);
-	console.log("triangleGraph length:" + triangleGraph.length);
 
 	// Traverse edges to find shared edges between triangles
 	for (let i = 0; i < edges.length - 1; i += 1) {
@@ -121,7 +119,6 @@ function triangleGraph(edges, triangleCount) {
 
 		let t1 = edge1[4]; // Pointer to triangle 1
 		let t2 = edge2[4]; // Pointer to triangle 2
-		//console.log(edge1, edge2);
 
 		if (t1 == t2) {
 			continue; // Skip self-edges
