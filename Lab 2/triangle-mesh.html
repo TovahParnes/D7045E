@@ -235,6 +235,9 @@
 				//color current triangle
 				colorArray[triangleInd] = col;
 				colorTriangle(triangleInd, col);
+				if (triangleInd === 0) {
+					fourColorCheck(triangleGraph, colorArray);
+				}
 				return col;
 			}
 
@@ -248,6 +251,20 @@
 
 				for (let j = 0; j < 9; j++) {
 					triangleColors[triangleInd * 9 + j] = color[j % 3];
+				}
+			}
+
+			function fourColorCheck(triangleGraph, colorArray) {
+				for (let i = 0; i < triangleGraph.length; i++) {
+					let neighborColors = [];
+					for (let j = 0; j < triangleGraph[i].length; j++) {
+						neighborColors.push(colorArray[triangleGraph[i][j]]);
+					}
+					if (neighborColors.includes(colorArray[i])) {
+						throw new Error(
+							"Neighboring triangles cannot share the same color"
+						);
+					}
 				}
 			}
 
