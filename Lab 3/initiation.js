@@ -2,35 +2,49 @@ let canvas; // The canvas where WebGL draws.
 let gl; // The WebGL graphics context.
 
 function init() {
-	try {
-		canvas = document.getElementById("webglcanvas");
-		let options = {
-			// no need for alpha channel in this program
-			alpha: false,
-		};
-		gl = canvas.getContext("webgl", options);
-		// (Note: this page would work with "webgl2", with no further modification.)
-		if (!gl) {
-			throw "Browser does not support WebGL";
-		}
-	} catch (e) {
-		document.getElementById("canvas-holder").innerHTML =
-			"<p>Sorry, could not get a WebGL graphics context.</p>";
-		return;
-	}
-	try {
-		initGL(); // initialize the WebGL graphics context
-	} catch (e) {
-		document.getElementById("canvas-holder").innerHTML =
-			"<p>Sorry, could not initialize the WebGL graphics context: " +
-			e +
-			"</p>";
-		return;
-	}
+	canvas = document.getElementById("webglcanvas");
+	gl = canvas.getContext("webgl2");
+
+	vertexShader = new Shader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+	fragmentShader = new Shader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+	program = new ShaderProgram(
+		gl,
+		vertexShader.getShader(),
+		fragmentShader.getShader()
+	);
+
+	gl.clearColor(1, 0, 0, 1); // specify the color to be used for clearing
+	gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
 function initGL(gl) {
-	//vertexShader = new Shader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+	vertexShader = new Shader(gl, "vertex", vertexShaderSource);
+	fragmentShader = new Shader(gl, "fragment", fragmentShaderSource);
+	program = new ShaderProgram(
+		gl,
+		vertexshader.getShader(),
+		fragmentShader.getShader()
+	);
+
+	/*
+	let prog = createProgram(gl, vertexShaderSource, fragmentShaderSource);
+	gl.useProgram(prog);
+	attributeCoords = gl.getAttribLocation(prog, "a_coords");
+	bufferCoords = gl.createBuffer();
+	attributeColor = gl.getAttribLocation(prog, "a_color");
+	bufferColor = gl.createBuffer();
+	uniformHeight = gl.getUniformLocation(prog, "u_height");
+	uniformWidth = gl.getUniformLocation(prog, "u_width");
+	gl.uniform1f(uniformHeight, canvas.height);
+	gl.uniform1f(uniformWidth, canvas.width);
+	uniformPointsize = gl.getUniformLocation(prog, "u_pointsize");
+	uniformColor = gl.getUniformLocation(prog, "u_color");
+	uniformUseUniformColor = gl.getUniformLocation(prog, "u_useUniformColor");
+	createPointData();
+	gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
+	gl.bufferData(gl.ARRAY_BUFFER, triangleColors, gl.STREAM_DRAW);
+	gl.vertexAttribPointer(attributeColor, 3, gl.FLOAT, false, 0, 0);
+	*/
 }
 
 const vertexShaderSource =
