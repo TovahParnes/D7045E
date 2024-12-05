@@ -5,9 +5,8 @@ function init() {
 	try {
 		canvas = document.getElementById("webglcanvas");
 		let options = {
-			// no need for alpha channel or depth buffer in this program
+			// no need for alpha channel in this program
 			alpha: false,
-			depth: false,
 		};
 		gl = canvas.getContext("webgl", options);
 		// (Note: this page would work with "webgl2", with no further modification.)
@@ -28,20 +27,6 @@ function init() {
 			"</p>";
 		return;
 	}
-
-	document.getElementById("numPointsRange").onchange = function () {
-		getNumPoints();
-		createPointData();
-		draw();
-	};
-
-	document.getElementById("coloring").onchange = function () {
-		colorTriangles();
-		draw();
-	};
-
-	getNumPoints();
-	draw();
 }
 
 function initGL(gl) {
