@@ -5,11 +5,95 @@
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Lab 3 - The Creation of a New World</title>
-		<script src="main.ts"></script>
-		<script src="shader.ts"></script>
+		<title>Lab3 - The Creation of a New World</title>
+		<script src="initiation.ts"></script>
+		<!--<script src="shader.ts"></script>
 		<script src="resources.ts"></script>
-		<script src="camera.ts"></script>
+		<script src="camera.ts"></script> -->
+
+		<script>
+			"use strict";
+
+			/*
+			const vertexShaderSource =
+				"attribute vec2 a_coords;\n" +
+				"attribute vec3 a_color;\n" +
+				"varying vec3 v_color;\n" +
+				"uniform float u_pointsize;\n" +
+				"uniform float u_width;\n" +
+				"uniform float u_height;\n" +
+				"void main() {\n" +
+				"   float x = -1.0 + 2.0*(a_coords.x / u_width);\n" +
+				"   float y = 1.0 - 2.0*(a_coords.y / u_height);\n" +
+				"   gl_Position = vec4(x, y, 0.0, 1.0);\n" +
+				"   v_color = a_color;\n" +
+				"   gl_PointSize = u_pointsize;\n" +
+				"}\n";
+
+			const fragmentShaderSource =
+				"precision mediump float;\n" +
+				"varying vec3 v_color;\n" +
+				"uniform vec3 u_color;\n" +
+				"uniform bool u_useUniformColor;\n" +
+				"void main() {\n" +
+				"	vec3 finalColor = u_useUniformColor ? u_color : v_color; \n" +
+				"   gl_FragColor = vec4(finalColor, 1.0);\n" +
+				"}\n";
+
+			function init() {
+				try {
+					canvas = document.getElementById("webglcanvas");
+					let options = {
+						// no need for alpha channel or depth buffer in this program
+						alpha: false,
+						depth: false,
+					};
+					gl = canvas.getContext("webgl", options);
+					// (Note: this page would work with "webgl2", with no further modification.)
+					if (!gl) {
+						throw "Browser does not support WebGL";
+					}
+				} catch (e) {
+					document.getElementById("canvas-holder").innerHTML =
+						"<p>Sorry, could not get a WebGL graphics context.</p>";
+					return;
+				}
+				try {
+					initGL(); // initialize the WebGL graphics context
+				} catch (e) {
+					document.getElementById("canvas-holder").innerHTML =
+						"<p>Sorry, could not initialize the WebGL graphics context: " +
+						e +
+						"</p>";
+					return;
+				}
+			}
+
+			function initGL() {
+				let prog = createProgram(gl, vertexShaderSource, fragmentShaderSource);
+				gl.useProgram(prog);
+				attributeCoords = gl.getAttribLocation(prog, "a_coords");
+				bufferCoords = gl.createBuffer();
+				attributeColor = gl.getAttribLocation(prog, "a_color");
+				bufferColor = gl.createBuffer();
+				uniformHeight = gl.getUniformLocation(prog, "u_height");
+				uniformWidth = gl.getUniformLocation(prog, "u_width");
+				gl.uniform1f(uniformHeight, canvas.height);
+				gl.uniform1f(uniformWidth, canvas.width);
+				uniformPointsize = gl.getUniformLocation(prog, "u_pointsize");
+				uniformColor = gl.getUniformLocation(prog, "u_color");
+				uniformUseUniformColor = gl.getUniformLocation(
+					prog,
+					"u_useUniformColor"
+				);
+				createPointData();
+				gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
+				gl.bufferData(gl.ARRAY_BUFFER, triangleColors, gl.STREAM_DRAW);
+				gl.vertexAttribPointer(attributeColor, 3, gl.FLOAT, false, 0, 0);
+			}*/
+
+			window.onload = init();
+		</script>
 	</head>
 	<body>
 		<h2>Lab 3 - The Creation of a New World</h2>

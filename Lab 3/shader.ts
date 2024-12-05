@@ -1,42 +1,55 @@
 class Shader {
 	shaderHandle: GLuint;
-	constructor(gl, shaderType, sourceCode) {}
+	type: number;
+	constructor(gl, shaderType, sourceCode) {
+		if (shaderType == gl.VERTEX_SHADER) {
+			this.shaderHandle = gl.createShader(gl.VERTEX_SHADER);
+			this.type = 0;
+		} else if (shaderType == gl.FRAGMENT_SHADER) {
+			this.shaderHandle = gl.createShader(gl.FRAGMENT_SHADER);
+			this.type = 1;
+		} else {
+			throw new Error("Invalid shader type");
+		}
+		gl.shaderSource(this.shaderHandle, sourceCode);
+		gl.compileShader(this.shaderHandle);
+		if (!gl.getShaderParameter(this.shaderHandle, gl.COMPILE_STATUS)) {
+			throw new Error(
+				"Error in vertex shader:  " + gl.getShaderInfoLog(this.shaderHandle)
+			);
+		}
+	}
 
-	getShader() {}
+	getShader() {
+		return this.shaderHandle;
+	}
 
 	getShaderType() {
 		//return shader type as enum
-	}
-}
-
-//maybe do this? not quite what is asked for in the lab
-class vertexShader extends Shader {
-	constructor(gl) {
-		const sourceCode =
-			"attribute vec2 a_coords;\n" +
-			"attribute vec3 a_color;\n" +
-			"varying vec3 v_color;\n" +
-			"uniform float u_pointsize;\n" +
-			"uniform float u_width;\n" +
-			"uniform float u_height;\n" +
-			"void main() {\n" +
-			"   float x = -1.0 + 2.0*(a_coords.x / u_width);\n" +
-			"   float y = 1.0 - 2.0*(a_coords.y / u_height);\n" +
-			"   gl_Position = vec4(x, y, 0.0, 1.0);\n" +
-			"   v_color = a_color;\n" +
-			"   gl_PointSize = u_pointsize;\n" +
-			"}\n";
-		super(gl, 0, sourceCode);
+		return this.type;
 	}
 }
 
 class ShaderProgram {
 	shaders: Shader[];
 	program: GLuint;
-	constructor(gl, vertexShader, fragmentShader) {}
+	constructor(gl, vsh, fsh) {
+		this.program = gl.createProgram();
+		this.shaders = [vsh, fsh];
+		gl.attachShader(this.program, vsh);
+		gl.attachShader(this.program, fsh);
 
-	activate() {
+		//maybe not use this here?
+		gl.linkProgram(this.program);
+		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+			throw new Error(
+				"Link error in program:  " + gl.getProgramInfoLog(this.program)
+			);
+		}
+	}
+
+	activate(gl) {
 		//activate the shader program
-		//glUseProgram(this.program);
+		gl.UseProgram(this.program);
 	}
 }
