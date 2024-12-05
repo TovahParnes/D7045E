@@ -1,7 +1,7 @@
 class Mesh {
-	vertexBufferObject: GLuint;
-	indexBufferObject: GLuint;
-	vertexArrayObject: GLuint;
+	//vertexBufferObject: GLuint;
+	//indexBufferObject: GLuint;
+	//vertexArrayObject: GLuint;
 	constructor(gl, vertices, normals, texCoords, indices) {}
 }
 
@@ -11,37 +11,39 @@ class Cuboid extends Mesh {
 		super(0, 0, 0, 0, 0);
 	}
 
-	draw(shaderProgram): void {
+	draw(shaderProgram) {
 		//draw the mesh
 	}
 }
-
-abstract class Material {
-	prog: ShaderProgram;
+//abstract class
+class Material {
+	//prog: ShaderProgram;
 	constructor(gl, shaderProgram) {
 		this.prog = shaderProgram;
 	}
 
-	abstract ApplyMaterial(): void;
+	applyMaterial() {
+		throw new Error("not yet implemented");
+	}
 }
 
 class MonoMaterial extends Material {
-	color: GLfloat[];
+	//color: GLfloat[];
 	//color: GLfloat[3];
 	constructor(gl, shaderProgram, color) {
 		super(gl, shaderProgram);
 		this.color = color;
 	}
 
-	ApplyMaterial() {
+	applyMaterial() {
 		//apply material
 		//color as uniform
 	}
 }
 
 class GraphicsNode {
-	mesh: Mesh;
-	material: Material;
+	//mesh: Mesh;
+	//material: Material;
 	//transform: vec4matrixs;
 	constructor(gl, mesh, material, transform) {
 		this.mesh = mesh;

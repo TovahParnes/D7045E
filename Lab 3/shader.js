@@ -1,6 +1,6 @@
 class Shader {
-	shaderHandle: GLuint;
-	type: number;
+	//shaderHandle: GLuint;
+	//type: number;
 	constructor(gl, shaderType, sourceCode) {
 		if (shaderType == gl.VERTEX_SHADER) {
 			this.shaderHandle = gl.createShader(gl.VERTEX_SHADER);
@@ -31,8 +31,8 @@ class Shader {
 }
 
 class ShaderProgram {
-	shaders: Shader[];
-	program: GLuint;
+	//shaders: Shader[];
+	//program: GLuint;
 	constructor(gl, vsh, fsh) {
 		this.program = gl.createProgram();
 		this.shaders = [vsh, fsh];
