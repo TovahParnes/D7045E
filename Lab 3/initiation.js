@@ -1,9 +1,19 @@
 let canvas; // The canvas where WebGL draws.
 let gl; // The WebGL graphics context.
 
+let uniformWidth;
+let uniformHeight;
+let uniformColor;
+
+let attributeCoords;
+let bufferCoords;
+
 function init() {
 	canvas = document.getElementById("webglcanvas");
 	gl = canvas.getContext("webgl2");
+	if (!gl) {
+		throw "Browser does not support WebGL";
+	}
 
 	vertexShader = new Shader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 	fragmentShader = new Shader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -13,38 +23,21 @@ function init() {
 		fragmentShader.getShader()
 	);
 
+	gl.viewport(0, 0, canvas.width, canvas.height);
 	gl.clearColor(1, 0, 0, 1); // specify the color to be used for clearing
 	gl.clear(gl.COLOR_BUFFER_BIT);
-}
 
-function initGL(gl) {
-	vertexShader = new Shader(gl, "vertex", vertexShaderSource);
-	fragmentShader = new Shader(gl, "fragment", fragmentShaderSource);
-	program = new ShaderProgram(
-		gl,
-		vertexshader.getShader(),
-		fragmentShader.getShader()
-	);
+	//Binding buffers here
 
-	/*
-	let prog = createProgram(gl, vertexShaderSource, fragmentShaderSource);
-	gl.useProgram(prog);
-	attributeCoords = gl.getAttribLocation(prog, "a_coords");
-	bufferCoords = gl.createBuffer();
-	attributeColor = gl.getAttribLocation(prog, "a_color");
-	bufferColor = gl.createBuffer();
-	uniformHeight = gl.getUniformLocation(prog, "u_height");
-	uniformWidth = gl.getUniformLocation(prog, "u_width");
-	gl.uniform1f(uniformHeight, canvas.height);
-	gl.uniform1f(uniformWidth, canvas.width);
-	uniformPointsize = gl.getUniformLocation(prog, "u_pointsize");
-	uniformColor = gl.getUniformLocation(prog, "u_color");
-	uniformUseUniformColor = gl.getUniformLocation(prog, "u_useUniformColor");
-	createPointData();
-	gl.bindBuffer(gl.ARRAY_BUFFER, bufferColor);
-	gl.bufferData(gl.ARRAY_BUFFER, triangleColors, gl.STREAM_DRAW);
-	gl.vertexAttribPointer(attributeColor, 3, gl.FLOAT, false, 0, 0);
-	*/
+	document.getElementById("xButton").onclick = function () {
+		axis = xAxis;
+	};
+	document.getElementById("yButton").onclick = function () {
+		axis = yAxis;
+	};
+	document.getElementById("zButton").onclick = function () {
+		axis = zAxis;
+	};
 }
 
 const vertexShaderSource =
