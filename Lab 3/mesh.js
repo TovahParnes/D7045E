@@ -4,6 +4,9 @@ class Mesh {
 	//vertexArrayObject: GLuint;
 	constructor(gl, vertices, indices, shaderProgram) {
 		this.gl = gl;
+		this.indicesLength = vertices.length;
+		this.verticesLength = vertices.length;
+
 		this.vertexArray = gl.createVertexArray();
 		gl.bindVertexArray(this.vertexArray);
 
@@ -32,6 +35,14 @@ class Mesh {
 			0
 		);
 		this.gl.enableVertexAttribArray(this.vertexPosition);
+	}
+
+	getIndicesLength() {
+		return this.indicesLength;
+	}
+
+	getVertices() {
+		return this.verticesLength;
 	}
 
 	//DRAWING:

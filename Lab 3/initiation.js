@@ -5,7 +5,24 @@ let shaderProgram;
 
 let nodes = [];
 let playerNode;
-let playerNodeTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
+let playerNodeTransform = new mat4(
+	1,
+	0,
+	0,
+	0,
+	0,
+	1,
+	0,
+	0,
+	0,
+	0,
+	1,
+	5,
+	0,
+	0,
+	0,
+	1
+);
 const minSize = 0.1;
 const maxSize = 0.6;
 const numCubes = 10;
