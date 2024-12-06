@@ -1,12 +1,11 @@
 let canvas; // The canvas where WebGL draws.
 let gl; // The WebGL graphics context.
+let camera;
+let shaderProgram;
 
-let uniformWidth;
-let uniformHeight;
-let uniformColor;
-
-let attributeCoords;
-let bufferCoords;
+let nodes = [];
+let playerNode;
+let playerNodeTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
 
 function init() {
 	canvas = document.getElementById("webglcanvas");
@@ -28,7 +27,7 @@ function init() {
 		fragmentShader.getShader()
 	);
 
-	//Binding buffers here
+	let cube = new Cuboid(gl, 0.1, 0.1, 0.1);
 }
 
 const vertexShaderSource =
