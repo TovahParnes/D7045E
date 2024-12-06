@@ -2,6 +2,7 @@
 class Material {
 	//prog: ShaderProgram;
 	constructor(gl, shaderProgram) {
+		this.gl = gl;
 		this.prog = shaderProgram;
 	}
 
@@ -16,10 +17,16 @@ class MonoMaterial extends Material {
 	constructor(gl, shaderProgram, color) {
 		super(gl, shaderProgram);
 		this.color = color;
+		this.fragColorLocation;
 	}
 
 	applyMaterial() {
-		//apply material
-		//color as uniform
+		this.fragColorLocation = this.gl.getUniformLocation(
+			this.prog,
+			"uFragColor"
+		);
+		this.gl.uniform4fv(this.fragColorLocation, this.color);
+
+		//TODO: update color to show depth
 	}
 }
