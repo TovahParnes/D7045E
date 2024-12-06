@@ -15,6 +15,11 @@ function init() {
 		throw "Browser does not support WebGL";
 	}
 
+	gl.viewport(0, 0, canvas.width, canvas.height);
+	gl.clearColor(0.8, 0.8, 0.8, 1);
+	gl.clear(gl.COLOR_BUFFER_BIT);
+	gl.enable(gl.DEPTH_TEST);
+
 	vertexShader = new Shader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 	fragmentShader = new Shader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 	program = new ShaderProgram(
@@ -23,21 +28,7 @@ function init() {
 		fragmentShader.getShader()
 	);
 
-	gl.viewport(0, 0, canvas.width, canvas.height);
-	gl.clearColor(1, 0, 0, 1); // specify the color to be used for clearing
-	gl.clear(gl.COLOR_BUFFER_BIT);
-
 	//Binding buffers here
-
-	document.getElementById("xButton").onclick = function () {
-		axis = xAxis;
-	};
-	document.getElementById("yButton").onclick = function () {
-		axis = yAxis;
-	};
-	document.getElementById("zButton").onclick = function () {
-		axis = zAxis;
-	};
 }
 
 const vertexShaderSource =
