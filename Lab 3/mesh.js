@@ -55,7 +55,7 @@ class Mesh {
 }
 
 class Cuboid extends Mesh {
-	constructor(gl, width, height, depth) {
+	constructor(gl, width, height, depth, shaderProgram) {
 		const x = width / 2;
 		const y = height / 2;
 		const z = depth / 2;
@@ -75,6 +75,6 @@ class Cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		super(gl, vertices, indices);
+		super(gl, vertices, indices, shaderProgram);
 	}
 }

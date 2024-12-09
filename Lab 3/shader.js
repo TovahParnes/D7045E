@@ -1,7 +1,7 @@
 class Shader {
 	//shaderHandle: GLuint;
 	//type: number;
-	constructor(gl, shaderType, sourceCode) {
+	constructor(gl, shaderType, source) {
 		if (shaderType == gl.VERTEX_SHADER) {
 			this.type = 0;
 		} else if (shaderType == gl.FRAGMENT_SHADER) {
@@ -10,7 +10,7 @@ class Shader {
 			throw new Error("Invalid shader type");
 		}
 		this.shaderHandle = gl.createShader(shaderType);
-		gl.shaderSource(this.shaderHandle, sourceCode);
+		gl.shaderSource(this.shaderHandle, document.getElementById(source).text);
 		gl.compileShader(this.shaderHandle);
 
 		if (!gl.getShaderParameter(this.shaderHandle, gl.COMPILE_STATUS)) {
