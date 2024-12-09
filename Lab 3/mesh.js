@@ -56,9 +56,9 @@ class Mesh {
 
 class Cuboid extends Mesh {
 	constructor(gl, width, height, depth) {
-		x = width / 2;
-		y = height / 2;
-		z = depth / 2;
+		const x = width / 2;
+		const y = height / 2;
+		const z = depth / 2;
 
 		const vertices = [
 			vec4(-x, -y, z, 1),

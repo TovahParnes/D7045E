@@ -1,3 +1,4 @@
+"use strict";
 class GraphicsNode {
 	//mesh: Mesh;
 	//material: Material;
@@ -23,6 +24,7 @@ class GraphicsNode {
 
 	update(mat) {
 		//multiply transform by mat
-		this.transform = mat * this.transform;
+		//this.transform = mat * this.transform;
+		mat4.multiply(this.transform, this.transform, mat);
 	}
 }
