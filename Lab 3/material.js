@@ -13,7 +13,7 @@ class Material {
 
 class MonoMaterial extends Material {
 	//color: GLfloat[];
-	//color: GLfloat[3];
+	//color: GLfloat[4];
 	constructor(gl, shaderProgram, color) {
 		super(gl, shaderProgram);
 		this.color = color;

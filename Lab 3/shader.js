@@ -43,7 +43,7 @@ class ShaderProgram {
 
 	activate() {
 		//activate the shader program
-		this.gl.UseProgram(this.program);
+		this.gl.useProgram(this.program);
 	}
 
 	getProgram() {

@@ -22,16 +22,29 @@ function init() {
 
 	gl.viewport(0, 0, canvas.width, canvas.height);
 	gl.clearColor(0.8, 0.8, 0.8, 1);
-	gl.clear(gl.COLOR_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
 
 	const vertexShader = new Shader(gl, gl.VERTEX_SHADER, "vertex-shader");
 	const fragmentShader = new Shader(gl, gl.FRAGMENT_SHADER, "fragment-shader");
-	const program = new ShaderProgram(
+	shaderProgram = new ShaderProgram(
 		gl,
 		vertexShader.getShader(),
 		fragmentShader.getShader()
 	);
 
-	let cube = new Cuboid(gl, 0.1, 0.1, 0.1, program.getProgram());
+	let cube = new Cuboid(gl, 0.1, 0.1, 0.1, shaderProgram.getProgram());
+	let greenMaterial = new MonoMaterial(
+		gl,
+		shaderProgram.getProgram(),
+		[0, 1, 0, 1]
+	);
+	playerNode = new GraphicsNode(gl, cube, greenMaterial, playerNodeTransform1);
+
+	render();
+}
+
+function render() {
+	gl.clear(gl.COLOR_BUFFER_BIT);
+	shaderProgram.activate();
+	playerNode.draw();
 }
