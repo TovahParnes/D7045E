@@ -32,6 +32,8 @@ function init() {
 		fragmentShader.getShader()
 	);
 
+	camera = new Camera(gl, shaderProgram.getProgram());
+
 	let cube = new Cuboid(gl, 0.1, 0.1, 0.1, shaderProgram.getProgram());
 	let greenMaterial = new MonoMaterial(
 		gl,

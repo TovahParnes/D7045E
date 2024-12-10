@@ -13,7 +13,7 @@ class GraphicsNode {
 	draw() {
 		//draw mesh
 		this.material.applyMaterial();
-		//graw call to gl
+		//draw call to gl
 		this.gl.drawElements(
 			this.gl.indices,
 			this.mesh.getIndicesLength(),

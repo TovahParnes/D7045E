@@ -44,14 +44,6 @@ class Mesh {
 	getVertices() {
 		return this.verticesLength;
 	}
-
-	//DRAWING:
-	/*
-    gl.bindVertexArray(vao);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo); // Rebind EBO since it's part of VAO state
-    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
-    gl.bindVertexArray(null);
-    */
 }
 
 class Cuboid extends Mesh {
