@@ -12,11 +12,19 @@ class Camera {
 
 		this.projectionMatrix = perspective(fov, aspect, near, far);
 
-		let eye = vec3(0, 0, 5); // Camera position
-		let at = vec3(0, 0, 0); // Point the camera looks at
-		let up = vec3(0, 1, 0); // Up direction for the camera
+		//let eye = vec3(0, 0, 5); // Camera position
+		this.radius = 10;
+		this.theta = 0.0;
+		this.eye = vec3(
+			this.radius * Math.sin(this.theta) * Math.cos(Math.PI),
+			this.radius * Math.sin(this.theta) * Math.sin(Math.PI),
+			this.radius * Math.cos(this.theta)
+		);
 
-		this.viewMatrix = lookAt(eye, at, up);
+		let at = vec3(0.0, 0.0, 0.0); // Point the camera looks at
+		let up = vec3(0.0, 1.0, 0.0); // Up direction for the camera
+
+		this.viewMatrix = lookAt(this.eye, at, up);
 	}
 
 	activate() {
@@ -24,12 +32,16 @@ class Camera {
 			this.shaderProgram,
 			"projectionMatrix"
 		);
-		this.gl.uniformMatrix4fv(projectionMatrix, false, this.projectionMatrix);
+		this.gl.uniformMatrix4fv(
+			projectionMatrix,
+			false,
+			flatten(this.projectionMatrix)
+		);
 
 		let viewMatrix = this.gl.getUniformLocation(
 			this.shaderProgram,
 			"viewMatrix"
 		);
-		this.gl.uniformMatrix4fv(viewMatrix, false, this.viewMatrix);
+		this.gl.uniformMatrix4fv(viewMatrix, false, flatten(this.viewMatrix));
 	}
 }

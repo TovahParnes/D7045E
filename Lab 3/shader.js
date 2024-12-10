@@ -11,6 +11,7 @@ class Shader {
 		} else {
 			throw new Error("Invalid shader type");
 		}
+
 		this.shaderHandle = gl.createShader(shaderType);
 		gl.shaderSource(this.shaderHandle, document.getElementById(source).text);
 		gl.compileShader(this.shaderHandle);

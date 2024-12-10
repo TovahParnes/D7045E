@@ -36,15 +36,15 @@ function init() {
 	let greenMaterial = new MonoMaterial(
 		gl,
 		shaderProgram.getProgram(),
-		[0, 1, 0, 1]
+		vec4(0, 1, 0, 1.0)
 	);
 	let redMaterial = new MonoMaterial(
 		gl,
 		shaderProgram.getProgram(),
-		[1, 0, 0, 1]
+		vec4(1, 0, 0, 1.0)
 	);
 
-	let cube = new Cuboid(gl, 0.1, 0.1, 0.1, shaderProgram.getProgram());
+	let cube = new Cuboid(gl, 0.5, 0.5, 0.5, shaderProgram.getProgram());
 	playerObject = new GraphicsNode(gl, cube, greenMaterial, playerTransform);
 
 	var max = 10;
@@ -52,18 +52,11 @@ function init() {
 	var maxZ = 10;
 	var minZ = -40;
 	for (let i = 0; i < numCubes; i++) {
-		let backgroundCube = new Cuboid(
-			gl,
-			0.1,
-			0.1,
-			0.1,
-			shaderProgram.getProgram()
-		);
 		var x = Math.floor(Math.random() * (max - min)) + min;
 		var y = Math.floor(Math.random() * (max - min)) + min;
 		var z = Math.floor(Math.random() * (maxZ - minZ)) + minZ;
 		var transform = mat4(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
-		objects.push(new GraphicsNode(gl, backgroundCube, redMaterial, transform));
+		objects.push(new GraphicsNode(gl, cube, redMaterial, transform));
 	}
 
 	window.addEventListener("keydown", handleKeyPress);
@@ -71,9 +64,13 @@ function init() {
 }
 
 function render() {
-	gl.clear(gl.COLOR_BUFFER_BIT);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	shaderProgram.activate();
 	playerObject.draw(shaderProgram.getProgram());
+
+	for (var i = 0; i < numCubes; i++) {
+		objects[i].draw(shaderProgram.getProgram());
+	}
 
 	requestAnimationFrame(render);
 }

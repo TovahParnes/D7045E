@@ -19,7 +19,6 @@ class MonoMaterial extends Material {
 	constructor(gl, shaderProgram, color) {
 		super(gl, shaderProgram);
 		this.color = color;
-		this.fragColorLocation;
 	}
 
 	applyMaterial() {
@@ -27,7 +26,7 @@ class MonoMaterial extends Material {
 			this.prog,
 			"uFragColor"
 		);
-		this.gl.uniform4fv(this.fragColorLocation, this.color);
+		this.gl.uniform4fv(this.fragColorLocation, flatten(this.color));
 
 		//TODO: update color to show depth
 	}
