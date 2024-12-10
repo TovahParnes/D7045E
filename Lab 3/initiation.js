@@ -4,9 +4,9 @@ let gl; // The WebGL graphics context.
 let camera;
 let shaderProgram;
 
-let nodes = [];
-let playerNode;
-let playerNodeTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
+let objects = [];
+let playerObject;
+var playerTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
 
 const minSize = 0.1;
 const maxSize = 0.6;
@@ -33,13 +33,38 @@ function init() {
 
 	camera = new Camera(gl, shaderProgram.getProgram());
 
-	let cube = new Cuboid(gl, 0.1, 0.1, 0.1, shaderProgram.getProgram());
 	let greenMaterial = new MonoMaterial(
 		gl,
 		shaderProgram.getProgram(),
 		[0, 1, 0, 1]
 	);
-	playerNode = new GraphicsNode(gl, cube, greenMaterial, playerNodeTransform);
+	let redMaterial = new MonoMaterial(
+		gl,
+		shaderProgram.getProgram(),
+		[1, 0, 0, 1]
+	);
+
+	let cube = new Cuboid(gl, 0.1, 0.1, 0.1, shaderProgram.getProgram());
+	playerObject = new GraphicsNode(gl, cube, greenMaterial, playerTransform);
+
+	var max = 10;
+	var min = -10;
+	var maxZ = 10;
+	var minZ = -40;
+	for (let i = 0; i < numCubes; i++) {
+		let backgroundCube = new Cuboid(
+			gl,
+			0.1,
+			0.1,
+			0.1,
+			shaderProgram.getProgram()
+		);
+		var x = Math.floor(Math.random() * (max - min)) + min;
+		var y = Math.floor(Math.random() * (max - min)) + min;
+		var z = Math.floor(Math.random() * (maxZ - minZ)) + minZ;
+		var transform = mat4(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
+		objects.push(new GraphicsNode(gl, backgroundCube, redMaterial, transform));
+	}
 
 	window.addEventListener("keydown", handleKeyPress);
 	render();
@@ -48,7 +73,7 @@ function init() {
 function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	shaderProgram.activate();
-	playerNode.draw(shaderProgram.getProgram());
+	playerObject.draw(shaderProgram.getProgram());
 
 	requestAnimationFrame(render);
 }
@@ -71,5 +96,5 @@ function handleKeyPress(event) {
 
 	// Update the player node's transform
 	const moveMatrix = translate(translation);
-	playerNode.update(moveMatrix);
+	playerObject.update(moveMatrix);
 }
