@@ -13,7 +13,7 @@ const maxSize = 0.6;
 const numCubes = 10;
 
 function init() {
-	canvas = document.getElementById("webglcanvas");
+	canvas = document.getElementById("gl-canvas");
 	gl = canvas.getContext("webgl2");
 	if (!gl) {
 		throw "Browser does not support WebGL";
