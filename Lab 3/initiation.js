@@ -6,8 +6,7 @@ let shaderProgram;
 
 let nodes = [];
 let playerNode;
-let playerNodeTransform1 = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
-//let playerNodeTransform = mat4.create();
+let playerNodeTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
 
 const minSize = 0.1;
 const maxSize = 0.6;
@@ -40,13 +39,37 @@ function init() {
 		shaderProgram.getProgram(),
 		[0, 1, 0, 1]
 	);
-	playerNode = new GraphicsNode(gl, cube, greenMaterial, playerNodeTransform1);
+	playerNode = new GraphicsNode(gl, cube, greenMaterial, playerNodeTransform);
 
+	window.addEventListener("keydown", handleKeyPress);
 	render();
 }
 
 function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	shaderProgram.activate();
-	playerNode.draw();
+	playerNode.draw(shaderProgram.getProgram());
+
+	requestAnimationFrame(render);
+}
+
+function handleKeyPress(event) {
+	let translation = vec3(0, 0, 0);
+	if (event.key === "w") {
+		translation[1] += 0.1; // Move up
+	} else if (event.key === "s") {
+		translation[1] -= 0.1; // Move down
+	} else if (event.key === "a") {
+		translation[0] -= 0.1; // Move left
+	} else if (event.key === "d") {
+		translation[0] += 0.1; // Move right
+	} else if (event.key === "e") {
+		translation[2] += 0.1; // Move forward
+	} else if (event.key === "c") {
+		translation[2] -= 0.1; // Move backward
+	}
+
+	// Update the player node's transform
+	const moveMatrix = translate(translation);
+	playerNode.update(moveMatrix);
 }

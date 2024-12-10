@@ -1,3 +1,5 @@
+"use strict";
+
 //abstract class
 class Material {
 	//prog: ShaderProgram;

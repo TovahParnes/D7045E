@@ -1,3 +1,5 @@
+"use strict";
+
 class Camera {
 	constructor(gl, shaderProgram) {
 		this.gl = gl;

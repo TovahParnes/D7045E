@@ -10,12 +10,20 @@ class GraphicsNode {
 		this.transform = transform;
 	}
 
-	draw() {
+	draw(shaderProgram) {
 		//draw mesh
 		this.material.applyMaterial();
+
+		let transformMatrix = this.gl.getUniformLocation(
+			shaderProgram,
+			"transformMatrix"
+		);
+		let flattenedtransformMatrix = flatten(this.transform);
+		this.gl.uniformMatrix4fv(transformMatrix, false, flattenedtransformMatrix);
+
 		//draw call to gl
 		this.gl.drawElements(
-			this.gl.indices,
+			this.gl.TRIANGLES,
 			this.mesh.getIndicesLength(),
 			this.gl.UNSIGNED_BYTE,
 			0
@@ -23,8 +31,6 @@ class GraphicsNode {
 	}
 
 	update(mat) {
-		//multiply transform by mat
-		//this.transform = mat * this.transform;
-		mat4.multiply(this.transform, this.transform, mat);
+		this.transform = mult(this.transform, mat);
 	}
 }

@@ -21,13 +21,13 @@
 
 		<script id="vertex-shader" type="x-shader/x-vertex">
 			attribute vec4 vertexPosition;
-			uniform mat4 transfMatrix;
+			uniform mat4 transformMatrix;
 			uniform mat4 viewMatrix;
 			uniform mat4 projectionMatrix;
 
 			void main()
 			{
-			  gl_Position = projectionMatrix * viewMatrix * transfMatrix * vertexPosition;
+			  gl_Position = projectionMatrix * viewMatrix * transformMatrix * vertexPosition;
 			}
 		</script>
 

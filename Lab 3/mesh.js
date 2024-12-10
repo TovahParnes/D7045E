@@ -7,24 +7,13 @@ class Mesh {
 		this.indicesLength = indices.length;
 		this.verticesLength = vertices.length;
 
-		// Helper to log errors
-		const checkGLError = (step) => {
-			const error = gl.getError();
-			if (error !== gl.NO_ERROR) {
-				console.error(`WebGL Error at ${step}:`, error);
-			}
-		};
-
 		this.vertexArray = gl.createVertexArray();
 		gl.bindVertexArray(this.vertexArray);
-		checkGLError("Creating and binding VAO");
 
 		this.vertexBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-		checkGLError("Creating and binding vertex buffer");
 
-		gl.enableVertexAttribArray(0);
 		gl.vertexAttribPointer(0, 4, gl.FLOAT, false, 0, 0);
 
 		this.indexBuffer = gl.createBuffer();
@@ -45,7 +34,6 @@ class Mesh {
 			0
 		);
 		this.gl.enableVertexAttribArray(this.vertexPosition);
-		checkGLError("Getting vertexPosition attribute location");
 	}
 
 	getIndicesLength() {
