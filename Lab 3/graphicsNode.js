@@ -15,7 +15,7 @@ class GraphicsNode {
 		this.material.applyMaterial();
 
 		let transformMatrix = this.gl.getUniformLocation(
-			shaderProgram,
+			shaderProgram.getProgram(),
 			"transformMatrix"
 		);
 		let flattenedtransformMatrix = flatten(this.transform);

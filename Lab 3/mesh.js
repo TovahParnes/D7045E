@@ -6,6 +6,7 @@ class Mesh {
 		this.gl = gl;
 		this.indicesLength = indices.length;
 		this.verticesLength = vertices.length;
+		let program = shaderProgram.getProgram();
 
 		this.vertexArray = gl.createVertexArray();
 		gl.bindVertexArray(this.vertexArray);
@@ -22,7 +23,7 @@ class Mesh {
 			gl.STATIC_DRAW
 		);
 
-		this.vertexPosition = gl.getAttribLocation(shaderProgram, "vertexPosition");
+		this.vertexPosition = gl.getAttribLocation(program, "vertexPosition");
 		this.gl.vertexAttribPointer(
 			this.vertexPosition,
 			4,

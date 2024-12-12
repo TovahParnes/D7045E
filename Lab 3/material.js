@@ -23,7 +23,7 @@ class MonoMaterial extends Material {
 
 	applyMaterial() {
 		this.fragColorLocation = this.gl.getUniformLocation(
-			this.prog,
+			this.prog.getProgram(),
 			"uFragColor"
 		);
 		this.gl.uniform4fv(this.fragColorLocation, flatten(this.color));

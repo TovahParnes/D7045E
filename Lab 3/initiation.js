@@ -8,8 +8,8 @@ let objects = [];
 let playerObject;
 var playerTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
 
-const minSize = 0.1;
-const maxSize = 0.6;
+const minSize = 1;
+const maxSize = 10;
 const numCubes = 10;
 
 function init() {
@@ -31,20 +31,12 @@ function init() {
 		fragmentShader.getShader()
 	);
 
-	camera = new Camera(gl, shaderProgram.getProgram(), canvas);
+	camera = new Camera(gl, shaderProgram, canvas);
 
-	let greenMaterial = new MonoMaterial(
-		gl,
-		shaderProgram.getProgram(),
-		vec4(0, 1, 0, 1.0)
-	);
-	let redMaterial = new MonoMaterial(
-		gl,
-		shaderProgram.getProgram(),
-		vec4(1, 0, 0, 1.0)
-	);
+	let greenMaterial = new MonoMaterial(gl, shaderProgram, vec4(0, 1, 0, 1.0));
+	let redMaterial = new MonoMaterial(gl, shaderProgram, (1, 0, 0, 1.0));
 
-	let cube = new Cuboid(gl, 0.5, 0.5, 0.5, shaderProgram.getProgram());
+	let cube = new Cuboid(gl, 0.5, 0.5, 0.5, shaderProgram);
 	playerObject = new GraphicsNode(gl, cube, greenMaterial, playerTransform);
 
 	var max = 10;
@@ -66,10 +58,10 @@ function init() {
 function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	shaderProgram.activate();
-	playerObject.draw(shaderProgram.getProgram());
+	playerObject.draw(shaderProgram);
 
 	for (var i = 0; i < numCubes; i++) {
-		objects[i].draw(shaderProgram.getProgram());
+		objects[i].draw(shaderProgram);
 	}
 
 	requestAnimationFrame(render);
