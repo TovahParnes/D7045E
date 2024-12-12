@@ -31,7 +31,7 @@ function init() {
 		fragmentShader.getShader()
 	);
 
-	camera = new Camera(gl, shaderProgram.getProgram());
+	camera = new Camera(gl, shaderProgram.getProgram(), canvas);
 
 	let greenMaterial = new MonoMaterial(
 		gl,

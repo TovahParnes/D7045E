@@ -1,5 +1,3 @@
-"use strict";
-
 class Camera {
 	constructor(gl, shaderProgram) {
 		this.gl = gl;
@@ -7,7 +5,7 @@ class Camera {
 
 		let aspect = gl.canvas.width / gl.canvas.height;
 		let fov = 45;
-		let near = 0.1;
+		let near = 1;
 		let far = 100;
 
 		this.projectionMatrix = perspective(fov, aspect, near, far);
