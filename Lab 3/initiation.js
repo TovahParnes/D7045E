@@ -34,7 +34,7 @@ function init() {
 	camera = new Camera(gl, shaderProgram, canvas);
 
 	let greenMaterial = new MonoMaterial(gl, shaderProgram, vec4(0, 1, 0, 1.0));
-	let redMaterial = new MonoMaterial(gl, shaderProgram, (1, 0, 0, 1.0));
+	let redMaterial = new MonoMaterial(gl, shaderProgram, vec4(1, 0, 0, 1.0));
 
 	let cube = new Cuboid(gl, 0.5, 0.5, 0.5, shaderProgram);
 	playerObject = new GraphicsNode(gl, cube, greenMaterial, playerTransform);
