@@ -6,6 +6,9 @@ let camera;
 let shaderProgram;
 
 let objects = [];
+const numObjects = 30;
+const minSize = 0.3;
+const maxSize = 1.5;
 
 function init() {
 	// Canvas
@@ -37,23 +40,23 @@ function init() {
 	let depth = 0.5;
 	let cube = new cuboid(gl, width, height, depth, shaderProgram);
 
-	let playableBoxMatrix = mat4(
+	let playerMatrix = mat4(
 		[1, 0, 0, 0],
 		[0, 1, 0, 0],
-		[0, 0, 1, -3],
+		[0, 0, 1, -1],
 		[0, 0, 0, 1]
 	);
-	playableBox = new GraphicsNode(gl, cube, redMaterial, playableBoxMatrix);
+	player = new GraphicsNode(gl, cube, redMaterial, playerMatrix);
 
-	for (let i = 0; i < 50; i++) {
+	for (let i = 0; i < numObjects; i++) {
 		let x = Math.random() * 5 - 2.5;
 		let y = Math.random() * 5 - 2.5;
 		let z = -Math.random() * 10 + 2;
 		let mat = move([x, y, z]);
-		let randomBox = new GraphicsNode(gl, cube, greenMaterial, mat);
-		objects.push(randomBox);
+		let object = new GraphicsNode(gl, cube, greenMaterial, mat);
+		objects.push(object);
+		render();
 	}
-	render();
 }
 
 function render() {
@@ -64,7 +67,7 @@ function render() {
 	for (let object of objects) {
 		object.draw();
 	}
-	playableBox.draw();
+	player.draw();
 }
 
 window.addEventListener("keydown", function (event) {
@@ -88,7 +91,7 @@ window.addEventListener("keydown", function (event) {
 		moveVector[2][3] -= 0.03;
 	}
 
-	playableBox.update(moveVector);
+	player.update(moveVector);
 	render();
 });
 

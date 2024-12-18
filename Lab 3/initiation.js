@@ -6,7 +6,7 @@ let shaderProgram;
 
 let objects = [];
 let playerObject;
-var playerTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 5, 0, 0, 0, 1);
+var playerTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -1, 0, 0, 0, 1);
 
 const minSize = 1;
 const maxSize = 10;
