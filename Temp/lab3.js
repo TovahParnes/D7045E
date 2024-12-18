@@ -10,7 +10,7 @@ function init() {
 	let canvas = document.getElementById("gl-canvas");
 	gl = canvas.getContext("webgl2");
 	gl.viewport(0, 0, canvas.width, canvas.height);
-	gl.clearColor(0.9, 0.9, 0.9, 1.0);
+	gl.clearColor(0.8, 0.8, 0.8, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 
 	// Making the shaders
@@ -22,9 +22,9 @@ function init() {
 	camera = new Camera(gl, shaderProgram, canvas);
 
 	// Making the mesh
-	let width = 0.1;
-	let height = 0.1;
-	let depth = 0.3;
+	let width = 0.8;
+	let height = 0.5;
+	let depth = 0.5;
 	let cube = new cuboid(gl, width, height, depth, shaderProgram);
 
 	let randomBoxesColor = [0, 1, 0, 1]; // Green

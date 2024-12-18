@@ -38,39 +38,19 @@ class Mesh {
 
 class cuboid extends Mesh {
 	constructor(gl, width, height, depth, shaderProgram) {
-		let vertices = [
-			-width,
-			-height,
-			depth,
-			1,
-			-width,
-			height,
-			depth,
-			1,
-			width,
-			height,
-			depth,
-			1,
-			width,
-			-height,
-			depth,
-			1,
-			-width,
-			-height,
-			-depth,
-			1,
-			-width,
-			height,
-			-depth,
-			1,
-			width,
-			height,
-			-depth,
-			1,
-			width,
-			-height,
-			-depth,
-			1,
+		const x = width / 2;
+		const y = height / 2;
+		const z = depth / 2;
+
+		const vertices = [
+			vec4(-x, -y, z, 1),
+			vec4(-x, y, z, 1),
+			vec4(x, y, z, 1),
+			vec4(x, -y, z, 1),
+			vec4(-x, -y, -z, 1),
+			vec4(-x, y, -z, 1),
+			vec4(x, y, -z, 1),
+			vec4(x, -y, -z, 1),
 		];
 
 		let indices = [
@@ -78,33 +58,27 @@ class cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		super(gl, vertices, indices, shaderProgram);
+		super(gl, flatten(vertices), indices, shaderProgram);
 
-		this.width = width;
-		this.height = height;
-		this.depth = depth;
-		this.gl = gl;
-		this.shaderProgram = shaderProgram;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	// Getters
 	getCordinates() {
-		let x = -this.width / 2;
-		let y = -this.height / 2;
-		let z = -this.depth / 2;
-
-		return [x, y, z];
+		return [this.x, this.y, this.z];
 	}
 
 	getWidth() {
-		return this.width;
+		return this.x * 2;
 	}
 
 	getHeight() {
-		return this.height;
+		return this.y * 2;
 	}
 
 	getDepth() {
-		return this.depth;
+		return this.z * 2;
 	}
 }
