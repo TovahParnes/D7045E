@@ -11,7 +11,7 @@ class material {
 	}
 }
 
-class MonochromeMaterial extends material {
+class MonoMaterial extends material {
 	constructor(gl, shaderProgram, color) {
 		super(gl, shaderProgram);
 		this.color = color;
