@@ -56,9 +56,6 @@ function init() {
 		var x = Math.floor(Math.random() * (max - min)) + min;
 		var y = Math.floor(Math.random() * (max - min)) + min;
 		var z = -Math.floor(Math.random() * (maxZ - minZ)) + minZ;
-		//let x = Math.random() * 5 - 2.5;
-		//let y = Math.random() * 5 - 2.5;
-		//let z = -Math.random() * 10 + 2;
 		let mat = move([x, y, z]);
 		let object = new GraphicsNode(gl, cube, greenMaterial, mat);
 		objects.push(object);
@@ -80,22 +77,22 @@ function render() {
 window.addEventListener("keydown", function (event) {
 	let moveVector = mat4([1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]);
 	if (event.key == "w") {
-		moveVector[1][3] += 0.03;
+		moveVector[1][3] += 0.1;
 	}
 	if (event.key == "s") {
-		moveVector[1][3] -= 0.03;
+		moveVector[1][3] -= 0.1;
 	}
 	if (event.key == "a") {
-		moveVector[0][3] -= 0.03;
+		moveVector[0][3] -= 0.1;
 	}
 	if (event.key == "d") {
-		moveVector[0][3] += 0.03;
+		moveVector[0][3] += 0.1;
 	}
 	if (event.key == "e") {
-		moveVector[2][3] += 0.03;
+		moveVector[2][3] += 0.1;
 	}
 	if (event.key == "c") {
-		moveVector[2][3] -= 0.03;
+		moveVector[2][3] -= 0.1;
 	}
 
 	player.update(moveVector);
