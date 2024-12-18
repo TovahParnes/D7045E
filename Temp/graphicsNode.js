@@ -1,4 +1,4 @@
-// Andreas Form och Marcus Asplund
+// Tovah Parnes - tovpar-9@student.ltu.se
 
 class GraphicsNode {
 	constructor(gl, mesh, material, transform) {

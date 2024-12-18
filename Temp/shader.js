@@ -1,4 +1,4 @@
-// Andreas Form och Marcus Asplund
+// Tovah Parnes - tovpar-9@student.ltu.se
 
 class Shader {
 	constructor(gl, shaderType, source) {

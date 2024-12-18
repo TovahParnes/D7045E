@@ -1,4 +1,4 @@
-// Andreas Form och Marcus Asplund
+// Tovah Parnes - tovpar-9@student.ltu.se
 
 class Mesh {
 	constructor(gl, vertices, indices, shaderProgram) {

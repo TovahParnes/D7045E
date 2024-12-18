@@ -1,4 +1,4 @@
-// Andreas Form och Marcus Asplund
+// Tovah Parnes - tovpar-9@student.ltu.se
 
 class Camera {
 	constructor(gl, shaderProgram, canvas) {
