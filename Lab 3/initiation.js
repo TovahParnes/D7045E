@@ -46,7 +46,7 @@ function init() {
 	for (let i = 0; i < numCubes; i++) {
 		var x = Math.floor(Math.random() * (max - min)) + min;
 		var y = Math.floor(Math.random() * (max - min)) + min;
-		var z = Math.floor(Math.random() * (maxZ - minZ)) + minZ;
+		var z = -Math.floor(Math.random() * (maxZ - minZ)) + minZ;
 		var transform = mat4(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
 		objects.push(new GraphicsNode(gl, cube, redMaterial, transform));
 	}

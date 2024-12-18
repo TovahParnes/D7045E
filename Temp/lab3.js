@@ -48,10 +48,17 @@ function init() {
 	);
 	player = new GraphicsNode(gl, cube, redMaterial, playerMatrix);
 
+	var max = 2.5;
+	var min = -2.5;
+	var maxZ = 10;
+	var minZ = 2;
 	for (let i = 0; i < numObjects; i++) {
-		let x = Math.random() * 5 - 2.5;
-		let y = Math.random() * 5 - 2.5;
-		let z = -Math.random() * 10 + 2;
+		var x = Math.floor(Math.random() * (max - min)) + min;
+		var y = Math.floor(Math.random() * (max - min)) + min;
+		var z = -Math.floor(Math.random() * (maxZ - minZ)) + minZ;
+		//let x = Math.random() * 5 - 2.5;
+		//let y = Math.random() * 5 - 2.5;
+		//let z = -Math.random() * 10 + 2;
 		let mat = move([x, y, z]);
 		let object = new GraphicsNode(gl, cube, greenMaterial, mat);
 		objects.push(object);
