@@ -7,24 +7,24 @@
 		<title>D7045E Lab 3</title>
 
 		<script id="vertex-shader" type="x-shader/x-vertex">
-			attribute vec4 a_Position;
-			uniform mat4 u_TransformMatrix;
+			attribute vec4 a_vertexPosition;
+			uniform mat4 u_transformMatrix;
 			uniform mat4 u_CameraMatrix;
-			varying float v_Depth;
+			varying float v_depth;
 			void main()
 			{
-				gl_Position = u_CameraMatrix * u_TransformMatrix * a_Position;
-				v_Depth = sqrt( pow( gl_Position.x , 2.0) + pow( gl_Position.y , 2.0) + pow(gl_Position.z , 2.0));
+				gl_Position = u_CameraMatrix * u_transformMatrix * a_vertexPosition;
+				v_depth = sqrt( pow( gl_Position.x , 2.0) + pow( gl_Position.y , 2.0) + pow(gl_Position.z , 2.0));
 			}
 		</script>
 
 		<script id="fragment-shader" type="x-shader/x-fragment">
 						precision mediump float;
 			uniform vec4 u_Color;
-			varying float v_Depth;
+			varying float v_depth;
 			void main()
 			{
-				gl_FragColor = vec4(u_Color[0]*1.5/v_Depth, u_Color[1]*1.5/v_Depth, u_Color[2]*1.5/v_Depth, 1);
+				gl_FragColor = vec4(u_Color[0]*1.5/v_depth, u_Color[1]*1.5/v_depth, u_Color[2]*1.5/v_depth, 1);
 			}
 		</script>
 	</head>

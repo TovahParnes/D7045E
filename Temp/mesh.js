@@ -21,7 +21,7 @@ class Mesh {
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indiceArray, gl.STATIC_DRAW);
 
 		let prog = shaderProgram.getProgram();
-		let pos = gl.getAttribLocation(prog, "a_Position");
+		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
 
 		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(pos);
