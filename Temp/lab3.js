@@ -25,7 +25,7 @@ function init() {
 	let width = 0.1;
 	let height = 0.1;
 	let depth = 0.3;
-	let cube = new cuboid(width, height, depth, gl, shaderProgram);
+	let cube = new cuboid(gl, width, height, depth, shaderProgram);
 
 	let randomBoxesColor = [0, 1, 0, 1]; // Green
 	let playableBoxColor = [1, 0, 1, 1]; // Red

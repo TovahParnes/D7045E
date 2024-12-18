@@ -1,7 +1,7 @@
 // Andreas Form och Marcus Asplund
 
 class Mesh {
-	constructor(vertices, indices, gl, shaderProgram) {
+	constructor(gl, vertices, indices, shaderProgram) {
 		this.vertices = vertices;
 		this.indices = indices;
 
@@ -37,7 +37,7 @@ class Mesh {
 }
 
 class cuboid extends Mesh {
-	constructor(width, height, depth, gl, shaderProgram) {
+	constructor(gl, width, height, depth, shaderProgram) {
 		let vertices = [
 			-width,
 			-height,
@@ -78,7 +78,7 @@ class cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		super(vertices, indices, gl, shaderProgram);
+		super(gl, vertices, indices, shaderProgram);
 
 		this.width = width;
 		this.height = height;
