@@ -1,26 +1,36 @@
 // Andreas Form och Marcus Asplund
 
 class Camera {
-    constructor(gl, shaderProgram, canvas) {
-        this.gl = gl;
-        this.shaderProgram = shaderProgram;
+	constructor(gl, shaderProgram, canvas) {
+		this.gl = gl;
+		this.shaderProgram = shaderProgram;
 
-        let aspect = canvas.width / canvas.height;
+		let aspect = canvas.width / canvas.height;
+		this.projectionMatrix = perspective(45, aspect, 1, 100);
 
-        this.projectionMatrix = perspective(45, aspect, 1, 100);
-    }
+		let eye = vec3(0, 0, 5);
+		let at = vec3(0.0, 0.0, 0.0);
+		let up = vec3(0.0, 1.0, 0.0);
+		this.viewMatrix = lookAt(eye, at, up);
+	}
 
-    activate(){
-        let prog = this.shaderProgram.getProgram();
-        let cameraMatrixSource = this.gl.getUniformLocation(prog, "u_CameraMatrix");
-        
-        let cameraMatrix = flatten(this.projectionMatrix);
+	activate() {
+		let program = this.shaderProgram.getProgram();
+		let projectionMatrix = this.gl.getUniformLocation(
+			program,
+			"u_projectionMatrix"
+		);
+		this.gl.uniformMatrix4fv(
+			projectionMatrix,
+			false,
+			flatten(this.projectionMatrix)
+		);
 
-        this.gl.uniformMatrix4fv(cameraMatrixSource, false, cameraMatrix);
-    }
+		let viewMatrix = this.gl.getUniformLocation(program, "u_viewMatrix");
+		this.gl.uniformMatrix4fv(viewMatrix, false, flatten(this.viewMatrix));
+	}
 
-    getShaderProgram(){
-        return this.shaderProgram;
-    }
-
+	getShaderProgram() {
+		return this.shaderProgram;
+	}
 }

@@ -9,11 +9,12 @@
 		<script id="vertex-shader" type="x-shader/x-vertex">
 			attribute vec4 a_vertexPosition;
 			uniform mat4 u_transformMatrix;
-			uniform mat4 u_CameraMatrix;
+			uniform mat4 u_viewMatrix;
+			uniform mat4 u_projectionMatrix;
 			varying float v_depth;
 			void main()
 			{
-				gl_Position = u_CameraMatrix * u_transformMatrix * a_vertexPosition;
+				gl_Position = u_projectionMatrix * u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				v_depth = sqrt( pow( gl_Position.x , 2.0) + pow( gl_Position.y , 2.0) + pow(gl_Position.z , 2.0));
 			}
 		</script>
