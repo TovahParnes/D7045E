@@ -56,7 +56,7 @@ function init() {
 		var x = Math.floor(Math.random() * (max - min)) + min;
 		var y = Math.floor(Math.random() * (max - min)) + min;
 		var z = -Math.floor(Math.random() * (maxZ - minZ)) + minZ;
-		let mat = move([x, y, z]);
+		let mat = translate(x, y, z);
 		let object = new GraphicsNode(gl, cube, greenMaterial, mat);
 		objects.push(object);
 		render();
@@ -75,27 +75,23 @@ function render() {
 }
 
 window.addEventListener("keydown", function (event) {
-	let moveVector = mat4([1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]);
-	if (event.key == "w") {
-		moveVector[1][3] += 0.1;
-	}
-	if (event.key == "s") {
-		moveVector[1][3] -= 0.1;
-	}
-	if (event.key == "a") {
-		moveVector[0][3] -= 0.1;
-	}
-	if (event.key == "d") {
-		moveVector[0][3] += 0.1;
-	}
-	if (event.key == "e") {
-		moveVector[2][3] += 0.1;
-	}
-	if (event.key == "c") {
-		moveVector[2][3] -= 0.1;
+	let translation = vec3(0, 0, 0);
+	if (event.key === "w") {
+		translation[1] += 0.1; // Move up
+	} else if (event.key === "s") {
+		translation[1] -= 0.1; // Move down
+	} else if (event.key === "a") {
+		translation[0] -= 0.1; // Move left
+	} else if (event.key === "d") {
+		translation[0] += 0.1; // Move right
+	} else if (event.key === "e") {
+		translation[2] += 0.1; // Move forward
+	} else if (event.key === "c") {
+		translation[2] -= 0.1; // Move backward
 	}
 
-	player.update(moveVector);
+	const moveMatrix = translate(translation);
+	player.update(moveMatrix);
 	render();
 });
 
