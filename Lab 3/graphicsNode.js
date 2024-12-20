@@ -1,8 +1,6 @@
-"use strict";
+// Tovah Parnes - tovpar-9@student.ltu.se
+
 class GraphicsNode {
-	//mesh: Mesh;
-	//material: Material;
-	//transform: vec4matrixs;
 	constructor(gl, mesh, material, transform) {
 		this.gl = gl;
 		this.mesh = mesh;
@@ -10,27 +8,19 @@ class GraphicsNode {
 		this.transform = transform;
 	}
 
-	draw(shaderProgram) {
-		//draw mesh
-		this.material.applyMaterial();
-
-		let transformMatrix = this.gl.getUniformLocation(
-			shaderProgram.getProgram(),
-			"transformMatrix"
-		);
-		let flattenedtransformMatrix = flatten(this.transform);
-		this.gl.uniformMatrix4fv(transformMatrix, false, flattenedtransformMatrix);
-
-		//draw call to gl
+	draw() {
+		this.material.applyMaterial(this.transform);
+		let indicesLength = this.mesh.getIndices().length;
 		this.gl.drawElements(
 			this.gl.TRIANGLES,
-			this.mesh.getIndicesLength(),
+			indicesLength,
 			this.gl.UNSIGNED_BYTE,
 			0
 		);
 	}
 
-	update(mat) {
-		this.transform = mult(this.transform, mat);
+	update(transform) {
+		transform = mult(this.transform, transform);
+		this.transform = transform;
 	}
 }

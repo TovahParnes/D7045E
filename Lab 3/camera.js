@@ -1,35 +1,24 @@
+// Tovah Parnes - tovpar-9@student.ltu.se
+
 class Camera {
-	constructor(gl, shaderProgram) {
+	constructor(gl, shaderProgram, canvas) {
 		this.gl = gl;
 		this.shaderProgram = shaderProgram;
 
-		let aspect = gl.canvas.width / gl.canvas.height;
-		let fov = 45;
-		let near = 1;
-		let far = 100;
+		let aspect = canvas.width / canvas.height;
+		this.projectionMatrix = perspective(45, aspect, 1, 100);
 
-		this.projectionMatrix = perspective(fov, aspect, near, far);
-
-		//let eye = vec3(0, 0, 5); // Camera position
-		this.radius = 10;
-		this.theta = 0.0;
-		this.eye = vec3(
-			this.radius * Math.sin(this.theta) * Math.cos(Math.PI),
-			this.radius * Math.sin(this.theta) * Math.sin(Math.PI),
-			this.radius * Math.cos(this.theta)
-		);
-
-		let at = vec3(0.0, 0.0, 0.0); // Point the camera looks at
-		let up = vec3(0.0, 1.0, 0.0); // Up direction for the camera
-
-		this.viewMatrix = lookAt(this.eye, at, up);
+		let eye = vec3(0, 0, 5);
+		let at = vec3(0.0, 0.0, 0.0);
+		let up = vec3(0.0, 1.0, 0.0);
+		this.viewMatrix = lookAt(eye, at, up);
 	}
 
 	activate() {
 		let program = this.shaderProgram.getProgram();
 		let projectionMatrix = this.gl.getUniformLocation(
 			program,
-			"projectionMatrix"
+			"u_projectionMatrix"
 		);
 		this.gl.uniformMatrix4fv(
 			projectionMatrix,
@@ -37,7 +26,11 @@ class Camera {
 			flatten(this.projectionMatrix)
 		);
 
-		let viewMatrix = this.gl.getUniformLocation(program, "viewMatrix");
+		let viewMatrix = this.gl.getUniformLocation(program, "u_viewMatrix");
 		this.gl.uniformMatrix4fv(viewMatrix, false, flatten(this.viewMatrix));
+	}
+
+	getShaderProgram() {
+		return this.shaderProgram;
 	}
 }

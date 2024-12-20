@@ -1,8 +1,6 @@
-"use strict";
+// Tovah Parnes - tovpar-9@student.ltu.se
 
 class Shader {
-	//shaderHandle: GLuint;
-	//type: number;
 	constructor(gl, shaderType, source) {
 		if (shaderType == gl.VERTEX_SHADER) {
 			this.type = 0;
@@ -12,44 +10,16 @@ class Shader {
 			throw new Error("Invalid shader type");
 		}
 
-		this.shaderHandle = gl.createShader(shaderType);
-		gl.shaderSource(this.shaderHandle, document.getElementById(source).text);
-		gl.compileShader(this.shaderHandle);
-
-		if (!gl.getShaderParameter(this.shaderHandle, gl.COMPILE_STATUS)) {
-			throw new Error(
-				"Error in vertex shader:  " + gl.getShaderInfoLog(this.shaderHandle)
-			);
-		}
+		this.shader = gl.createShader(shaderType);
+		gl.shaderSource(this.shader, document.getElementById(source).text);
+		gl.compileShader(this.shader);
 	}
 
 	getShader() {
-		return this.shaderHandle;
+		return this.shader;
 	}
 
 	getShaderType() {
-		//return shader type as enum
 		return this.type;
-	}
-}
-
-class ShaderProgram {
-	constructor(gl, vertexShader, fragmentShader) {
-		this.gl = gl;
-		this.program = gl.createProgram();
-		this.vertexShader = vertexShader;
-		this.fragmentShader = fragmentShader;
-		this.gl.attachShader(this.program, this.fragmentShader);
-		this.gl.attachShader(this.program, this.vertexShader);
-		this.gl.linkProgram(this.program);
-	}
-
-	activate() {
-		//activate the shader program
-		this.gl.useProgram(this.program);
-	}
-
-	getProgram() {
-		return this.program;
 	}
 }

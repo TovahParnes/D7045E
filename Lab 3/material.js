@@ -1,33 +1,38 @@
-"use strict";
+// Tovah Parnes - tovpar-9@student.ltu.se
 
-//abstract class
-class Material {
-	//prog: ShaderProgram;
+class material {
 	constructor(gl, shaderProgram) {
 		this.gl = gl;
-		this.prog = shaderProgram;
+		this.shaderProgram = shaderProgram;
 	}
 
 	applyMaterial() {
-		throw new Error("not yet implemented");
+		throw new Error("abstract method, must be implemented");
 	}
 }
 
-class MonoMaterial extends Material {
-	//color: GLfloat[];
-	//color: GLfloat[4];
+class MonoMaterial extends material {
 	constructor(gl, shaderProgram, color) {
 		super(gl, shaderProgram);
 		this.color = color;
 	}
 
-	applyMaterial() {
-		this.fragColorLocation = this.gl.getUniformLocation(
-			this.prog.getProgram(),
-			"uFragColor"
-		);
-		this.gl.uniform4fv(this.fragColorLocation, flatten(this.color));
+	applyMaterial(transformMatrix) {
+		let program = this.shaderProgram.getProgram();
 
-		//TODO: update color to show depth
+		let colorLocation = this.gl.getUniformLocation(program, "u_color");
+		let flattenedColor = flatten(this.color);
+		this.gl.uniform4fv(colorLocation, flattenedColor);
+
+		let transformLocation = this.gl.getUniformLocation(
+			program,
+			"u_transformMatrix"
+		);
+		let flattenedtransformMatrix = flatten(transformMatrix);
+		this.gl.uniformMatrix4fv(
+			transformLocation,
+			false,
+			flattenedtransformMatrix
+		);
 	}
 }
