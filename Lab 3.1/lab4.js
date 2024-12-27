@@ -34,11 +34,15 @@ function init() {
 	let greenMaterial = new MonoMaterial(gl, shaderProgram, vec4(0, 1, 0, 1.0));
 	let redMaterial = new MonoMaterial(gl, shaderProgram, vec4(1, 0, 0, 1.0));
 
+	//Shapes
+	let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
+	let torus = new Torus(gl, 0.5, 0.25, 16, 8, shaderProgram);
+
 	// Making the player
 	let width = 0.8;
 	let height = 0.5;
 	let depth = 0.5;
-	let cube = new cuboid(gl, width, height, depth, shaderProgram);
+	let cube = new Cuboid(gl, width, height, depth, shaderProgram);
 
 	let playerMatrix = mat4(
 		[1, 0, 0, 0],
@@ -46,7 +50,7 @@ function init() {
 		[0, 0, 1, -1],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, cube, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, torus, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
