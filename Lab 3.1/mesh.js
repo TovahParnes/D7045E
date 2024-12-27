@@ -1,11 +1,10 @@
 // Tovah Parnes - tovpar-9@student.ltu.se
 
-import { uvSphere } from "./basic-object-models-IFS";
-
 class Mesh {
-	constructor(gl, vertices, indices, shaderProgram) {
+	constructor(gl, vertices, indices, normals, shaderProgram) {
 		this.vertices = vertices;
 		this.indices = indices;
+		this.normals = normals;
 
 		let vertexArray = gl.createVertexArray();
 		gl.bindVertexArray(vertexArray);
@@ -24,6 +23,15 @@ class Mesh {
 		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
 		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(pos);
+
+		this.normalBuff = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuff);
+		let normalArray = new Float32Array(this.normals);
+		gl.bufferData(gl.ARRAY_BUFFER, normalArray, gl.STATIC_DRAW);
+
+		let norm = gl.getAttribLocation(prog, "a_vertexNormal");
+		gl.vertexAttribPointer(norm, 3, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(norm);
 	}
 
 	getIndices() {
@@ -57,7 +65,8 @@ class cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		super(gl, flatten(vertices), indices, shaderProgram);
+		let normals = vec3(0, 0, 0); //TEMP
+		super(gl, flatten(vertices), indices, normals, shaderProgram);
 
 		this.x = x;
 		this.y = y;
