@@ -1,5 +1,7 @@
 // Tovah Parnes - tovpar-9@student.ltu.se
 
+import { uvSphere } from "./basic-object-models-IFS";
+
 class Mesh {
 	constructor(gl, vertices, indices, shaderProgram) {
 		this.vertices = vertices;
@@ -65,5 +67,28 @@ class cuboid extends Mesh {
 	// Getters
 	getCordinates() {
 		return [this.x, this.y, this.z];
+	}
+}
+
+class sphere extends Mesh {
+	constructor(gl, radius, slices, stacks, shaderProgram) {
+		const sphere = uvSphere(radius, slices, stacks);
+
+		const vertices = [
+			//vertices for a sphere
+		];
+
+		let indices = [
+			//indices for a sphere
+		];
+
+		super(gl, flatten(vertices), indices, shaderProgram);
+
+		this.radius = radius;
+	}
+
+	// Getters
+	getRadius() {
+		return this.radius;
 	}
 }
