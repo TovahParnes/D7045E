@@ -80,18 +80,7 @@ function uvSphere(radius, slices, stacks) {
 	};
 }
 
-/**
- * Create a model of a torus (surface of a doughnut).  The z-axis goes through the doughnut hole,
- * and the center of the torus is at (0,0,0).
- * @param outerRadius the distance from the center to the outside of the tube, 0.5 if not specified.
- * @param innerRadius the distance from the center to the inside of the tube, outerRadius/3 if not
- *    specified.  (This is the radius of the doughnut hole.)
- * @param slices the number of lines of longitude, default 32.  These are slices parallel to the
- * z-axis and go around the tube the short way (through the hole).
- * @param stacks the number of lines of latitude plus 1, default 16.  These lines are perpendicular
- * to the z-axis and go around the tube the long way (arouind the hole).
- */
-
+/*
 function uvCube(width, height, depth) {
 	var normals = [];
 	var texCoords = [];
@@ -154,7 +143,19 @@ function uvCube(width, height, depth) {
 		indices: new Uint16Array(indices),
 	};
 }
+	*/
 
+/**
+ * Create a model of a torus (surface of a doughnut).  The z-axis goes through the doughnut hole,
+ * and the center of the torus is at (0,0,0).
+ * @param outerRadius the distance from the center to the outside of the tube, 0.5 if not specified.
+ * @param innerRadius the distance from the center to the inside of the tube, outerRadius/3 if not
+ *    specified.  (This is the radius of the doughnut hole.)
+ * @param slices the number of lines of longitude, default 32.  These are slices parallel to the
+ * z-axis and go around the tube the short way (through the hole).
+ * @param stacks the number of lines of latitude plus 1, default 16.  These lines are perpendicular
+ * to the z-axis and go around the tube the long way (arouind the hole).
+ */
 function uvTorus(outerRadius, innerRadius, slices, stacks) {
 	outerRadius = outerRadius || 0.5;
 	innerRadius = innerRadius || outerRadius / 3;
