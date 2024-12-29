@@ -35,22 +35,23 @@ function init() {
 	let redMaterial = new MonoMaterial(gl, shaderProgram, vec4(1, 0, 0, 1.0));
 
 	// Shapes
-	let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
-	let star = new Star(gl, 5, 0.5, 0.25, 0.1, shaderProgram);
+	//let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
+	//let star = new Star(gl, 5, 0.5, 0.25, 0.1, shaderProgram);
+	let cone = new Cone(gl, 0.5, 0.5, 16, shaderProgram);
 
 	// Making the player
 	let width = 0.8;
 	let height = 0.5;
 	let depth = 0.5;
-	let cube = new cuboid(gl, width, height, depth, shaderProgram);
+	//let cube = new cuboid(gl, width, height, depth, shaderProgram);
 
 	let playerMatrix = mat4(
 		[1, 0, 0, 0],
 		[0, 1, 0, 0],
-		[0, 0, 1, -1],
+		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, star, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, cone, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
@@ -62,8 +63,8 @@ function init() {
 		var y = Math.floor(Math.random() * (max - min)) + min;
 		var z = -Math.floor(Math.random() * (maxZ - minZ)) + minZ;
 		let mat = translate(x, y, z);
-		let object = new GraphicsNode(gl, cube, greenMaterial, mat);
-		objects.push(object);
+		//let object = new GraphicsNode(gl, cube, greenMaterial, mat);
+		//objects.push(object);
 	}
 
 	render();

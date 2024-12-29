@@ -27,6 +27,8 @@ class Mesh {
 
 		this.vertices = vertices;
 		this.indices = indices;
+		console.log(this.vertices.length);
+		console.log(this.indices.length);
 
 		// Create a vertex array object
 		let vertexArr = gl.createVertexArray();
@@ -155,5 +157,87 @@ class Star extends Mesh {
 
 		//let normals = calculateNormals(vertices, indices);
 		super(gl, vertices, indices, shaderProgram);
+	}
+}
+
+/* AI code - at least it displays something
+class Cone extends Mesh {
+	constructor(gl, radius, height, slices, shaderProgram) {
+		const vertices = [];
+		for (let i = 0; i <= slices; i++) {
+			const angle = (i / slices) * Math.PI * 2;
+			const x = radius * Math.cos(angle);
+			const z = radius * Math.sin(angle);
+
+			// Vertex at base
+			vertices.push(vec4(x, -height / 2, z, 1));
+
+			// Vertex on side
+			if (i < slices) {
+				const t = i / slices;
+				const y = height * t;
+				vertices.push(vec4(x, y, z, 1));
+			}
+		}
+
+		// Calculate indices
+		let indices = [];
+		for (let i = 0; i < slices; i++) {
+			indices.push(i + 1, i, slices + 1); // Triangle for each slice
+		}
+
+		super(gl, flatten(vertices), indices, shaderProgram);
+
+		this.radius = radius;
+		this.height = height;
+		this.slices = slices;
+	
+	}
+}
+*/
+
+class Cone extends Mesh {
+	constructor(gl, width, height, slices, shaderProgram) {
+		let bottomCircle = [];
+		let triangles = [];
+		let bottomSurface = [];
+
+		let normals = [];
+		let vertices = [];
+		let indices = [];
+
+		let topPoint = vec4(0.0, height, 0.0, 1.0);
+		let bottomMiddlePoint = vec4(0.0, -height, 0.0, 1.0);
+
+		let phi = (2.0 * Math.PI) / slices;
+
+		bottomCircle.push(bottomMiddlePoint);
+		triangles.push(topPoint);
+
+		for (var i = 0; i < slices + 1; i++) {
+			var angle = i * phi;
+			bottomCircle.push(
+				vec4(width * Math.cos(angle), -height, width * Math.sin(angle), 1.0)
+			);
+		}
+
+		for (var i = 0; i < bottomCircle.length - 1; i++) {
+			vertices.push(bottomCircle[i], topPoint, bottomCircle[i + 1]);
+
+			var t1 = subtract(topPoint, bottomCircle[i]);
+			var t2 = subtract(bottomCircle[i + 1], topPoint);
+			var normal = cross(t1, t2);
+			var normal = normalize(vec4(normal[0], normal[1], normal[2], 0.0));
+
+			normals.push(normal);
+			normals.push(normal);
+			normals.push(normal);
+		}
+
+		for (var i = 0; i < bottomCircle.length - 1; i++) {
+			vertices.push(bottomCircle[i], bottomCircle[i + 1], bottomMiddlePoint);
+		}
+
+		super(gl, flatten(vertices), indices, shaderProgram);
 	}
 }
