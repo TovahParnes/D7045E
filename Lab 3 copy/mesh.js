@@ -2,7 +2,6 @@
 
 class Mesh {
 	constructor(gl, vertices, indices, shaderProgram) {
-		/*
 		this.vertices = vertices;
 		this.indices = indices;
 
@@ -21,33 +20,6 @@ class Mesh {
 
 		let prog = shaderProgram.getProgram();
 		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
-		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
-		gl.enableVertexAttribArray(pos);
-		*/
-
-		this.vertices = vertices;
-		this.indices = indices;
-		console.log(this.vertices.length);
-		console.log(this.indices.length);
-
-		// Create a vertex array object
-		let vertexArr = gl.createVertexArray();
-		let vertexBuff = gl.createBuffer();
-		let indexBuff = gl.createBuffer();
-
-		gl.bindVertexArray(vertexArr);
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
-		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuff);
-
-		let verticeArray = new Float32Array(this.vertices);
-		let indiceArray = new Uint8Array(this.indices);
-
-		gl.bufferData(gl.ARRAY_BUFFER, verticeArray, gl.STATIC_DRAW);
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indiceArray, gl.STATIC_DRAW);
-
-		let prog = shaderProgram.getProgram();
-		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
-
 		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(pos);
 	}
@@ -143,25 +115,30 @@ class Sphere extends Mesh {
 }
 
 class Star extends Mesh {
-	constructor(n, outerDist, innerDist, T, gl, shaderProgram) {
+	constructor(gl, points, outerDist, innerDist, thickness, shaderProgram) {
+		if (points < 2) throw new Error("there must be at least 2 points");
+		if (outerDist <= innerDist)
+			throw new Error("outerDist must be bigger or the same as innerDist");
+		if (thickness <= 0) throw new Error("thickness must be bigger than 0");
+
 		const vertices = [];
 		const indices = [];
-		const angleStep = Math.PI / n;
+		const angleStep = Math.PI / points;
 
 		// Center vertices
-		vertices.push(vec4(0, 0, T / 2, 1)); // Front center
-		vertices.push(vec4(0, 0, -T / 2, 1)); // Back center
+		vertices.push(vec4(0, 0, thickness / 2, 1)); // Front center
+		vertices.push(vec4(0, 0, -thickness / 2, 1)); // Back center
 
 		// Outer and inner vertices
-		for (let i = 0; i < 2 * n; i++) {
+		for (let i = 0; i < 2 * points; i++) {
 			const angle = i * angleStep;
 			const dist = i % 2 === 0 ? outerDist : innerDist;
 			vertices.push(vec4(dist * Math.cos(angle), dist * Math.sin(angle), 0, 1));
 		}
 
 		// Indices for triangles
-		for (let i = 2; i < 2 * n + 2; i++) {
-			const next = i === 2 * n + 1 ? 2 : i + 1;
+		for (let i = 2; i < 2 * points + 2; i++) {
+			const next = i === 2 * points + 1 ? 2 : i + 1;
 			// Front triangles
 			indices.push(0, i, next);
 			// Back triangles
@@ -170,92 +147,10 @@ class Star extends Mesh {
 
 		super(gl, flatten(vertices), indices, shaderProgram);
 
-		this.n = n;
+		this.points = points;
 		this.outerDist = outerDist;
 		this.innerDist = innerDist;
-		this.T = T;
-	}
-}
-
-/* AI code - at least it displays something
-class Cone extends Mesh {
-	constructor(gl, radius, height, slices, shaderProgram) {
-		const vertices = [];
-		for (let i = 0; i <= slices; i++) {
-			const angle = (i / slices) * Math.PI * 2;
-			const x = radius * Math.cos(angle);
-			const z = radius * Math.sin(angle);
-
-			// Vertex at base
-			vertices.push(vec4(x, -height / 2, z, 1));
-
-			// Vertex on side
-			if (i < slices) {
-				const t = i / slices;
-				const y = height * t;
-				vertices.push(vec4(x, y, z, 1));
-			}
-		}
-
-		// Calculate indices
-		let indices = [];
-		for (let i = 0; i < slices; i++) {
-			indices.push(i + 1, i, slices + 1); // Triangle for each slice
-		}
-
-		super(gl, flatten(vertices), indices, shaderProgram);
-
-		this.radius = radius;
-		this.height = height;
-		this.slices = slices;
-	
-	}
-}
-*/
-
-class Cone extends Mesh {
-	constructor(gl, width, height, slices, shaderProgram) {
-		let bottomCircle = [];
-		let triangles = [];
-		let bottomSurface = [];
-
-		let normals = [];
-		let vertices = [];
-		let indices = [];
-
-		let topPoint = vec4(0.0, height, 0.0, 1.0);
-		let bottomMiddlePoint = vec4(0.0, -height, 0.0, 1.0);
-
-		let phi = (2.0 * Math.PI) / slices;
-
-		bottomCircle.push(bottomMiddlePoint);
-		triangles.push(topPoint);
-
-		for (var i = 0; i < slices + 1; i++) {
-			var angle = i * phi;
-			bottomCircle.push(
-				vec4(width * Math.cos(angle), -height, width * Math.sin(angle), 1.0)
-			);
-		}
-
-		for (var i = 0; i < bottomCircle.length - 1; i++) {
-			vertices.push(bottomCircle[i], topPoint, bottomCircle[i + 1]);
-
-			var t1 = subtract(topPoint, bottomCircle[i]);
-			var t2 = subtract(bottomCircle[i + 1], topPoint);
-			var normal = cross(t1, t2);
-			var normal = normalize(vec4(normal[0], normal[1], normal[2], 0.0));
-
-			normals.push(normal);
-			normals.push(normal);
-			normals.push(normal);
-		}
-
-		for (var i = 0; i < bottomCircle.length - 1; i++) {
-			vertices.push(bottomCircle[i], bottomCircle[i + 1], bottomMiddlePoint);
-		}
-
-		super(gl, flatten(vertices), indices, shaderProgram);
+		this.thickness = thickness;
 	}
 }
 
@@ -263,7 +158,7 @@ class Torus extends Mesh {
 	constructor(gl, innerRadius, outerRadius, segments, shaderProgram) {
 		const vertices = [];
 		const indices = [];
-		let numSegments = segments;
+		let numSegments = segments - 1; // Added the minus one and it seems to work, TODO: check it working in 3d
 		const ringRadius = (outerRadius - innerRadius) / 2;
 		const centerRadius = innerRadius + ringRadius;
 
