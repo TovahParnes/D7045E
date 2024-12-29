@@ -199,3 +199,37 @@ class Torus extends Mesh {
 		this.numSegments = numSegments;
 	}
 }
+
+class Cone extends Mesh {
+	constructor(gl, width, height, slices, shaderProgram) {
+		let vertices = [];
+		let indices = [];
+		let normals = [];
+
+		let topPoint = vec4(0.0, height / 2, 0.0, 1.0);
+		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
+
+		let angleStep = (2.0 * Math.PI) / slices;
+
+		vertices.push(bottomMiddlePoint);
+		vertices.push(topPoint);
+
+		let count = vertices.length;
+		for (var i = 0; i < slices + 1; i++) {
+			var angle = i * angleStep;
+			vertices.push(
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+			);
+			indices.push(0, count, count - 1);
+			indices.push(1, count, count - 1);
+			count++;
+		}
+		//TODO: check so that each face had a triangle
+
+		super(gl, flatten(vertices), indices, shaderProgram);
+
+		this.width = width;
+		this.height = height;
+		this.slices = slices;
+	}
+}

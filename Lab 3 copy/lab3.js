@@ -36,8 +36,8 @@ function init() {
 
 	// Shapes
 	//let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
-	//let cone = new Cone(gl, 0.5, 0.5, 16, shaderProgram);
-	let star = new Star(gl, 5, 0.3, 0.2, 0.1, shaderProgram);
+	let cone = new Cone(gl, 0.5, 1, 3, shaderProgram);
+	//let star = new Star(gl, 5, 0.3, 0.2, 0.1, shaderProgram);
 	//let torus = new Torus(gl, 0.25, 0.5, 16, shaderProgram);
 
 	// Making the player
@@ -52,7 +52,7 @@ function init() {
 		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, star, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, cone, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
