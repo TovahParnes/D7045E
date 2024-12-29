@@ -233,3 +233,60 @@ class Cone extends Mesh {
 		this.slices = slices;
 	}
 }
+
+class Cylinder extends Mesh {
+	constructor(gl, width, height, slices, shaderProgram) {
+		let vertices = [];
+		let indices = [];
+		let normals = [];
+
+		let topmiddlePoint = vec4(0.0, height / 2, 0.0, 1.0);
+		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
+
+		let angleStep = (2.0 * Math.PI) / slices;
+
+		vertices.push(bottomMiddlePoint);
+		vertices.push(topmiddlePoint);
+
+		let count = vertices.length;
+		for (var i = 0; i < slices + 1; i++) {
+			var angle = i * angleStep;
+			// Count = bottom vertex
+			let curBot = count;
+			// Last bottom vertex = count -2
+			let lastBot = count - 2;
+			// Bottom
+			vertices.push(
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+			);
+
+			// Count + 1 = top vertex
+			let curTop = count + 1;
+			// Last top vertex = count - 1
+			let lastTop = count - 1;
+			// Top
+			vertices.push(
+				vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
+			);
+
+			// Bottom circle
+			indices.push(0, curBot, lastBot);
+
+			// Top circle
+			indices.push(1, curTop, lastTop);
+
+			// Sides
+			indices.push(curBot, curTop, lastTop);
+			indices.push(curBot, lastBot, lastTop);
+
+			count = count + 2;
+		}
+		//TODO: check so that each face had a triangle
+
+		super(gl, flatten(vertices), indices, shaderProgram);
+
+		this.width = width;
+		this.height = height;
+		this.slices = slices;
+	}
+}
