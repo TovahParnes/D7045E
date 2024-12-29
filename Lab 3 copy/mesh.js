@@ -267,10 +267,10 @@ class Cylinder extends Mesh {
 			let lastBot = count - 1;
 
 			// Top circle
-			indices.push(1, curTop, lastTop);
+			indices.push(0, curTop, lastTop);
 
 			// Bottom circle
-			indices.push(0, curBot, lastBot);
+			indices.push(1, curBot, lastBot);
 
 			// Sides
 			indices.push(curBot, curTop, lastTop);
