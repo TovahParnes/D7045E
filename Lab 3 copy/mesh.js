@@ -245,35 +245,32 @@ class Cylinder extends Mesh {
 
 		let angleStep = (2.0 * Math.PI) / slices;
 
-		vertices.push(bottomMiddlePoint);
 		vertices.push(topmiddlePoint);
+		vertices.push(bottomMiddlePoint);
 
 		let count = vertices.length;
 		for (var i = 0; i < slices + 1; i++) {
 			var angle = i * angleStep;
-			// Count = bottom vertex
-			let curBot = count;
-			// Last bottom vertex = count -2
-			let lastBot = count - 2;
-			// Bottom
-			vertices.push(
-				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
-			);
 
-			// Count + 1 = top vertex
-			let curTop = count + 1;
-			// Last top vertex = count - 1
-			let lastTop = count - 1;
 			// Top
 			vertices.push(
 				vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
 			);
+			let curTop = count;
+			let lastTop = count - 2;
 
-			// Bottom circle
-			indices.push(0, curBot, lastBot);
+			// Bottom
+			vertices.push(
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+			);
+			let curBot = count + 1;
+			let lastBot = count - 1;
 
 			// Top circle
 			indices.push(1, curTop, lastTop);
+
+			// Bottom circle
+			indices.push(0, curBot, lastBot);
 
 			// Sides
 			indices.push(curBot, curTop, lastTop);
