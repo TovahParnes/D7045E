@@ -98,21 +98,47 @@ class cuboid extends Mesh {
 
 class Sphere extends Mesh {
 	constructor(gl, radius, slices, stacks, shaderProgram) {
-		const sphere = uvSphere(radius, slices, stacks);
-		const vertices = sphere.vertexPositions;
-		const indices = sphere.indices;
-		const normals = sphere.vertexNormals;
+		const vertices = [];
+		const indices = [];
 
-		super(gl, vertices, indices, shaderProgram);
+		let latitudeBands = stacks;
+		let longitudeBands = slices;
+
+		for (let latNumber = 0; latNumber <= latitudeBands; latNumber++) {
+			const theta = (latNumber * Math.PI) / latitudeBands;
+			const sinTheta = Math.sin(theta);
+			const cosTheta = Math.cos(theta);
+
+			for (let longNumber = 0; longNumber <= longitudeBands; longNumber++) {
+				const phi = (longNumber * 2 * Math.PI) / longitudeBands;
+				const sinPhi = Math.sin(phi);
+				const cosPhi = Math.cos(phi);
+
+				const x = cosPhi * sinTheta;
+				const y = cosTheta;
+				const z = sinPhi * sinTheta;
+				const u = 1 - longNumber / longitudeBands;
+				const v = 1 - latNumber / latitudeBands;
+
+				vertices.push(vec4(radius * x, radius * y, radius * z, 1));
+			}
+		}
+
+		for (let latNumber = 0; latNumber < latitudeBands; latNumber++) {
+			for (let longNumber = 0; longNumber < longitudeBands; longNumber++) {
+				const first = latNumber * (longitudeBands + 1) + longNumber;
+				const second = first + longitudeBands + 1;
+
+				indices.push(first, second, first + 1);
+				indices.push(second, second + 1, first + 1);
+			}
+		}
+
+		super(gl, flatten(vertices), indices, shaderProgram);
 
 		this.radius = radius;
-		this.slices = slices;
-		this.stacks = stacks;
-	}
-
-	// Getters
-	getRadius() {
-		return this.radius;
+		this.latitudeBands = latitudeBands;
+		this.longitudeBands = longitudeBands;
 	}
 }
 

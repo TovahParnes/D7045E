@@ -35,9 +35,9 @@ function init() {
 	let redMaterial = new MonoMaterial(gl, shaderProgram, vec4(1, 0, 0, 1.0));
 
 	// Shapes
-	//let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
+	let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
 	//let star = new Star(gl, 5, 0.5, 0.25, 0.1, shaderProgram);
-	let cone = new Cone(gl, 0.5, 0.5, 16, shaderProgram);
+	//let cone = new Cone(gl, 0.5, 0.5, 16, shaderProgram);
 
 	// Making the player
 	let width = 0.8;
@@ -51,7 +51,7 @@ function init() {
 		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, cone, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, sphere, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;

@@ -12,7 +12,7 @@ class GraphicsNode {
 		this.material.applyMaterial(this.transform);
 		let indicesLength = this.mesh.getIndices().length;
 		console.log(indicesLength);
-		indicesLength = indicesLength / 2;
+		//indicesLength = 20;
 		this.gl.drawElements(
 			this.gl.TRIANGLES,
 			indicesLength,
