@@ -2,6 +2,7 @@
 
 class Mesh {
 	constructor(gl, vertices, indices, shaderProgram) {
+		/*
 		this.vertices = vertices;
 		this.indices = indices;
 
@@ -20,6 +21,31 @@ class Mesh {
 
 		let prog = shaderProgram.getProgram();
 		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
+		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(pos);
+		*/
+
+		this.vertices = vertices;
+		this.indices = indices;
+
+		// Create a vertex array object
+		let vertexArr = gl.createVertexArray();
+		let vertexBuff = gl.createBuffer();
+		let indexBuff = gl.createBuffer();
+
+		gl.bindVertexArray(vertexArr);
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuff);
+
+		let verticeArray = new Float32Array(this.vertices);
+		let indiceArray = new Uint8Array(this.indices);
+
+		gl.bufferData(gl.ARRAY_BUFFER, verticeArray, gl.STATIC_DRAW);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indiceArray, gl.STATIC_DRAW);
+
+		let prog = shaderProgram.getProgram();
+		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
+
 		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(pos);
 	}
@@ -88,54 +114,46 @@ class Sphere extends Mesh {
 	}
 }
 
-function uvSphere(radius, slices, stacks) {
-	radius = radius || 0.5;
-	slices = slices || 16;
-	stacks = stacks || 8;
-	var vertexCount = (slices + 1) * (stacks + 1);
-	var vertices = new Float32Array(3 * vertexCount);
-	var normals = new Float32Array(3 * vertexCount);
-	var texCoords = new Float32Array(2 * vertexCount);
-	var indices = new Uint16Array(2 * slices * stacks * 3);
-	var du = (2 * Math.PI) / slices;
-	var dv = Math.PI / stacks;
-	var i, j, u, v, x, y, z;
-	var indexV = 0;
-	var indexT = 0;
-	for (i = 0; i <= stacks; i++) {
-		v = -Math.PI / 2 + i * dv;
-		for (j = 0; j <= slices; j++) {
-			u = j * du;
-			x = Math.cos(u) * Math.cos(v);
-			y = Math.sin(u) * Math.cos(v);
-			z = Math.sin(v);
-			vertices[indexV] = radius * x;
-			normals[indexV++] = x;
-			vertices[indexV] = radius * y;
-			normals[indexV++] = y;
-			vertices[indexV] = radius * z;
-			normals[indexV++] = z;
-			texCoords[indexT++] = j / slices;
-			texCoords[indexT++] = i / stacks;
+class Star extends Mesh {
+	constructor(
+		gl,
+		spikes,
+		outerDistance,
+		innerDistance,
+		thickness,
+		shaderProgram
+	) {
+		if (spikes < 2) throw new Error("spikes must be larger than 2");
+		if (outerDistance <= innerDistance)
+			throw new Error(
+				"outerDistance must be bigger or the same as innerDistance"
+			);
+
+		let vertices = [0, 0, thickness / 2, 0, 0, -thickness / 2];
+		for (let i = 0; i < spikes; i++) {
+			let angle = Math.PI / 2 + (i / spikes) * 2 * Math.PI;
+			let x = Math.cos(angle) * outerDistance;
+			let y = Math.sin(angle) * outerDistance;
+			vertices.push(x, y, 0);
 		}
-	}
-	var k = 0;
-	for (j = 0; j < stacks; j++) {
-		var row1 = j * (slices + 1);
-		var row2 = (j + 1) * (slices + 1);
-		for (i = 0; i < slices; i++) {
-			indices[k++] = row1 + i;
-			indices[k++] = row2 + i + 1;
-			indices[k++] = row2 + i;
-			indices[k++] = row1 + i;
-			indices[k++] = row1 + i + 1;
-			indices[k++] = row2 + i + 1;
+
+		for (let i = 0; i < spikes; i++) {
+			let angle = (i / spikes) * 2 * Math.PI + Math.PI / 2 + Math.PI / spikes;
+			let x = Math.cos(angle) * innerDistance;
+			let y = Math.sin(angle) * innerDistance;
+			vertices.push(x, y, 0);
 		}
+
+		let indices = [];
+		for (let i = 0; i < spikes; i++) {
+			let last = spikes + 2 + ((i + spikes - 1) % spikes);
+			indices.push(0, i + 2, i + spikes + 2);
+			indices.push(0, i + 2, last);
+			indices.push(1, i + 2, i + spikes + 2);
+			indices.push(1, i + 2, last);
+		}
+
+		//let normals = calculateNormals(vertices, indices);
+		super(gl, vertices, indices, shaderProgram);
 	}
-	return {
-		vertexPositions: vertices,
-		vertexNormals: normals,
-		vertexTextureCoords: texCoords,
-		indices: indices,
-	};
 }
