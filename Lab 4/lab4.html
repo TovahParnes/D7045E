@@ -13,12 +13,12 @@
 			uniform mat4 u_viewMatrix;
 			uniform mat4 u_projectionMatrix;
 			varying vec3 worldPosition;
-			varying vec3 normals;
+			varying vec3 v_normals;
 			varying float v_depth;
 			void main()
 			{
 				worldPosition = (u_transformMatrix * a_vertexPosition).xyz;
-				normals = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
+				v_normals = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
 				gl_Position = u_projectionMatrix * u_viewMatrix * u_transformMatrix * a_vertexPosition;
 			}
 		</script>
@@ -27,6 +27,7 @@
 			precision mediump float;
 			uniform vec4 u_color;
 			varying float v_depth;
+			varying vec3 v_normals;
 			void main()
 			{
 				gl_FragColor = vec4(u_color[0]*1.5/v_depth, u_color[1]*1.5/v_depth, u_color[2]*1.5/v_depth, 1);

@@ -24,3 +24,15 @@ class GraphicsNode {
 		this.transform = transform;
 	}
 }
+
+class Light extends GraphicsNode {
+	constructor(gl, shaderProgram, mesh, material, transform) {
+		super(gl, mesh, material, transform);
+		this.shaderProgram = shaderProgram;
+	}
+
+	applyLight() {
+		let prog = this.shaderProgram.getProgram();
+		// TODO: continue here
+	}
+}
