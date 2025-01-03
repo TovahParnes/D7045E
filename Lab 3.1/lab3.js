@@ -40,12 +40,7 @@ function init() {
 	//let star = new Star(gl, 5, 0.3, 0.2, 0.1, shaderProgram);
 	//let torus = new Torus(gl, 0.25, 0.5, 16, shaderProgram);
 	let cylinder = new Cylinder(gl, 0.5, 1, 16, shaderProgram);
-
-	// Making the player
-	let width = 0.8;
-	let height = 0.5;
-	let depth = 0.5;
-	//let cube = new cuboid(gl, width, height, depth, shaderProgram);
+	//let cube = new cuboid(gl, 0.8, 0.5, 0.5, shaderProgram);
 
 	let playerMatrix = mat4(
 		[1, 0, 0, 0],
