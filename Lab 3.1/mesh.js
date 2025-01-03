@@ -70,7 +70,9 @@ class cuboid extends Mesh {
 
 class Sphere extends Mesh {
 	constructor(gl, radius, slices, stacks, shaderProgram) {
-		//TODO: add error checking
+		if (radius <= 0) throw new Error("radus can not be negative or zero");
+		if (slices < 2) throw new Error("there must be at least 2 slices");
+		if (stacks < 2) throw new Error("there must be at least 2 stacks");
 		const vertices = [];
 		const indices = [];
 
@@ -155,9 +157,15 @@ class Star extends Mesh {
 
 class Torus extends Mesh {
 	constructor(gl, innerRadius, outerRadius, segments, shaderProgram) {
+		if (innerRadius <= 0)
+			throw new Error("inner radius can not be negative or zero");
+		if (outerRadius <= innerRadius)
+			throw new Error("outer radius must be bigger than the inner radius");
+		if (segments < 3) throw new Error("there must be at least 3 segments");
+
 		const vertices = [];
 		const indices = [];
-		let numSegments = segments - 1; // Added the minus one and it seems to work, TODO: check it working in 3d
+		let numSegments = segments;
 		const ringRadius = (outerRadius - innerRadius) / 2;
 		const centerRadius = innerRadius + ringRadius;
 
