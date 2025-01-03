@@ -369,10 +369,6 @@ function calculateNormals(vertices, indices) {
 function calculateFaceNormal(v1, v2, v3) {
 	const u = subtract(v2, v1);
 	const v = subtract(v3, v1);
-	const normal = vec3(
-		u[1] * v[2] - u[2] * v[1],
-		u[2] * v[0] - u[0] * v[2],
-		u[0] * v[1] - u[1] * v[0]
-	);
+	const normal = cross(u, v);
 	return normalize(normal);
 }
