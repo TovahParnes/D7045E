@@ -70,6 +70,7 @@ class cuboid extends Mesh {
 
 class Sphere extends Mesh {
 	constructor(gl, radius, slices, stacks, shaderProgram) {
+		//TODO: add error checking
 		const vertices = [];
 		const indices = [];
 
@@ -112,17 +113,20 @@ class Sphere extends Mesh {
 class Star extends Mesh {
 	constructor(gl, points, outerDist, innerDist, thickness, shaderProgram) {
 		if (points < 2) throw new Error("there must be at least 2 points");
-		if (outerDist <= innerDist)
+		if (outerDist < innerDist)
 			throw new Error("outerDist must be bigger or the same as innerDist");
 		if (thickness <= 0) throw new Error("thickness must be bigger than 0");
 
 		const vertices = [];
 		const indices = [];
+
+		let frontCenter = vec4(0.0, 0.0, thickness / 2.0, 1.0);
+		let backCenter = vec4(0.0, 0.0, -thickness / 2.0, 1.0);
+
 		const angleStep = Math.PI / points;
 
-		// Center vertices
-		vertices.push(vec4(0, 0, thickness / 2, 1)); // Front center
-		vertices.push(vec4(0, 0, -thickness / 2, 1)); // Back center
+		vertices.push(frontCenter); // Front center
+		vertices.push(backCenter); // Back center
 
 		// Outer and inner vertices
 		for (let i = 0; i < 2 * points; i++) {
