@@ -93,12 +93,8 @@ class cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		let normals = [
-			1, 0, 3, 3, 2, 1, 2, 3, 7, 7, 6, 2, 3, 0, 4, 4, 7, 3, 6, 5, 1, 1, 2, 6, 4,
-			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
-		];
-
-		super(gl, flatten(vertices), indices, normals, shaderProgram);
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.x = x;
 		this.y = y;
@@ -118,7 +114,6 @@ class Sphere extends Mesh {
 		if (stacks < 2) throw new Error("there must be at least 2 stacks");
 		const vertices = [];
 		const indices = [];
-		const normals = [];
 
 		for (let currStack = 0; currStack <= stacks; currStack++) {
 			const theta = (currStack * Math.PI) / stacks;
@@ -148,7 +143,8 @@ class Sphere extends Mesh {
 			}
 		}
 
-		super(gl, flatten(vertices), indices, indices, shaderProgram);
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.radius = radius;
 		this.stacks = stacks;
@@ -165,7 +161,6 @@ class Star extends Mesh {
 
 		const vertices = [];
 		const indices = [];
-		const normals = [];
 
 		let frontCenter = vec4(0.0, 0.0, thickness / 2.0, 1.0);
 		let backCenter = vec4(0.0, 0.0, -thickness / 2.0, 1.0);
@@ -191,7 +186,8 @@ class Star extends Mesh {
 			indices.push(1, next, i);
 		}
 
-		super(gl, flatten(vertices), indices, normals, shaderProgram);
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.points = points;
 		this.outerDist = outerDist;
@@ -210,7 +206,6 @@ class Torus extends Mesh {
 
 		const vertices = [];
 		const indices = [];
-		const normals = [];
 
 		let numSegments = segments;
 		const ringRadius = (outerRadius - innerRadius) / 2;
@@ -246,7 +241,8 @@ class Torus extends Mesh {
 			}
 		}
 
-		super(gl, flatten(vertices), indices, normals, shaderProgram);
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.innerRadius = innerRadius;
 		this.outerRadius = outerRadius;
@@ -265,7 +261,6 @@ class Cone extends Mesh {
 
 		let vertices = [];
 		let indices = [];
-		let normals = [];
 
 		let topPoint = vec4(0.0, height / 2, 0.0, 1.0);
 		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
@@ -287,7 +282,8 @@ class Cone extends Mesh {
 		}
 		//TODO: check so that each face had a triangle
 
-		super(gl, flatten(vertices), indices, normals, shaderProgram);
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;
 		this.height = height;
@@ -306,7 +302,6 @@ class Cylinder extends Mesh {
 
 		let vertices = [];
 		let indices = [];
-		let normals = [];
 
 		let topmiddlePoint = vec4(0.0, height / 2, 0.0, 1.0);
 		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
@@ -348,10 +343,36 @@ class Cylinder extends Mesh {
 		}
 		//TODO: check so that each face had a triangle
 
-		super(gl, flatten(vertices), indices, normals, shaderProgram);
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;
 		this.height = height;
 		this.slices = slices;
 	}
+}
+
+function calculateNormals(vertices, indices) {
+	let normals = [];
+
+	for (let i = 0; i < indices.length; i += 3) {
+		let v1 = vertices[indices[i]];
+		let v2 = vertices[indices[i + 1]];
+		let v3 = vertices[indices[i + 2]];
+
+		normals.push(calculateFaceNormal(v1, v2, v3));
+	}
+
+	return normals;
+}
+
+function calculateFaceNormal(v1, v2, v3) {
+	const u = subtract(v2, v1);
+	const v = subtract(v3, v1);
+	const normal = vec3(
+		u[1] * v[2] - u[2] * v[1],
+		u[2] * v[0] - u[0] * v[2],
+		u[0] * v[1] - u[1] * v[0]
+	);
+	return normalize(normal);
 }
