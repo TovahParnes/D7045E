@@ -73,33 +73,28 @@ class Sphere extends Mesh {
 		const vertices = [];
 		const indices = [];
 
-		let latitudeBands = stacks;
-		let longitudeBands = slices;
-
-		for (let latNumber = 0; latNumber <= latitudeBands; latNumber++) {
-			const theta = (latNumber * Math.PI) / latitudeBands;
+		for (let currStack = 0; currStack <= stacks; currStack++) {
+			const theta = (currStack * Math.PI) / stacks;
 			const sinTheta = Math.sin(theta);
 			const cosTheta = Math.cos(theta);
 
-			for (let longNumber = 0; longNumber <= longitudeBands; longNumber++) {
-				const phi = (longNumber * 2 * Math.PI) / longitudeBands;
+			for (let currSlice = 0; currSlice <= slices; currSlice++) {
+				const phi = (currSlice * 2 * Math.PI) / slices;
 				const sinPhi = Math.sin(phi);
 				const cosPhi = Math.cos(phi);
 
 				const x = cosPhi * sinTheta;
 				const y = cosTheta;
 				const z = sinPhi * sinTheta;
-				const u = 1 - longNumber / longitudeBands;
-				const v = 1 - latNumber / latitudeBands;
 
 				vertices.push(vec4(radius * x, radius * y, radius * z, 1));
 			}
 		}
 
-		for (let latNumber = 0; latNumber < latitudeBands; latNumber++) {
-			for (let longNumber = 0; longNumber < longitudeBands; longNumber++) {
-				const first = latNumber * (longitudeBands + 1) + longNumber;
-				const second = first + longitudeBands + 1;
+		for (let currStack = 0; currStack < stacks; currStack++) {
+			for (let currSlice = 0; currSlice < slices; currSlice++) {
+				const first = currStack * (slices + 1) + currSlice;
+				const second = first + slices + 1;
 
 				indices.push(first, second, first + 1);
 				indices.push(second, second + 1, first + 1);
@@ -109,8 +104,8 @@ class Sphere extends Mesh {
 		super(gl, flatten(vertices), indices, shaderProgram);
 
 		this.radius = radius;
-		this.latitudeBands = latitudeBands;
-		this.longitudeBands = longitudeBands;
+		this.stacks = stacks;
+		this.slices = slices;
 	}
 }
 
