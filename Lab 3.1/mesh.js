@@ -209,6 +209,13 @@ class Torus extends Mesh {
 
 class Cone extends Mesh {
 	constructor(gl, width, height, slices, shaderProgram) {
+		if (width <= 0.0 || height <= 0.0) {
+			throw "Cone width and height must be greater than 0";
+		}
+		if (slices < 3) {
+			throw "Cone slices must be greater than 3";
+		}
+
 		let vertices = [];
 		let indices = [];
 		let normals = [];
@@ -243,6 +250,13 @@ class Cone extends Mesh {
 
 class Cylinder extends Mesh {
 	constructor(gl, width, height, slices, shaderProgram) {
+		if (width <= 0.0 || height <= 0.0) {
+			throw "Cone width and height must be greater than 0";
+		}
+		if (slices < 3) {
+			throw "Cone slices must be greater than 3";
+		}
+
 		let vertices = [];
 		let indices = [];
 		let normals = [];
