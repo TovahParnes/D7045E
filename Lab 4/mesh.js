@@ -71,7 +71,7 @@ class Mesh {
 	}
 }
 
-class Cuboid extends Mesh {
+class cuboid extends Mesh {
 	constructor(gl, width, height, depth, shaderProgram) {
 		const x = width / 2;
 		const y = height / 2;
@@ -96,7 +96,7 @@ class Cuboid extends Mesh {
 		let normals = [
 			1, 0, 3, 3, 2, 1, 2, 3, 7, 7, 6, 2, 3, 0, 4, 4, 7, 3, 6, 5, 1, 1, 2, 6, 4,
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
-		]; //TEMP! TODO: Fix normals
+		];
 
 		super(gl, flatten(vertices), indices, normals, shaderProgram);
 
@@ -113,45 +113,245 @@ class Cuboid extends Mesh {
 
 class Sphere extends Mesh {
 	constructor(gl, radius, slices, stacks, shaderProgram) {
-		const sphere = uvSphere(radius, slices, stacks);
-		const vertices = sphere.vertexPositions;
-		const indices = sphere.indices;
-		const normals = sphere.vertexNormals;
+		if (radius <= 0) throw new Error("radus can not be negative or zero");
+		if (slices < 2) throw new Error("there must be at least 2 slices");
+		if (stacks < 2) throw new Error("there must be at least 2 stacks");
+		const vertices = [];
+		const indices = [];
+		const normals = [];
 
-		super(gl, vertices, indices, normals, shaderProgram);
+		for (let currStack = 0; currStack <= stacks; currStack++) {
+			const theta = (currStack * Math.PI) / stacks;
+			const sinTheta = Math.sin(theta);
+			const cosTheta = Math.cos(theta);
+
+			for (let currSlice = 0; currSlice <= slices; currSlice++) {
+				const phi = (currSlice * 2 * Math.PI) / slices;
+				const sinPhi = Math.sin(phi);
+				const cosPhi = Math.cos(phi);
+
+				const x = cosPhi * sinTheta;
+				const y = cosTheta;
+				const z = sinPhi * sinTheta;
+
+				vertices.push(vec4(radius * x, radius * y, radius * z, 1));
+			}
+		}
+
+		for (let currStack = 0; currStack < stacks; currStack++) {
+			for (let currSlice = 0; currSlice < slices; currSlice++) {
+				const first = currStack * (slices + 1) + currSlice;
+				const second = first + slices + 1;
+
+				indices.push(first, second, first + 1);
+				indices.push(second, second + 1, first + 1);
+			}
+		}
+
+		super(gl, flatten(vertices), indices, indices, shaderProgram);
 
 		this.radius = radius;
-		this.slices = slices;
 		this.stacks = stacks;
+		this.slices = slices;
 	}
+}
 
-	// Getters
-	getRadius() {
-		return this.radius;
+class Star extends Mesh {
+	constructor(gl, points, outerDist, innerDist, thickness, shaderProgram) {
+		if (points < 2) throw new Error("there must be at least 2 points");
+		if (outerDist < innerDist)
+			throw new Error("outerDist must be bigger or the same as innerDist");
+		if (thickness <= 0) throw new Error("thickness must be bigger than 0");
+
+		const vertices = [];
+		const indices = [];
+		const normals = [];
+
+		let frontCenter = vec4(0.0, 0.0, thickness / 2.0, 1.0);
+		let backCenter = vec4(0.0, 0.0, -thickness / 2.0, 1.0);
+
+		const angleStep = Math.PI / points;
+
+		vertices.push(frontCenter); // Front center
+		vertices.push(backCenter); // Back center
+
+		// Outer and inner vertices
+		for (let i = 0; i < 2 * points; i++) {
+			const angle = i * angleStep;
+			const dist = i % 2 === 0 ? outerDist : innerDist;
+			vertices.push(vec4(dist * Math.cos(angle), dist * Math.sin(angle), 0, 1));
+		}
+
+		// Indices for triangles
+		for (let i = 2; i < 2 * points + 2; i++) {
+			const next = i === 2 * points + 1 ? 2 : i + 1;
+			// Front triangles
+			indices.push(0, i, next);
+			// Back triangles
+			indices.push(1, next, i);
+		}
+
+		super(gl, flatten(vertices), indices, normals, shaderProgram);
+
+		this.points = points;
+		this.outerDist = outerDist;
+		this.innerDist = innerDist;
+		this.thickness = thickness;
 	}
 }
 
 class Torus extends Mesh {
-	constructor(gl, outerRadius, innerRadius, slices, stacks, shaderProgram) {
-		const torus = uvTorus(outerRadius, innerRadius, slices, stacks);
-		const vertices = torus.vertexPositions;
-		const indices = torus.indices;
-		const normals = torus.vertexNormals;
+	constructor(gl, innerRadius, outerRadius, segments, shaderProgram) {
+		if (innerRadius <= 0)
+			throw new Error("inner radius can not be negative or zero");
+		if (outerRadius <= innerRadius)
+			throw new Error("outer radius must be bigger than the inner radius");
+		if (segments < 3) throw new Error("there must be at least 3 segments");
 
-		super(gl, vertices, indices, normals, shaderProgram);
+		const vertices = [];
+		const indices = [];
+		const normals = [];
 
-		this.outerRadius = outerRadius;
+		let numSegments = segments;
+		const ringRadius = (outerRadius - innerRadius) / 2;
+		const centerRadius = innerRadius + ringRadius;
+
+		for (let i = 0; i < numSegments; i++) {
+			const theta = (i / numSegments) * 2 * Math.PI;
+			const cosTheta = Math.cos(theta);
+			const sinTheta = Math.sin(theta);
+
+			for (let j = 0; j < numSegments; j++) {
+				const phi = (j / numSegments) * 2 * Math.PI;
+				const cosPhi = Math.cos(phi);
+				const sinPhi = Math.sin(phi);
+
+				const x = (centerRadius + ringRadius * cosPhi) * cosTheta;
+				const y = (centerRadius + ringRadius * cosPhi) * sinTheta;
+				const z = ringRadius * sinPhi;
+
+				vertices.push(vec4(x, y, z, 1));
+
+				const nextI = (i + 1) % numSegments;
+				const nextJ = (j + 1) % numSegments;
+
+				indices.push(
+					i * numSegments + j,
+					nextI * numSegments + j,
+					nextI * numSegments + nextJ,
+					i * numSegments + j,
+					nextI * numSegments + nextJ,
+					i * numSegments + nextJ
+				);
+			}
+		}
+
+		super(gl, flatten(vertices), indices, normals, shaderProgram);
+
 		this.innerRadius = innerRadius;
+		this.outerRadius = outerRadius;
+		this.numSegments = numSegments;
+	}
+}
+
+class Cone extends Mesh {
+	constructor(gl, width, height, slices, shaderProgram) {
+		if (width <= 0.0 || height <= 0.0) {
+			throw "Cone width and height must be greater than 0";
+		}
+		if (slices < 3) {
+			throw "Cone slices must be greater than 3";
+		}
+
+		let vertices = [];
+		let indices = [];
+		let normals = [];
+
+		let topPoint = vec4(0.0, height / 2, 0.0, 1.0);
+		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
+
+		let angleStep = (2.0 * Math.PI) / slices;
+
+		vertices.push(bottomMiddlePoint);
+		vertices.push(topPoint);
+
+		let count = vertices.length;
+		for (var i = 0; i < slices + 1; i++) {
+			var angle = i * angleStep;
+			vertices.push(
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+			);
+			indices.push(0, count, count - 1);
+			indices.push(1, count, count - 1);
+			count++;
+		}
+		//TODO: check so that each face had a triangle
+
+		super(gl, flatten(vertices), indices, normals, shaderProgram);
+
+		this.width = width;
+		this.height = height;
 		this.slices = slices;
-		this.stacks = stacks;
 	}
+}
 
-	// Getters
-	getOuterRadius() {
-		return this.outerRadius;
-	}
+class Cylinder extends Mesh {
+	constructor(gl, width, height, slices, shaderProgram) {
+		if (width <= 0.0 || height <= 0.0) {
+			throw "Cone width and height must be greater than 0";
+		}
+		if (slices < 3) {
+			throw "Cone slices must be greater than 3";
+		}
 
-	getInnerRadius() {
-		return this.innerRadius;
+		let vertices = [];
+		let indices = [];
+		let normals = [];
+
+		let topmiddlePoint = vec4(0.0, height / 2, 0.0, 1.0);
+		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
+
+		let angleStep = (2.0 * Math.PI) / slices;
+
+		vertices.push(topmiddlePoint);
+		vertices.push(bottomMiddlePoint);
+
+		let count = vertices.length;
+		for (var i = 0; i < slices + 1; i++) {
+			var angle = i * angleStep;
+
+			// Top
+			vertices.push(
+				vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
+			);
+			let curTop = count;
+			let lastTop = count - 2;
+
+			// Bottom
+			vertices.push(
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+			);
+			let curBot = count + 1;
+			let lastBot = count - 1;
+
+			// Top circle
+			indices.push(0, curTop, lastTop);
+
+			// Bottom circle
+			indices.push(1, curBot, lastBot);
+
+			// Sides
+			indices.push(curBot, curTop, lastTop);
+			indices.push(curBot, lastBot, lastTop);
+
+			count = count + 2;
+		}
+		//TODO: check so that each face had a triangle
+
+		super(gl, flatten(vertices), indices, normals, shaderProgram);
+
+		this.width = width;
+		this.height = height;
+		this.slices = slices;
 	}
 }
