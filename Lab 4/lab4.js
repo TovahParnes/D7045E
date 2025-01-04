@@ -37,30 +37,33 @@ function init() {
 
 	let ambientColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
-		"ambientColor"
+		"u_ambientColor"
 	);
+	gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
 
 	let diffuseColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
-		"diffuseColor"
+		"u_diffuseColor"
 	);
+	gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
+
 	let specularColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
-		"specularColor"
+		"u_specularColor"
 	);
-
-	gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
-	gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
 	gl.uniform3fv(specularColorLoc, flatten(specularColor));
 
-	gl.uniform4fv(
-		gl.getUniformLocation(shader.getProgram(), "lightPosition"),
-		flatten(lightPosition)
+	let lightPositionLoc = gl.getUniformLocation(
+		shader.getProgram(),
+		"u_lightPosition"
 	);
-	gl.uniform1f(
-		gl.getUniformLocation(shader.getProgram(), "specularExponent"),
-		specularExponent
+	gl.uniform4fv(lightPositionLoc, flatten(lightPosition));
+
+	let specularExponentLoc = gl.getUniformLocation(
+		shader.getProgram(),
+		"u_specularExponent"
 	);
+	gl.uniform1f(specularExponentLoc, specularExponent);
 
 	// Camera
 	camera = new Camera(gl, shader, canvas);
@@ -70,12 +73,12 @@ function init() {
 	let redMaterial = new MonoMaterial(gl, shader, vec4(1, 0, 0, 1.0));
 
 	// Shapes
-	let cube = new cuboid(gl, 0.8, 0.5, 0.5, shader);
-	//let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
-	//let star = new Star(gl, 5, 0.3, 0.2, 0.1, shaderProgram);
-	//let torus = new Torus(gl, 0.25, 0.5, 15, shaderProgram);
-	//let cone = new Cone(gl, 0.5, 1, 10, shaderProgram);
-	//let cylinder = new Cylinder(gl, 0.5, 1, 16, shaderProgram);
+	//let cube = new cuboid(gl, 0.8, 0.5, 0.5, shader);
+	let sphere = new Sphere(gl, 0.5, 16, 8, shader);
+	//let star = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
+	//let torus = new Torus(gl, 0.25, 0.5, 15, shader);
+	//let cone = new Cone(gl, 0.5, 1, 10, shader);
+	//let cylinder = new Cylinder(gl, 0.5, 1, 16, shader);
 
 	let playerMatrix = mat4(
 		[1, 0, 0, 0],
@@ -83,7 +86,7 @@ function init() {
 		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, cube, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, sphere, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
