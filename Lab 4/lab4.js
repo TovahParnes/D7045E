@@ -3,7 +3,7 @@
 let canvas;
 let gl;
 let camera;
-let shaderProgram;
+let shader;
 
 let objects = [];
 const numObjects = 30;
@@ -25,17 +25,50 @@ function init() {
 	// Shaders
 	const vertexShader = new Shader(gl, gl.VERTEX_SHADER, "vertex-shader");
 	const fragmentShader = new Shader(gl, gl.FRAGMENT_SHADER, "fragment-shader");
-	shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader);
+	shader = new ShaderProgram(gl, vertexShader, fragmentShader);
+
+	// Lights
+	let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
+	let diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
+	let specularColor = vec3(1.0, 1.0, 1.0);
+	let lightPosition = vec4(0.0, -1, 0.0, 1.0);
+	let specularExponent = 50.0;
+
+	let ambientColorLoc = gl.getUniformLocation(
+		shader.getProgram(),
+		"ambientColor"
+	);
+	let diffuseColorLoc = gl.getUniformLocation(
+		shader.getProgram(),
+		"diffuseColor"
+	);
+	let specularColorLoc = gl.getUniformLocation(
+		shader.getProgram(),
+		"specularColor"
+	);
+
+	gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
+	gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
+	gl.uniform3fv(specularColorLoc, flatten(specularColor));
+
+	gl.uniform4fv(
+		gl.getUniformLocation(shader.getProgram(), "lightPosition"),
+		flatten(lightPosition)
+	);
+	gl.uniform1f(
+		gl.getUniformLocation(shader.getProgram(), "specularExponent"),
+		specularExponent
+	);
 
 	// Camera
-	camera = new Camera(gl, shaderProgram, canvas);
+	camera = new Camera(gl, shader, canvas);
 
 	// ColorMaterials
-	let greenMaterial = new MonoMaterial(gl, shaderProgram, vec4(0, 1, 0, 1.0));
-	let redMaterial = new MonoMaterial(gl, shaderProgram, vec4(1, 0, 0, 1.0));
+	let greenMaterial = new MonoMaterial(gl, shader, vec4(0, 1, 0, 1.0));
+	let redMaterial = new MonoMaterial(gl, shader, vec4(1, 0, 0, 1.0));
 
 	// Shapes
-	let cube = new cuboid(gl, 0.8, 0.5, 0.5, shaderProgram);
+	let cube = new cuboid(gl, 0.8, 0.5, 0.5, shader);
 	//let sphere = new Sphere(gl, 0.5, 16, 8, shaderProgram);
 	//let star = new Star(gl, 5, 0.3, 0.2, 0.1, shaderProgram);
 	//let torus = new Torus(gl, 0.25, 0.5, 15, shaderProgram);
@@ -69,7 +102,7 @@ function init() {
 
 function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-	shaderProgram.activate();
+	shader.activate();
 	camera.activate();
 
 	for (let object of objects) {

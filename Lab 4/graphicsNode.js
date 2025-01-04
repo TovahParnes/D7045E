@@ -33,6 +33,26 @@ class Light extends GraphicsNode {
 
 	applyLight() {
 		let prog = this.shaderProgram.getProgram();
-		// TODO: continue here
+
+		let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
+		let diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
+		let specularColor = vec3(1.0, 1.0, 1.0);
+
+		let ambientColorLoc = gl.getUniformLocation(
+			shader.getProgram(),
+			"ambientColor"
+		);
+		let diffuseColorLoc = gl.getUniformLocation(
+			shader.getProgram(),
+			"diffuseColor"
+		);
+		let specularColorLoc = gl.getUniformLocation(
+			shader.getProgram(),
+			"specularColor"
+		);
+
+		gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
+		gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
+		gl.uniform3fv(specularColorLoc, flatten(specularColor));
 	}
 }

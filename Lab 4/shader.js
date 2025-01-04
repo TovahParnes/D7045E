@@ -13,6 +13,12 @@ class Shader {
 		this.shader = gl.createShader(shaderType);
 		gl.shaderSource(this.shader, document.getElementById(source).text);
 		gl.compileShader(this.shader);
+
+		if (!gl.getShaderParameter(this.shader, gl.COMPILE_STATUS)) {
+			alert("Error compiling shader: " + gl.getShaderInfoLog(this.shader));
+			gl.deleteShader(this.shader);
+			return null;
+		}
 	}
 
 	getShader() {
