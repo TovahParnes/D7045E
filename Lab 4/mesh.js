@@ -114,6 +114,7 @@ class Sphere extends Mesh {
 		if (stacks < 2) throw new Error("there must be at least 2 stacks");
 		const vertices = [];
 		const indices = [];
+		const normals = [];
 
 		for (let currStack = 0; currStack <= stacks; currStack++) {
 			const theta = (currStack * Math.PI) / stacks;
@@ -130,6 +131,7 @@ class Sphere extends Mesh {
 				const z = sinPhi * sinTheta;
 
 				vertices.push(vec4(radius * x, radius * y, radius * z, 1));
+				normals.push(vec3(x, y, z));
 			}
 		}
 
@@ -143,7 +145,6 @@ class Sphere extends Mesh {
 			}
 		}
 
-		const normals = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.radius = radius;
