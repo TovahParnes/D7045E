@@ -26,6 +26,7 @@ function init() {
 	const vertexShader = new Shader(gl, gl.VERTEX_SHADER, "vertex-shader");
 	const fragmentShader = new Shader(gl, gl.FRAGMENT_SHADER, "fragment-shader");
 	shader = new ShaderProgram(gl, vertexShader, fragmentShader);
+	shader.activate(); //TEST
 
 	// Lights
 	let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
@@ -38,6 +39,7 @@ function init() {
 		shader.getProgram(),
 		"ambientColor"
 	);
+
 	let diffuseColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
 		"diffuseColor"

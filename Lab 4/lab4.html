@@ -16,6 +16,8 @@
 			varying vec3 v_normal;
 			varying float v_depth;
 			varying vec4 v_eyeCoords;
+			uniform vec4 ambientColor;
+
 			void main()
 			{
 				worldPosition = (u_transformMatrix * a_vertexPosition).xyz;
