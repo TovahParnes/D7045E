@@ -93,7 +93,34 @@ class cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		const normals = calculateNormals(vertices, indices);
+		const normals = [
+			vec4(0, 0, 1, 0),
+			vec4(0, 0, 1, 0),
+			vec4(0, 0, 1, 0),
+			vec4(0, 0, 1, 0),
+			vec4(0, 0, -1, 0),
+			vec4(0, 0, -1, 0),
+			vec4(0, 0, -1, 0),
+			vec4(0, 0, -1, 0),
+			vec4(-1, 0, 0, 0),
+			vec4(-1, 0, 0, 0),
+			vec4(-1, 0, 0, 0),
+			vec4(-1, 0, 0, 0),
+			vec4(1, 0, 0, 0),
+			vec4(1, 0, 0, 0),
+			vec4(1, 0, 0, 0),
+			vec4(1, 0, 0, 0),
+			vec4(0, 1, 0, 0),
+			vec4(0, 1, 0, 0),
+			vec4(0, 1, 0, 0),
+			vec4(0, 1, 0, 0),
+			vec4(0, -1, 0, 0),
+			vec4(0, -1, 0, 0),
+			vec4(0, -1, 0, 0),
+			vec4(0, -1, 0, 0),
+		];
+
+		//const normals = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.x = x;
@@ -145,7 +172,10 @@ class Sphere extends Mesh {
 			}
 		}
 
+		const normals2 = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
+		console.log(flatten(normals));
+		console.log(flatten(normals2));
 
 		this.radius = radius;
 		this.stacks = stacks;
@@ -207,6 +237,7 @@ class Torus extends Mesh {
 
 		const vertices = [];
 		const indices = [];
+		const normals = [];
 
 		let numSegments = segments;
 		const ringRadius = (outerRadius - innerRadius) / 2;
@@ -228,6 +259,12 @@ class Torus extends Mesh {
 
 				vertices.push(vec4(x, y, z, 1));
 
+				const nx = cosPhi * cosTheta;
+				const ny = cosPhi * sinTheta;
+				const nz = sinPhi;
+
+				normals.push(vec4(nx, ny, nz, 0));
+
 				const nextI = (i + 1) % numSegments;
 				const nextJ = (j + 1) % numSegments;
 
@@ -242,7 +279,7 @@ class Torus extends Mesh {
 			}
 		}
 
-		const normals = calculateNormals(vertices, indices);
+		//const normals = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.innerRadius = innerRadius;

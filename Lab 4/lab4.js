@@ -32,7 +32,7 @@ function init() {
 	let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
 	let diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightPosition = vec4(0.0, -5.0, 3.0, 1.0);
+	let lightPosition = vec4(5.0, -5.0, 5.0, 1.0);
 	let specularExponent = 50.0;
 
 	let ambientColorLoc = gl.getUniformLocation(
