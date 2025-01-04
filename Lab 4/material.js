@@ -28,11 +28,18 @@ class MonoMaterial extends material {
 			program,
 			"u_transformMatrix"
 		);
-		let flattenedtransformMatrix = flatten(transformMatrix);
 		this.gl.uniformMatrix4fv(
 			transformLocation,
 			false,
-			flattenedtransformMatrix
+			flatten(transformMatrix)
 		);
+
+		let normalMat = mat3();
+		normalMat = normalMatrix(transformMatrix, true);
+		var normalMatrixLocation = this.gl.getUniformLocation(
+			program,
+			"u_normalMatrix"
+		);
+		this.gl.uniformMatrix3fv(normalMatrixLocation, false, flatten(normalMat));
 	}
 }

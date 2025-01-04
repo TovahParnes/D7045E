@@ -10,6 +10,7 @@
 			attribute vec4 a_vertexPosition;
 			attribute vec3 a_vertexNormal;
 			uniform mat4 u_transformMatrix;
+			uniform mat3 u_normalMatrix;
 			uniform mat4 u_viewMatrix;
 			uniform mat4 u_projectionMatrix;
 			varying vec3 v_normal;
@@ -17,7 +18,8 @@
 
 			void main()
 			{
-				v_normal = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
+				//v_normal = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
+				v_normal = normalize(u_normalMatrix * a_vertexNormal);
 				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				gl_Position = u_projectionMatrix * v_eyeCoords;
 			}
