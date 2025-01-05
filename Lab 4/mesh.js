@@ -122,9 +122,12 @@ class cuboid extends Mesh {
 		const normals2 = calculateNormals(vertices, indices);
 		const normals3 = calculateNormals2(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals3), shaderProgram);
-		console.log(flatten(normals));
-		console.log(flatten(normals2));
-		console.log(flatten(normals3));
+		// console.log("normals - given values");
+		// console.log(flatten(normals));
+		// console.log("normals2 - old function");
+		// console.log(flatten(normals2));
+		// console.log("normals3 - new function");
+		// console.log(flatten(normals3));
 
 		this.x = x;
 		this.y = y;
@@ -175,8 +178,8 @@ class Sphere extends Mesh {
 			}
 		}
 
-		const normals2 = calculateNormals(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
+		const normals2 = calculateNormals2(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
 		console.log(flatten(normals));
 		console.log(flatten(normals2));
 
@@ -446,15 +449,49 @@ function calculateNormals2(vertices, indices) {
 		let v3 = vertices[indices[i + 2]];
 		let normal = cross(subtract(v2, v1), subtract(v3, v1));
 		normal = normalize(normal);
+
+		console.log(normal);
+		console.log(vertexNormals[indices[i]]);
+		console.log(add(vertexNormals[indices[i]], normal));
+
 		vertexNormals[indices[i]] = add(vertexNormals[indices[i]], normal);
 		vertexNormals[indices[i + 1]] = add(vertexNormals[indices[i + 1]], normal);
 		vertexNormals[indices[i + 2]] = add(vertexNormals[indices[i + 2]], normal);
 	}
+
+	//console.log(flatten(vertexNormals));
 	for (let i = 0; i < vertexNormals.length; i++) {
 		vertexNormals[i] = normalize(vertexNormals[i]);
-		normals.push(vertexNormals[i][0]);
-		normals.push(vertexNormals[i][1]);
-		normals.push(vertexNormals[i][2]);
 	}
+	//console.log(flatten(vertexNormals));
+	//console.log(flatten(normals));
+
+	return vertexNormals;
+}
+
+function calculateNormals3(vertices, indices) {
+	let normals = [];
+	let vertexNormals = [];
+	for (let i = 0; i < vertices.length; i++) {
+		vertexNormals.push(vec3());
+	}
+	for (let i = 0; i < indices.length; i += 3) {
+		let v1 = vertices[indices[i]];
+		let v2 = vertices[indices[i + 1]];
+		let v3 = vertices[indices[i + 2]];
+		let normal = cross(subtract(v2, v1), subtract(v3, v1));
+		normal = normalize(normal);
+		vertexNormals[indices[i]] = add(vertexNormals[indices[i]], normal);
+		vertexNormals[indices[i + 1]] = add(vertexNormals[indices[i + 1]], normal);
+		vertexNormals[indices[i + 2]] = add(vertexNormals[indices[i + 2]], normal);
+	}
+
+	// console.log("vertexNormals");
+	// console.log(flatten(vertexNormals));
+	for (let i = 0; i < vertexNormals.length; i++) {
+		vertexNormals[i] = normalize(vertexNormals[i]);
+		normals.push(vertexNormals[i][0], vertexNormals[i][1], vertexNormals[i][2]);
+	}
+
 	return normals;
 }
