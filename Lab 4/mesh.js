@@ -192,6 +192,7 @@ class Star extends Mesh {
 
 		const vertices = [];
 		const indices = [];
+		const normals = [];
 
 		let frontCenter = vec4(0.0, 0.0, thickness / 2.0, 1.0);
 		let backCenter = vec4(0.0, 0.0, -thickness / 2.0, 1.0);
@@ -215,10 +216,27 @@ class Star extends Mesh {
 			indices.push(0, i, next);
 			// Back triangles
 			indices.push(1, next, i);
+
+			const normalFront = calculateFaceNormal2(
+				vertices[0],
+				vertices[i],
+				vertices[next]
+			);
+			normals.push(normalFront, normalFront, normalFront);
+
+			// Normals for back triangles
+			const normalBack = calculateFaceNormal2(
+				vertices[1],
+				vertices[next],
+				vertices[i]
+			);
+			normals.push(normalBack, normalBack, normalBack);
 		}
 
-		const normals = calculateNormals(vertices, indices);
+		const normals2 = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
+		console.log(flatten(normals));
+		console.log(flatten(normals2));
 
 		this.points = points;
 		this.outerDist = outerDist;
@@ -408,5 +426,16 @@ function calculateFaceNormal(v1, v2, v3) {
 	const u = subtract(v2, v1);
 	const v = subtract(v3, v1);
 	const normal = cross(u, v);
+	return normalize(normal);
+}
+
+function calculateFaceNormal2(v1, v2, v3) {
+	const u = subtract(v2, v1);
+	const v = subtract(v3, v1);
+	const normal = vec3(
+		u[1] * v[2] - u[2] * v[1],
+		u[2] * v[0] - u[0] * v[2],
+		u[0] * v[1] - u[1] * v[0]
+	);
 	return normalize(normal);
 }
