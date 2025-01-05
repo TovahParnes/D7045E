@@ -32,7 +32,7 @@ function init() {
 	let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
 	let diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightPosition = vec4(10.0, -10.0, 10.0, 1.0);
+	let lightPosition = vec4(0.0, -10.0, 10.0, 1.0);
 	let specularExponent = 50.0;
 
 	let ambientColorLoc = gl.getUniformLocation(
@@ -73,10 +73,10 @@ function init() {
 	let redMaterial = new MonoMaterial(gl, shader, vec4(1, 0, 0, 1.0));
 
 	// Shapes
-	let cube = new cuboid(gl, 0.8, 0.5, 0.5, shader);
+	//let cube = new cuboid(gl, 0.8, 0.5, 0.5, shader);
 	//let sphere = new Sphere(gl, 0.5, 16, 8, shader);
 	//let star = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
-	//let torus = new Torus(gl, 0.25, 0.5, 15, shader);
+	let torus = new Torus(gl, 0.25, 0.5, 15, shader);
 	//let cone = new Cone(gl, 0.5, 1, 10, shader);
 	//let cylinder = new Cylinder(gl, 0.5, 1, 16, shader);
 
@@ -86,7 +86,7 @@ function init() {
 		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, cube, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, torus, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
@@ -119,17 +119,17 @@ function render() {
 window.addEventListener("keydown", function (event) {
 	let translation = vec3(0, 0, 0);
 	if (event.key === "w") {
-		translation[1] += 0.1; // Move up
+		translation[1] += 0.5; // Move up
 	} else if (event.key === "s") {
-		translation[1] -= 0.1; // Move down
+		translation[1] -= 0.5; // Move down
 	} else if (event.key === "a") {
-		translation[0] -= 0.1; // Move left
+		translation[0] -= 0.5; // Move left
 	} else if (event.key === "d") {
-		translation[0] += 0.1; // Move right
+		translation[0] += 0.5; // Move right
 	} else if (event.key === "e") {
-		translation[2] += 0.1; // Move forward
+		translation[2] += 0.5; // Move forward
 	} else if (event.key === "c") {
-		translation[2] -= 0.1; // Move backward
+		translation[2] -= 0.5; // Move backward
 	}
 
 	const moveMatrix = translate(translation);

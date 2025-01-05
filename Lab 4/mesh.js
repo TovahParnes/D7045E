@@ -1,5 +1,4 @@
 // Tovah Parnes - tovpar-9@student.ltu.se
-
 class Mesh {
 	constructor(gl, vertices, indices, normals, shaderProgram) {
 		this.vertices = vertices;
@@ -77,11 +76,7 @@ class cuboid extends Mesh {
 		const y = height / 2;
 		const z = depth / 2;
 
-		const w = width / 2;
-		const h = height / 2;
-		const d = depth / 2;
-
-		const vertices2 = [
+		const vertices = [
 			vec4(-x, -y, z, 1),
 			vec4(-x, y, z, 1),
 			vec4(x, y, z, 1),
@@ -92,64 +87,12 @@ class cuboid extends Mesh {
 			vec4(x, -y, -z, 1),
 		];
 
-		const vertices = [
-			vec4(-w, -h, d, 1),
-			vec4(-w, h, d, 1),
-			vec4(w, h, d, 1),
-			vec4(w, -h, d, 1),
-			vec4(-w, -h, -d, 1),
-			vec4(-w, h, -d, 1),
-			vec4(w, h, -d, 1),
-			vec4(w, -h, -d, 1),
-		];
-
-		let indices2 = [
+		let indices = [
 			1, 0, 3, 3, 2, 1, 2, 3, 7, 7, 6, 2, 3, 0, 4, 4, 7, 3, 6, 5, 1, 1, 2, 6, 4,
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		const indices = [
-			0, 1, 2, 2, 3, 0,
-
-			2, 3, 7, 7, 6, 2,
-
-			3, 0, 4, 4, 7, 3,
-
-			6, 5, 7, 1, 2, 6,
-
-			4, 5, 6, 6, 7, 4,
-
-			5, 4, 0, 0, 1, 5,
-		];
-
 		const normals = [
-			vec4(0, 0, 1, 0),
-			vec4(0, 0, 1, 0),
-			vec4(0, 0, 1, 0),
-			vec4(0, 0, 1, 0),
-			vec4(0, 0, -1, 0),
-			vec4(0, 0, -1, 0),
-			vec4(0, 0, -1, 0),
-			vec4(0, 0, -1, 0),
-			vec4(-1, 0, 0, 0),
-			vec4(-1, 0, 0, 0),
-			vec4(-1, 0, 0, 0),
-			vec4(-1, 0, 0, 0),
-			vec4(1, 0, 0, 0),
-			vec4(1, 0, 0, 0),
-			vec4(1, 0, 0, 0),
-			vec4(1, 0, 0, 0),
-			vec4(0, 1, 0, 0),
-			vec4(0, 1, 0, 0),
-			vec4(0, 1, 0, 0),
-			vec4(0, 1, 0, 0),
-			vec4(0, -1, 0, 0),
-			vec4(0, -1, 0, 0),
-			vec4(0, -1, 0, 0),
-			vec4(0, -1, 0, 0),
-		];
-
-		const normals2 = [
 			vec3(0, 0, 1),
 			vec3(0, 0, 1),
 			vec3(0, 0, 1),
@@ -176,8 +119,12 @@ class cuboid extends Mesh {
 			vec3(0, -1, 0),
 		];
 
-		const normals3 = calculateNormals(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
+		const normals2 = calculateNormals(vertices, indices);
+		const normals3 = calculateNormals2(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals3), shaderProgram);
+		console.log(flatten(normals));
+		console.log(flatten(normals2));
+		console.log(flatten(normals3));
 
 		this.x = x;
 		this.y = y;
@@ -273,7 +220,7 @@ class Star extends Mesh {
 			// Back triangles
 			indices.push(1, next, i);
 
-			const normalFront = calculateFaceNormal2(
+			const normalFront = calculateFaceNormal(
 				vertices[0],
 				vertices[i],
 				vertices[next]
@@ -281,7 +228,7 @@ class Star extends Mesh {
 			normals.push(normalFront, normalFront, normalFront);
 
 			// Normals for back triangles
-			const normalBack = calculateFaceNormal2(
+			const normalBack = calculateFaceNormal(
 				vertices[1],
 				vertices[next],
 				vertices[i]
@@ -289,8 +236,8 @@ class Star extends Mesh {
 			normals.push(normalBack, normalBack, normalBack);
 		}
 
-		const normals2 = calculateNormals(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
+		const normals2 = calculateNormals2(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
 		console.log(flatten(normals));
 		console.log(flatten(normals2));
 
@@ -353,7 +300,7 @@ class Torus extends Mesh {
 			}
 		}
 
-		const normals2 = calculateNormals(vertices, indices);
+		const normals2 = calculateNormals2(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
 		console.log(flatten(normals));
 		console.log(flatten(normals2));
@@ -396,7 +343,7 @@ class Cone extends Mesh {
 		}
 		//TODO: check so that each face had a triangle
 
-		const normals = calculateNormals(vertices, indices);
+		const normals = calculateNormals2(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;
@@ -457,7 +404,7 @@ class Cylinder extends Mesh {
 		}
 		//TODO: check so that each face had a triangle
 
-		const normals = calculateNormals(vertices, indices);
+		const normals = calculateNormals2(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;
@@ -477,9 +424,6 @@ function calculateNormals(vertices, indices) {
 		normals.push(calculateFaceNormal(v1, v2, v3));
 	}
 
-	console.log(indices.length);
-	console.log(normals.length);
-
 	return normals;
 }
 
@@ -490,13 +434,27 @@ function calculateFaceNormal(v1, v2, v3) {
 	return normalize(normal);
 }
 
-function calculateFaceNormal2(v1, v2, v3) {
-	const u = subtract(v2, v1);
-	const v = subtract(v3, v1);
-	const normal = vec3(
-		u[1] * v[2] - u[2] * v[1],
-		u[2] * v[0] - u[0] * v[2],
-		u[0] * v[1] - u[1] * v[0]
-	);
-	return normalize(normal);
+function calculateNormals2(vertices, indices) {
+	let normals = [];
+	let vertexNormals = [];
+	for (let i = 0; i < vertices.length; i++) {
+		vertexNormals.push(vec3());
+	}
+	for (let i = 0; i < indices.length; i += 3) {
+		let v1 = vertices[indices[i]];
+		let v2 = vertices[indices[i + 1]];
+		let v3 = vertices[indices[i + 2]];
+		let normal = cross(subtract(v2, v1), subtract(v3, v1));
+		normal = normalize(normal);
+		vertexNormals[indices[i]] = add(vertexNormals[indices[i]], normal);
+		vertexNormals[indices[i + 1]] = add(vertexNormals[indices[i + 1]], normal);
+		vertexNormals[indices[i + 2]] = add(vertexNormals[indices[i + 2]], normal);
+	}
+	for (let i = 0; i < vertexNormals.length; i++) {
+		vertexNormals[i] = normalize(vertexNormals[i]);
+		normals.push(vertexNormals[i][0]);
+		normals.push(vertexNormals[i][1]);
+		normals.push(vertexNormals[i][2]);
+	}
+	return normals;
 }
