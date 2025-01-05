@@ -77,7 +77,11 @@ class cuboid extends Mesh {
 		const y = height / 2;
 		const z = depth / 2;
 
-		const vertices = [
+		const w = width / 2;
+		const h = height / 2;
+		const d = depth / 2;
+
+		const vertices2 = [
 			vec4(-x, -y, z, 1),
 			vec4(-x, y, z, 1),
 			vec4(x, y, z, 1),
@@ -88,9 +92,34 @@ class cuboid extends Mesh {
 			vec4(x, -y, -z, 1),
 		];
 
-		let indices = [
+		const vertices = [
+			vec4(-w, -h, d, 1),
+			vec4(-w, h, d, 1),
+			vec4(w, h, d, 1),
+			vec4(w, -h, d, 1),
+			vec4(-w, -h, -d, 1),
+			vec4(-w, h, -d, 1),
+			vec4(w, h, -d, 1),
+			vec4(w, -h, -d, 1),
+		];
+
+		let indices2 = [
 			1, 0, 3, 3, 2, 1, 2, 3, 7, 7, 6, 2, 3, 0, 4, 4, 7, 3, 6, 5, 1, 1, 2, 6, 4,
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
+		];
+
+		const indices = [
+			0, 1, 2, 2, 3, 0,
+
+			2, 3, 7, 7, 6, 2,
+
+			3, 0, 4, 4, 7, 3,
+
+			6, 5, 7, 1, 2, 6,
+
+			4, 5, 6, 6, 7, 4,
+
+			5, 4, 0, 0, 1, 5,
 		];
 
 		const normals = [
@@ -120,8 +149,35 @@ class cuboid extends Mesh {
 			vec4(0, -1, 0, 0),
 		];
 
-		//const normals = calculateNormals(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
+		const normals2 = [
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+		];
+
+		const normals3 = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
 
 		this.x = x;
 		this.y = y;
