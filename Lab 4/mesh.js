@@ -297,8 +297,10 @@ class Torus extends Mesh {
 			}
 		}
 
-		//const normals = calculateNormals(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
+		const normals2 = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
+		console.log(flatten(normals));
+		console.log(flatten(normals2));
 
 		this.innerRadius = innerRadius;
 		this.outerRadius = outerRadius;
@@ -418,6 +420,9 @@ function calculateNormals(vertices, indices) {
 
 		normals.push(calculateFaceNormal(v1, v2, v3));
 	}
+
+	console.log(indices.length);
+	console.log(normals.length);
 
 	return normals;
 }
