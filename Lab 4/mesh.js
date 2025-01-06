@@ -343,47 +343,17 @@ class Cylinder extends Mesh {
 			if (nextTop >= vertices.length) {
 				nextTop = 3;
 			}
+
 			// Top and bottom
 			indices.push(0, currBottom, nextBottom);
 			indices.push(1, nextTop, currTop);
+
 			// Sides
 			indices.push(currBottom, currTop, nextTop);
 			indices.push(currBottom, nextTop, nextBottom);
 		}
 
-		// let count = vertices.length;
-		// for (var i = 0; i < slices + 1; i++) {
-		// 	var angle = i * angleStep;
-
-		// 	// Top
-		// 	vertices.push(
-		// 		vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
-		// 	);
-		// 	let curTop = count;
-		// 	let lastTop = count - 2;
-
-		// 	// Bottom
-		// 	vertices.push(
-		// 		vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
-		// 	);
-		// 	let curBot = count + 1;
-		// 	let lastBot = count - 1;
-
-		// 	// Top circle
-		// 	indices.push(0, curTop, lastTop);
-
-		// 	// Bottom circle
-		// 	indices.push(1, curBot, lastBot);
-
-		// 	// Sides
-		// 	indices.push(curBot, curTop, lastTop);
-		// 	indices.push(curBot, lastBot, lastTop);
-
-		// 	count = count + 2;
-		// }
-		//TODO: check so that each face had a triangle
-
-		const normals = calculateNormals2(vertices, indices);
+		const normals = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;

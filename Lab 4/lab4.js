@@ -32,7 +32,7 @@ function init() {
 	let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
 	let diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightPosition = vec4(-30.0, 10.0, 10.0, 1.0);
+	let lightPosition = vec4(30.0, 10.0, -10.0, 1.0);
 	let specularExponent = 50.0;
 
 	let ambientColorLoc = gl.getUniformLocation(
@@ -77,8 +77,8 @@ function init() {
 	//let sphere = new Sphere(gl, 0.5, 16, 8, shader);
 	//let star = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
 	//let torus = new Torus(gl, 0.25, 0.5, 15, shader);
-	let cone = new Cone(gl, 0.5, 2.2, 16, shader);
-	//let cylinder = new Cylinder(gl, 0.5, 1, 16, shader);
+	//let cone = new Cone(gl, 0.5, 2.2, 16, shader);
+	let cylinder = new Cylinder(gl, 0.5, 1, 16, shader);
 
 	let playerMatrix = mat4(
 		[1, 0, 0, 0],
@@ -86,7 +86,7 @@ function init() {
 		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, cone, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, cylinder, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
