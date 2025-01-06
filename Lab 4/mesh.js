@@ -323,79 +323,36 @@ class Cone extends Mesh {
 			throw "Cone slices must be greater than 3";
 		}
 
-		// let vertices = [];
-		// let indices = [];
-		// let normals = [];
+		let vertices = [];
+		let indices = [];
 
-		// let topPoint = vec4(0.0, height / 2, 0.0, 1.0);
-		// let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
+		let topPoint = vec4(0.0, height / 2, 0.0, 1.0);
+		let bottomMiddlePoint = vec4(0.0, -height / 2, 0.0, 1.0);
 
-		// let angleStep = (2.0 * Math.PI) / slices;
+		let angleStep = (2.0 * Math.PI) / slices;
 
-		// vertices.push(bottomMiddlePoint);
-		// vertices.push(topPoint);
-		// normals.push(vec4(0, -1, 0, 0));
+		vertices.push(bottomMiddlePoint);
+		vertices.push(topPoint);
 
-		// let count = vertices.length;
-		// for (var i = 0; i < slices + 1; i++) {
-		// 	var angle = i * angleStep;
-		// 	vertices.push(
-		// 		vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
-		// 	);
-		// 	indices.push(0, count, count - 1);
-		// 	indices.push(1, count, count - 1);
-		// 	count++;
-		// }
-		// //TODO: check so that each face had a triangle
-
-		// const normals2 = calculateNormals(vertices, indices);
-
-		const r = width / 2;
-		const h = height;
-		const segments = 36; // Number of segments to approximate the circular base
-
-		const vertices = [];
-		const indices = [];
-		const normals = [];
-
-		// Base center vertex
-		vertices.push(vec4(0, 0, 0, 1));
-		// Base center normal
-		normals.push(vec4(0, -1, 0, 0));
-
-		// Base perimeter vertices
-		for (let i = 0; i < segments; i++) {
-			const angle = (i / segments) * 2 * Math.PI;
-			vertices.push(vec4(r * Math.cos(angle), 0, r * Math.sin(angle), 1));
-			// Base perimeter normals
-			normals.push(vec4(0, -1, 0, 0));
-		}
-
-		// Apex vertex
-		vertices.push(vec4(0, h, 0, 1));
-		// Apex normal
-		normals.push(vec4(0, 1, 0, 0));
-
-		// Base indices
-		for (let i = 1; i <= segments; i++) {
-			indices.push(0, i, (i % segments) + 1);
-		}
-
-		// Side indices
-		const apexIndex = vertices.length - 1;
-		for (let i = 1; i <= segments; i++) {
-			indices.push(i, apexIndex, (i % segments) + 1);
-			// Side normals
-			const angle = (i / segments) * 2 * Math.PI;
-			const normal = vec4(
-				Math.cos(angle),
-				r / Math.sqrt(r * r + h * h),
-				Math.sin(angle),
-				0
+		// vertices
+		for (var i = 0; i < slices + 1; i++) {
+			var angle = i * angleStep;
+			vertices.push(
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
 			);
-			normals.push(normal);
 		}
 
+		// indices
+		for (var i = 2; i < vertices.length; i++) {
+			let next = i + 1;
+			if (next >= vertices.length) {
+				next = 2;
+			}
+			indices.push(0, next, i);
+			indices.push(1, next, i);
+		}
+
+		const normals = calculateNormals2(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;
@@ -473,7 +430,13 @@ function calculateNormals(vertices, indices) {
 		let v2 = vertices[indices[i + 1]];
 		let v3 = vertices[indices[i + 2]];
 
-		normals.push(calculateFaceNormal(v1, v2, v3));
+		console.log(v1, v2, v3);
+
+		let normal = calculateFaceNormal(v1, v2, v3);
+
+		normals.push(normal);
+		//normals.push(normal);
+		//normals.push(normal);
 	}
 
 	return normals;
