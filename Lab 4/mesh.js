@@ -72,19 +72,19 @@ class Mesh {
 
 class cuboid extends Mesh {
 	constructor(gl, width, height, depth, shaderProgram) {
-		const x = width / 2;
-		const y = height / 2;
-		const z = depth / 2;
+		const w = width / 2;
+		const h = height / 2;
+		const d = depth / 2;
 
 		const vertices = [
-			vec4(-x, -y, z, 1),
-			vec4(-x, y, z, 1),
-			vec4(x, y, z, 1),
-			vec4(x, -y, z, 1),
-			vec4(-x, -y, -z, 1),
-			vec4(-x, y, -z, 1),
-			vec4(x, y, -z, 1),
-			vec4(x, -y, -z, 1),
+			vec4(-w, -h, d, 1),
+			vec4(-w, h, d, 1),
+			vec4(w, h, d, 1),
+			vec4(w, -h, d, 1),
+			vec4(-w, -h, -d, 1),
+			vec4(-w, h, -d, 1),
+			vec4(w, h, -d, 1),
+			vec4(w, -h, -d, 1),
 		];
 
 		let indices = [
@@ -92,51 +92,17 @@ class cuboid extends Mesh {
 			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
 		];
 
-		const normals = [
-			vec3(0, 0, 1),
-			vec3(0, 0, 1),
-			vec3(0, 0, 1),
-			vec3(0, 0, 1),
-			vec3(0, 0, -1),
-			vec3(0, 0, -1),
-			vec3(0, 0, -1),
-			vec3(0, 0, -1),
-			vec3(-1, 0, 0),
-			vec3(-1, 0, 0),
-			vec3(-1, 0, 0),
-			vec3(-1, 0, 0),
-			vec3(1, 0, 0),
-			vec3(1, 0, 0),
-			vec3(1, 0, 0),
-			vec3(1, 0, 0),
-			vec3(0, 1, 0),
-			vec3(0, 1, 0),
-			vec3(0, 1, 0),
-			vec3(0, 1, 0),
-			vec3(0, -1, 0),
-			vec3(0, -1, 0),
-			vec3(0, -1, 0),
-			vec3(0, -1, 0),
-		];
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
-		const normals2 = calculateNormals(vertices, indices);
-		const normals3 = calculateNormals2(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals3), shaderProgram);
-		// console.log("normals - given values");
-		// console.log(flatten(normals));
-		// console.log("normals2 - old function");
-		// console.log(flatten(normals2));
-		// console.log("normals3 - new function");
-		// console.log(flatten(normals3));
-
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.w = w;
+		this.h = h;
+		this.d = d;
 	}
 
 	// Getters
-	getCordinates() {
-		return [this.x, this.y, this.z];
+	getSize() {
+		return [this.w, this.h, this.d];
 	}
 }
 
@@ -381,36 +347,67 @@ class Cylinder extends Mesh {
 		vertices.push(topmiddlePoint);
 		vertices.push(bottomMiddlePoint);
 
-		let count = vertices.length;
-		for (var i = 0; i < slices + 1; i++) {
+		// vertices
+		for (var i = 0; i < slices; i++) {
 			var angle = i * angleStep;
-
-			// Top
 			vertices.push(
 				vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
 			);
-			let curTop = count;
-			let lastTop = count - 2;
-
-			// Bottom
 			vertices.push(
 				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
 			);
-			let curBot = count + 1;
-			let lastBot = count - 1;
-
-			// Top circle
-			indices.push(0, curTop, lastTop);
-
-			// Bottom circle
-			indices.push(1, curBot, lastBot);
-
-			// Sides
-			indices.push(curBot, curTop, lastTop);
-			indices.push(curBot, lastBot, lastTop);
-
-			count = count + 2;
 		}
+
+		// indices
+		for (var i = 2; i < vertices.length; i = i + 2) {
+			let currBottom = i;
+			let currTop = i + 1;
+			let nextBottom = i + 2;
+			if (nextBottom >= vertices.length) {
+				nextBottom = 2;
+			}
+			let nextTop = i + 3;
+			if (nextTop >= vertices.length) {
+				nextTop = 3;
+			}
+			// Top and bottom
+			indices.push(0, currBottom, nextBottom);
+			indices.push(1, nextTop, currTop);
+			// Sides
+			indices.push(currBottom, currTop, nextTop);
+			indices.push(currBottom, nextTop, nextBottom);
+		}
+
+		// let count = vertices.length;
+		// for (var i = 0; i < slices + 1; i++) {
+		// 	var angle = i * angleStep;
+
+		// 	// Top
+		// 	vertices.push(
+		// 		vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
+		// 	);
+		// 	let curTop = count;
+		// 	let lastTop = count - 2;
+
+		// 	// Bottom
+		// 	vertices.push(
+		// 		vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+		// 	);
+		// 	let curBot = count + 1;
+		// 	let lastBot = count - 1;
+
+		// 	// Top circle
+		// 	indices.push(0, curTop, lastTop);
+
+		// 	// Bottom circle
+		// 	indices.push(1, curBot, lastBot);
+
+		// 	// Sides
+		// 	indices.push(curBot, curTop, lastTop);
+		// 	indices.push(curBot, lastBot, lastTop);
+
+		// 	count = count + 2;
+		// }
 		//TODO: check so that each face had a triangle
 
 		const normals = calculateNormals2(vertices, indices);
@@ -422,7 +419,7 @@ class Cylinder extends Mesh {
 	}
 }
 
-function calculateNormals(vertices, indices) {
+function calculateNormalsOld(vertices, indices) {
 	let normals = [];
 
 	for (let i = 0; i < indices.length; i += 3) {
@@ -435,8 +432,6 @@ function calculateNormals(vertices, indices) {
 		let normal = calculateFaceNormal(v1, v2, v3);
 
 		normals.push(normal);
-		//normals.push(normal);
-		//normals.push(normal);
 	}
 
 	return normals;
@@ -449,7 +444,7 @@ function calculateFaceNormal(v1, v2, v3) {
 	return normalize(normal);
 }
 
-function calculateNormals2(vertices, indices) {
+function calculateNormals(vertices, indices) {
 	let normals = [];
 	let vertexNormals = [];
 	for (let i = 0; i < vertices.length; i++) {
@@ -459,6 +454,7 @@ function calculateNormals2(vertices, indices) {
 		let v1 = vertices[indices[i]];
 		let v2 = vertices[indices[i + 1]];
 		let v3 = vertices[indices[i + 2]];
+		console.log(v1, v2, v3);
 		let normal = cross(subtract(v2, v1), subtract(v3, v1));
 		normal = normalize(normal);
 
@@ -472,31 +468,4 @@ function calculateNormals2(vertices, indices) {
 	}
 
 	return vertexNormals;
-}
-
-function calculateNormals3(vertices, indices) {
-	let normals = [];
-	let vertexNormals = [];
-	for (let i = 0; i < vertices.length; i++) {
-		vertexNormals.push(vec3());
-	}
-	for (let i = 0; i < indices.length; i += 3) {
-		let v1 = vertices[indices[i]];
-		let v2 = vertices[indices[i + 1]];
-		let v3 = vertices[indices[i + 2]];
-		let normal = cross(subtract(v2, v1), subtract(v3, v1));
-		normal = normalize(normal);
-		vertexNormals[indices[i]] = add(vertexNormals[indices[i]], normal);
-		vertexNormals[indices[i + 1]] = add(vertexNormals[indices[i + 1]], normal);
-		vertexNormals[indices[i + 2]] = add(vertexNormals[indices[i + 2]], normal);
-	}
-
-	// console.log("vertexNormals");
-	// console.log(flatten(vertexNormals));
-	for (let i = 0; i < vertexNormals.length; i++) {
-		vertexNormals[i] = normalize(vertexNormals[i]);
-		normals.push(vertexNormals[i][0], vertexNormals[i][1], vertexNormals[i][2]);
-	}
-
-	return normals;
 }
