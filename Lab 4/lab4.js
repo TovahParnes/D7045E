@@ -74,8 +74,8 @@ function init() {
 
 	// Shapes
 	//let cube = new cuboid(gl, 0.8, 0.5, 0.5, shader);
-	let sphere = new Sphere(gl, 0.5, 16, 8, shader);
-	//let star = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
+	//let sphere = new Sphere(gl, 0.5, 16, 8, shader);
+	let star = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
 	//let torus = new Torus(gl, 0.25, 0.5, 15, shader);
 	//let cone = new Cone(gl, 0.5, 2.2, 4, shader);
 	//let cylinder = new Cylinder(gl, 0.5, 1, 16, shader);
@@ -86,7 +86,7 @@ function init() {
 		[0, 0, 1, 0],
 		[0, 0, 0, 1]
 	);
-	player = new GraphicsNode(gl, sphere, redMaterial, playerMatrix);
+	player = new GraphicsNode(gl, star, redMaterial, playerMatrix);
 
 	// Making the objects
 	var max = 2.5;
