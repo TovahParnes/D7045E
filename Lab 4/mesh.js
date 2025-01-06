@@ -205,7 +205,6 @@ class Torus extends Mesh {
 
 		const vertices = [];
 		const indices = [];
-		const normals = [];
 
 		let numSegments = segments;
 		const ringRadius = (outerRadius - innerRadius) / 2;
@@ -231,8 +230,6 @@ class Torus extends Mesh {
 				const ny = cosPhi * sinTheta;
 				const nz = sinPhi;
 
-				normals.push(vec4(nx, ny, nz, 0));
-
 				const nextI = (i + 1) % numSegments;
 				const nextJ = (j + 1) % numSegments;
 
@@ -247,10 +244,8 @@ class Torus extends Mesh {
 			}
 		}
 
-		const normals2 = calculateNormals2(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
-		console.log(flatten(normals));
-		console.log(flatten(normals2));
+		const normals = calculateNormals(vertices, indices);
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.innerRadius = innerRadius;
 		this.outerRadius = outerRadius;
