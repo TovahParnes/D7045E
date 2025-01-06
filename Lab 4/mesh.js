@@ -317,17 +317,17 @@ class Cylinder extends Mesh {
 
 		let angleStep = (2.0 * Math.PI) / slices;
 
-		vertices.push(topmiddlePoint);
 		vertices.push(bottomMiddlePoint);
+		vertices.push(topmiddlePoint);
 
 		// vertices
 		for (var i = 0; i < slices; i++) {
 			var angle = i * angleStep;
 			vertices.push(
-				vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
+				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
 			);
 			vertices.push(
-				vec4(width * Math.cos(angle), -height / 2, width * Math.sin(angle), 1.0)
+				vec4(width * Math.cos(angle), height / 2, width * Math.sin(angle), 1.0)
 			);
 		}
 
