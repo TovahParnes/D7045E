@@ -362,53 +362,22 @@ class Cylinder extends Mesh {
 	}
 }
 
-function calculateNormalsOld(vertices, indices) {
-	let normals = [];
-
-	for (let i = 0; i < indices.length; i += 3) {
-		let v1 = vertices[indices[i]];
-		let v2 = vertices[indices[i + 1]];
-		let v3 = vertices[indices[i + 2]];
-
-		console.log(v1, v2, v3);
-
-		let normal = calculateFaceNormal(v1, v2, v3);
-
-		normals.push(normal);
-	}
-
-	return normals;
-}
-
-function calculateFaceNormal(v1, v2, v3) {
-	const u = subtract(v2, v1);
-	const v = subtract(v3, v1);
-	const normal = cross(u, v);
-	return normalize(normal);
-}
-
 function calculateNormals(vertices, indices) {
 	let normals = [];
-	let vertexNormals = [];
 	for (let i = 0; i < vertices.length; i++) {
-		vertexNormals.push(vec3());
+		normals.push(vec3());
 	}
 	for (let i = 0; i < indices.length; i += 3) {
 		let v1 = vertices[indices[i]];
 		let v2 = vertices[indices[i + 1]];
 		let v3 = vertices[indices[i + 2]];
-		console.log(v1, v2, v3);
 		let normal = cross(subtract(v2, v1), subtract(v3, v1));
 		normal = normalize(normal);
 
-		vertexNormals[indices[i]] = add(vertexNormals[indices[i]], normal);
-		vertexNormals[indices[i + 1]] = add(vertexNormals[indices[i + 1]], normal);
-		vertexNormals[indices[i + 2]] = add(vertexNormals[indices[i + 2]], normal);
+		normals[indices[i]] = add(normals[indices[i]], normal);
+		normals[indices[i + 1]] = add(normals[indices[i + 1]], normal);
+		normals[indices[i + 2]] = add(normals[indices[i + 2]], normal);
 	}
 
-	for (let i = 0; i < vertexNormals.length; i++) {
-		vertexNormals[i] = normalize(vertexNormals[i]);
-	}
-
-	return vertexNormals;
+	return normals;
 }
