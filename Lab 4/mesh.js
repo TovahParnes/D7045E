@@ -291,7 +291,7 @@ class Cone extends Mesh {
 			indices.push(1, next, i);
 		}
 
-		const normals = calculateNormals2(vertices, indices);
+		const normals = calculateNormals(vertices, indices);
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.width = width;
