@@ -143,11 +143,7 @@ class Sphere extends Mesh {
 				indices.push(second, second + 1, first + 1);
 			}
 		}
-
-		const normals2 = calculateNormals2(vertices, indices);
-		super(gl, flatten(vertices), indices, flatten(normals2), shaderProgram);
-		console.log(flatten(normals));
-		console.log(flatten(normals2));
+		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.radius = radius;
 		this.stacks = stacks;
