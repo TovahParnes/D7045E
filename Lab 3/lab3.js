@@ -7,8 +7,6 @@ let shaderProgram;
 
 let objects = [];
 const numObjects = 30;
-const minSize = 0.3;
-const maxSize = 1.5;
 
 function init() {
 	// Canvas
