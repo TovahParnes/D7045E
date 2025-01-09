@@ -173,8 +173,72 @@ class Cuboid extends Mesh {
 			vec3(0, -1, 0),
 		];
 
+		const verticesA = [
+			vec4(-w, -h, d, 1),
+			vec4(w, -h, d, 1),
+			vec4(-w, h, d, 1),
+			vec4(w, h, d, 1),
+
+			vec4(-w, h, d, 1),
+			vec4(w, h, d, 1),
+			vec4(-w, h, -d, 1),
+			vec4(w, h, -d, 1),
+
+			vec4(-w, h, -d, 1),
+			vec4(w, h, -d, 1),
+			vec4(-w, -h, -d, 1),
+			vec4(w, -h, -d, 1),
+
+			vec4(-w, -h, -d, 1),
+			vec4(w, -h, -d, 1),
+			vec4(-w, -h, d, 1),
+			vec4(w, -h, d, 1),
+
+			vec4(w, -h, d, 1),
+			vec4(w, -h, -d, 1),
+			vec4(w, h, d, 1),
+			vec4(w, h, -d, 1),
+
+			vec4(-w, -h, -d, 1),
+			vec4(-w, -h, d, 1),
+			vec4(-w, h, -d, 1),
+			vec4(-w, h, d, 1),
+		];
+
+		const indicesA = [
+			0, 1, 2, 2, 1, 3, 4, 5, 6, 6, 5, 7, 8, 9, 10, 10, 9, 11, 12, 13, 14, 14,
+			13, 15, 16, 17, 18, 18, 17, 19, 20, 21, 22, 22, 21, 23,
+		];
+
+		const normalsA = [
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+		];
+
 		const normals = calculateNormals(vertices, indices);
-		super(gl, flatten(vertices), indices2, flatten(normals3), shaderProgram);
+		super(gl, flatten(verticesA), indicesA, flatten(normalsA), shaderProgram);
 
 		this.w = w;
 		this.h = h;
