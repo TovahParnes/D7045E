@@ -42,12 +42,10 @@ class Mesh {
 		this.vertexBuffer = gl.createBuffer();
 		this.indexBuffer = gl.createBuffer();
 		this.normalBuff = gl.createBuffer();
-
-		
 	}
 
 	activateBuffers() {
-        let prog = this.shaderProgram.getProgram();
+		let prog = this.shaderProgram.getProgram();
 		let pos = gl.getAttribLocation(prog, "a_vertexPosition");
 		let norm = gl.getAttribLocation(prog, "a_vertexNormal");
 
@@ -59,7 +57,6 @@ class Mesh {
 		let verticeArray = new Float32Array(this.vertices);
 		gl.bufferData(gl.ARRAY_BUFFER, verticeArray, gl.STATIC_DRAW);
 
-
 		gl.vertexAttribPointer(pos, 4, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(pos);
 
@@ -69,7 +66,7 @@ class Mesh {
 
 		gl.vertexAttribPointer(norm, 3, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(norm);
-    }
+	}
 
 	getIndices() {
 		return this.indices;
@@ -88,21 +85,68 @@ class Cuboid extends Mesh {
 
 		const vertices = [
 			vec4(-w, -h, d, 1),
+			vec4(w, -h, d, 1),
 			vec4(-w, h, d, 1),
 			vec4(w, h, d, 1),
-			vec4(w, -h, d, 1),
-			vec4(-w, -h, -d, 1),
+
+			vec4(-w, h, d, 1),
+			vec4(w, h, d, 1),
 			vec4(-w, h, -d, 1),
 			vec4(w, h, -d, 1),
+
+			vec4(-w, h, -d, 1),
+			vec4(w, h, -d, 1),
+			vec4(-w, -h, -d, 1),
 			vec4(w, -h, -d, 1),
+
+			vec4(-w, -h, -d, 1),
+			vec4(w, -h, -d, 1),
+			vec4(-w, -h, d, 1),
+			vec4(w, -h, d, 1),
+
+			vec4(w, -h, d, 1),
+			vec4(w, -h, -d, 1),
+			vec4(w, h, d, 1),
+			vec4(w, h, -d, 1),
+
+			vec4(-w, -h, -d, 1),
+			vec4(-w, -h, d, 1),
+			vec4(-w, h, -d, 1),
+			vec4(-w, h, d, 1),
 		];
 
-		let indices = [
-			1, 0, 3, 3, 2, 1, 2, 3, 7, 7, 6, 2, 3, 0, 4, 4, 7, 3, 6, 5, 1, 1, 2, 6, 4,
-			5, 6, 6, 7, 4, 5, 4, 0, 0, 1, 5,
+		const indices = [
+			0, 1, 2, 2, 1, 3, 4, 5, 6, 6, 5, 7, 8, 9, 10, 10, 9, 11, 12, 13, 14, 14,
+			13, 15, 16, 17, 18, 18, 17, 19, 20, 21, 22, 22, 21, 23,
 		];
 
-		const normals = calculateNormals(vertices, indices);
+		const normals = [
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 0, 1),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 1, 0),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, 0, -1),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(0, -1, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+			vec3(-1, 0, 0),
+		];
+
 		super(gl, flatten(vertices), indices, flatten(normals), shaderProgram);
 
 		this.w = w;
