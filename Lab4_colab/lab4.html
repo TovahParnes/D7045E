@@ -20,6 +20,7 @@
 			{
 				//v_normal = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
 				v_normal = normalize(u_normalMatrix * a_vertexNormal);
+
 				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				gl_Position = u_projectionMatrix * v_eyeCoords;
 			}
@@ -60,7 +61,6 @@
 	</head>
 
 	<body>
-
 		<noscript
 			><p><b>Sorry, but this page requires JavaScript.</b></p></noscript
 		>
