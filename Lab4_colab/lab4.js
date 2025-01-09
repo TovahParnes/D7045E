@@ -5,6 +5,7 @@ let gl;
 let camera;
 let shader;
 let rootnode;
+let light;
 
 let objects = [];
 const numObjects = 30;
@@ -12,7 +13,6 @@ const minSize = 0.3;
 const maxSize = 1.5;
 
 function createScene() {
-	rootNode = new GraphicsNode(gl, null, null, mat4(1)); // Root node with identity transform
 
 	let whiteMaterial = new MonoMaterial(gl, shader, vec4(1, 1, 1, 1));
 	let blackMaterial = new MonoMaterial(gl, shader, vec4(0, 0, 0, 1));
@@ -450,8 +450,11 @@ function createScene() {
 		rightFootTransform
 	);
 	rightLegNode.addChild(rightFootNode);
-
+	
 	rootNode.addChild(robotNode); // Attach robot node to the root node
+	
+	
+	
 
 	// Set the root node's transform to place it in the scene
 	rootNode.setTransform(mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
@@ -480,7 +483,11 @@ function init() {
 	let ambientColor = vec4(0.6, 0.6, 0.6, 1.0);
 	let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightPosition = vec4(0.0, 10, 0.0, 1.0);
+	let lightX = 0.0;
+	let lightY = 5.0;
+	let lightZ = 0.0;
+	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
+	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
 	let specularExponent = 500.0;
 
 	let ambientColorLoc = gl.getUniformLocation(
@@ -513,6 +520,17 @@ function init() {
 	);
 	gl.uniform1f(specularExponentLoc, specularExponent);
 
+	rootNode = new GraphicsNode(gl, null, null, mat4(1)); // Root node with identity transform
+
+	let lightMesh = new Sphere(gl, 0.2, 16, 8, shader);
+	let lightMaterial = new MonoMaterial(gl, shader, vec4(1, 1, 1, 1));
+
+	lightSphere = new GraphicsNode(gl, lightMesh, lightMaterial, mat4(1, 0, 0, lightX, 0, 1, 0, lightY, 0, 0, 1, lightZ, 0, 0, 0, 1));
+
+	rootNode.addChild(lightSphere); // Attach light node to the root node
+
+
+
 	// Camera
 	camera = new Camera(gl, shader, canvas);
 
@@ -536,7 +554,6 @@ function init() {
 	);  */
 
 	let box1Matrix = mat4(1, 0, 0, -0, 0, 1, 0, 3, 0, 0, 1, -0, 0, 0, 0, 1);
-
 	let box2Matrix = mat4(1, 0, 0, -0, 0, 1, 0, -3, 0, 0, 1, -0, 0, 0, 0, 1);
 
 	createScene();
@@ -546,6 +563,9 @@ function init() {
 	objects.push(box);
 	objects.push(box2);
 
+
+	
+
 	render();
 }
 
@@ -553,6 +573,8 @@ function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	shader.activate();
 	camera.activate();
+	
+
 
 	rootNode.draw();
 

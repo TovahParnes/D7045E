@@ -59,7 +59,9 @@ class Light extends GraphicsNode {
 
 		let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
 		let diffuseColor = vec4(0.6, 0.6, 0.6, 1.0);
+		let lightPosition = mult(this.transform, vec4(0.0, 0.0, 0.0, 1.0)); // Use transform to get light position
 		let specularColor = vec3(1.0, 1.0, 1.0);
+		let specularExponent = 500.0;
 
 		let ambientColorLoc = gl.getUniformLocation(
 			shader.getProgram(),
@@ -73,8 +75,19 @@ class Light extends GraphicsNode {
 			shader.getProgram(),
 			"specularColor"
 		);
+	
+		let lightPositionLoc = gl.getUniformLocation(
+			shader.getProgram(),
+			"u_lightPosition"
+		);
 		
-
+		let specularExponentLoc = gl.getUniformLocation(
+			shader.getProgram(),
+			"u_specularExponent"
+		);
+		
+		gl.uniform4fv(lightPositionLoc, flatten(lightPosition));
+		gl.uniform1f(specularExponentLoc, specularExponent);
 		gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
 		gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
 		gl.uniform3fv(specularColorLoc, flatten(specularColor));
