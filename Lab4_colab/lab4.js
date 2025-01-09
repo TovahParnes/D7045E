@@ -209,7 +209,7 @@ function createScene() {
 	// Create robot
 	robotNode = new GraphicsNode(gl, null, null, mat4(1)); // Root node for the robot
 
-	let bodyMaterial = new MonoMaterial(gl, shader, vec4(0.8, 0.2, 0.2, 1));
+	let bodyMaterial = new MonoMaterial(gl, shader, vec4(0.8, 0.1, 0.1, 1));
 	let limbMaterial = new MonoMaterial(gl, shader, vec4(0.2, 0.2, 0.8, 1));
 	let handMaterial = new MonoMaterial(gl, shader, vec4(0.2, 0.8, 0.2, 1));
 	let footMaterial = new MonoMaterial(gl, shader, vec4(0.8, 0.8, 0.2, 1));
@@ -476,15 +476,15 @@ function init() {
 
 	// Lights
 
-	let ambientColor = vec4(0.6, 0.6, 0.6, 1.0);
-	let diffuseColor = vec4(0.6, 0.6, 0.6, 1.0);
+	let ambientColor = vec4(0.3, 0.3, 0.3, 1.0);
+	let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightX = 2.0;
-	let lightY = 0.5;
-	let lightZ = 1.0;
+	let lightX = 5;
+	let lightY = -0.5;
+	let lightZ = 1.5;
 	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
 	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
-	let specularExponent = 50.0;
+	let specularExponent = 16;
 
 	let ambientColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
