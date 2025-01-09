@@ -22,7 +22,7 @@
 				v_normal = normalize(u_normalMatrix * a_vertexNormal);
 				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				gl_Position = u_projectionMatrix * v_eyeCoords;
-				vec3 worldPos = (u_transformMatrix * a_vertexPosition).xyz;
+				vec3 worldPos = (u_viewMatrix*u_transformMatrix * a_vertexPosition).xyz;
 			}
 		</script>
 
@@ -42,7 +42,7 @@
 			{
 				vec3 N, L, R, V;  // Vectors for lighting equation.
 				N = normalize(v_normal);
-				L = normalize(u_lightPosition.xyz - worldPos);
+				L = (u_lightPosition.xyz / u_lightPosition.w - v_eyeCoords.xyz);
 
 				float lambertian = max(dot(N, L), 0.0);
 				float specular = 0.0;
@@ -52,7 +52,7 @@
 				}
 				float specAngle = max(dot(R, V), 0.0);
 				specular = pow(specAngle, u_specularExponent);
-				vec4 color = vec4(u_ambientColor.rgb +
+				vec4 color = vec4(u_ambientColor.rgb * u_ambientColor.a +
 			                   lambertian * u_diffuseColor.rgb +
 			                   specular * u_specularColor.rgb, 1.0);
 				gl_FragColor = color * u_color;

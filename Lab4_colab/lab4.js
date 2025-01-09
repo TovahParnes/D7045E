@@ -619,9 +619,9 @@ function init() {
 	let ambientColor = vec4(0.3, 0.3, 0.3, 1.0);
 	let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightX = 10;
-	let lightY = 2;
-	let lightZ = 0.5;
+	let lightX = 0;
+	let lightY = 0;
+	let lightZ = -10;
 	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
 	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
 	let specularExponent = 16;
