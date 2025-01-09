@@ -12,7 +12,6 @@ const numObjects = 30;
 const minSize = 0.3;
 const maxSize = 1.5;
 
-
 let robotNode;
 let robotBodyNode;
 let robotPosition = 0;
@@ -33,50 +32,103 @@ function updateMovements() {
 	// Update robot position
 	robotPosition += robotDirection * robotSpeed;
 	if (robotPosition > 0.12 || robotPosition < -0.12) {
-	  robotDirection *= -1; // Reverse direction
+		robotDirection *= -1; // Reverse direction
 	}
-  
+
 	// Update arm rotations
 	leftArmRotation += armRotationSpeed;
 	rightArmRotation -= armRotationSpeed;
-  
+
 	// Apply updated position to robot transform
-	let robotTransform = mat4(0.4, 0, 0, robotPosition, 0, 0.4, 0, -1.6, 0, 0, 0.4, 0, 0, 0, 0, 1);
-	robotBodyNode.setTransform(robotTransform); 
-  
+	let robotTransform = mat4(
+		0.4,
+		0,
+		0,
+		robotPosition,
+		0,
+		0.4,
+		0,
+		-1.6,
+		0,
+		0,
+		0.4,
+		0,
+		0,
+		0,
+		0,
+		1
+	);
+	robotBodyNode.setTransform(robotTransform);
+
 	// Apply vertical rotation to left arm
 	let leftArmTransform = mat4(
-	  1, 0, 0, -0.25,
-	  0, Math.cos(leftArmRotation), -Math.sin(leftArmRotation), 0.1,
-	  0, Math.sin(leftArmRotation), Math.cos(leftArmRotation), 0,
-	  0, 0, 0, 1
+		1,
+		0,
+		0,
+		-0.25,
+		0,
+		Math.cos(leftArmRotation),
+		-Math.sin(leftArmRotation),
+		0.1,
+		0,
+		Math.sin(leftArmRotation),
+		Math.cos(leftArmRotation),
+		0,
+		0,
+		0,
+		0,
+		1
 	);
 	leftArmNode.setTransform(leftArmTransform);
-  
+
 	// Apply vertical rotation to right arm
 	let rightArmTransform = mat4(
-	  1, 0, 0, 0.25,
-	  0, Math.cos(rightArmRotation), -Math.sin(rightArmRotation), 0.1,
-	  0, Math.sin(rightArmRotation), Math.cos(rightArmRotation), 0,
-	  0, 0, 0, 1
+		1,
+		0,
+		0,
+		0.25,
+		0,
+		Math.cos(rightArmRotation),
+		-Math.sin(rightArmRotation),
+		0.1,
+		0,
+		Math.sin(rightArmRotation),
+		Math.cos(rightArmRotation),
+		0,
+		0,
+		0,
+		0,
+		1
 	);
 	rightArmNode.setTransform(rightArmTransform);
-  
+
 	// Update star scale
 	starScale += starScaleDirection * 0.1;
 	if (starScale > 1.5 || starScale < 0.4) {
-	  starScaleDirection *= -1; // Reverse scaling direction
+		starScaleDirection *= -1; // Reverse scaling direction
 	}
-  
+
 	// Apply scaling to star
 	let starTransform = mat4(
-	  starScale, 0, 0, 0,
-	  0, starScale, 0, 0.4,
-	  0, 0, starScale, 0,
-	  0, 0, 0, 1
+		starScale,
+		0,
+		0,
+		0,
+		0,
+		starScale,
+		0,
+		0.4,
+		0,
+		0,
+		starScale,
+		0,
+		0,
+		0,
+		0,
+		1
 	);
 	starNode.setTransform(starTransform);
-  }
+}
 
 function createScene() {
 	let whiteMaterial = new MonoMaterial(gl, shader, vec4(1, 1, 1, 1));
@@ -273,7 +325,12 @@ function createScene() {
 	rootNode.addChild(torusNode);
 
 	// Create robot
-	robotNode = new GraphicsNode(gl, null, null, mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)); // Root node for the robot
+	robotNode = new GraphicsNode(
+		gl,
+		null,
+		null,
+		mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+	); // Root node for the robot
 
 	let bodyMaterial = new MonoMaterial(gl, shader, vec4(0.8, 0.1, 0.1, 1));
 	let limbMaterial = new MonoMaterial(gl, shader, vec4(0.2, 0.2, 0.8, 1));
@@ -291,11 +348,26 @@ function createScene() {
 	//constructor(gl, points, outerDist, innerDist, thickness, shaderProgram)
 
 	// Body
-	let bodyTransform = mat4(0.4, 0, 0, 0, 0, 0.4, 0, -0, 0, 0, 0.4, 0, 0, 0, 0, 1);
+	let bodyTransform = mat4(
+		0.4,
+		0,
+		0,
+		0,
+		0,
+		0.4,
+		0,
+		-0,
+		0,
+		0,
+		0.4,
+		0,
+		0,
+		0,
+		0,
+		1
+	);
 	robotBodyNode = new GraphicsNode(gl, bodyMesh, bodyMaterial, bodyTransform);
 	robotNode.addChild(robotBodyNode);
-
-	
 
 	// Head
 	let headTransform = mat4(1, 0, 0, 0, 0, 1, 0, 0.45, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -547,9 +619,9 @@ function init() {
 	let ambientColor = vec4(0.3, 0.3, 0.3, 1.0);
 	let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightX = 5;
-	let lightY = -0.5;
-	let lightZ = 1.5;
+	let lightX = 4;
+	let lightY = 3;
+	let lightZ = 2;
 	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
 	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
 	let specularExponent = 16;
@@ -639,7 +711,6 @@ function render() {
 	updateMovements();
 	shader.activate();
 	camera.activate();
-
 
 	rootNode.draw();
 
