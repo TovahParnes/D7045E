@@ -202,7 +202,7 @@ function createScene() {
 
 	let sphereMesh = new Sphere(gl, 0.1, 11, 11, shader);
 	let cubeMesh = new Cuboid(gl, 0.2, 0.2, 0.2, shader);
-	let cylinderMesh = new Cylinder(gl, 0.2, 0.2, 16, shader);
+	let cylinderMesh = new Cylinder(gl, 0.1, 0.2, 16, shader);
 	let coneMesh = new Cone(gl, 0.15, 0.2, 8, shader);
 	let torusMesh = new Torus(gl, 0.05, 0.1, 8, shader);
 
