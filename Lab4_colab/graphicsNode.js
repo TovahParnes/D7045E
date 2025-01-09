@@ -1,12 +1,40 @@
 // Tovah Parnes - tovpar-9@student.ltu.se
+class Node{
 
-class GraphicsNode {
+	constructor(transform){
+		this.children = [];
+		this.transform = transform;
+	}
+
+	addChild(node){
+		this.children.push(node);
+	}
+
+	draw(){
+		for (let i = 0; i < this.children.length; i++) {
+			this.children[i].draw();
+		}
+	}
+
+
+	update(transform) {
+		transform = mult(this.transform, transform);
+		this.transform = transform;
+	}
+
+	setTransform(transform){
+		this.transform = transform;
+	}
+} 
+
+
+class GraphicsNode extends Node {
 	constructor(gl, mesh, material, transform) {
+		super(transform);
 		this.gl = gl;
 		this.mesh = mesh;
 		this.material = material;
 		this.transform = transform;
-		this.children = [];
 	}
 
 	draw(parentTransform = mat4(1)) {
@@ -34,20 +62,9 @@ class GraphicsNode {
 		}
 	}
 
-	addChild(node) {
-		this.children.push(node);
-	}
-
-
-	update(transform) {
-		transform = mult(this.transform, transform);
-		this.transform = transform;
-	}
-
-	setTransform(transform){
-		this.transform = transform;
-	}
+	
 }
+
 
 class Light extends GraphicsNode {
 	constructor(gl, shaderProgram, mesh, material, transform) {
