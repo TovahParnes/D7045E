@@ -13,9 +13,11 @@
 			uniform mat3 u_normalMatrix;
 			uniform mat4 u_viewMatrix;
 			uniform mat4 u_projectionMatrix;
+			uniform vec4 u_lightPosition; // Add this line
 			varying vec3 v_normal;
 			varying vec4 v_eyeCoords;
 			varying vec3 worldPos;
+			varying vec4 v_lightPosition; // Add this line
 
 			void main()
 			{
@@ -23,6 +25,7 @@
 				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				gl_Position = u_projectionMatrix * v_eyeCoords;
 				vec3 worldPos = (u_transformMatrix * a_vertexPosition).xyz;
+				v_lightPosition = u_viewMatrix * u_lightPosition; // Add this line
 			}
 		</script>
 
@@ -38,11 +41,12 @@
 			uniform float u_specularExponent;
 			uniform vec4 u_color;
 			varying vec3 worldPos;
+			varying vec4 v_lightPosition; // Add this line
 			void main()
 			{
 				vec3 N, L, R, V;  // Vectors for lighting equation.
 				N = normalize(v_normal);
-				L = normalize(u_lightPosition.xyz - worldPos);
+				L = normalize(v_lightPosition.xyz - v_eyeCoords.xyz); // Modify this line
 
 				float lambertian = max(dot(N, L), 0.0);
 				float specular = 0.0;
