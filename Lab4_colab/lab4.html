@@ -15,20 +15,24 @@
 			uniform mat4 u_projectionMatrix;
 			varying vec3 v_normal;
 			varying vec4 v_eyeCoords;
+			varying vec3 worldPos;
+			varying vec3 vertPos;
 
 			void main()
 			{
 				//v_normal = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
 				v_normal = normalize(u_normalMatrix * a_vertexNormal);
-
 				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				gl_Position = u_projectionMatrix * v_eyeCoords;
+				vec3 worldPos = (u_transformMatrix * a_vertexPosition).xyz;
+				vec3 vertPos = a_vertexPosition.xyz;
 			}
 		</script>
 
 		<script id="fragment-shader" type="x-shader/x-fragment">
 			precision mediump float;
 			varying vec3 v_normal;
+			uniform mat3 u_normalMatrix;
 			varying vec4 v_eyeCoords;
 			uniform vec4 u_lightPosition;
 			uniform vec4 u_ambientColor;
@@ -36,26 +40,25 @@
 			uniform vec3 u_specularColor;
 			uniform float u_specularExponent;
 			uniform vec4 u_color;
+			varying vec3 worldPos;
 			void main()
 			{
 				vec3 N, L, R, V;  // Vectors for lighting equation.
 				N = normalize(v_normal);
-				if (u_lightPosition.w == 0.0) { // Directional light.
-					L = normalize(u_lightPosition.xyz);
-				} else { // Point light.
-					L = normalize(u_lightPosition.xyz / u_lightPosition.w - v_eyeCoords.xyz);
-				}
-				R = -reflect(L, N);
-				V = normalize(-v_eyeCoords.xyz);  // (Assumes a perspective projection.)
+				L = normalize(u_lightPosition.xyz - worldPos);
 
-				vec3 ambient = u_ambientColor.rgb * u_ambientColor.a;
-				vec3 diffuse = max(dot(L, N), 0.0) * u_diffuseColor.rgb * u_diffuseColor.a;
-				vec3 specular = vec3(0.0);
-				if (dot(L, N) > 0.0) {
-					specular = pow(max(dot(R, V), 0.0), u_specularExponent) * u_specularColor;
+				float lambertian = max(dot(N, L), 0.0);
+				float specular = 0.0;
+				if (lambertian > 0.0) {
+					R = reflect(-L, N);
+					V = normalize(-v_eyeCoords.xyz);  // (Assumes a perspective projection.)
 				}
-				vec4 v_color = vec4(ambient + diffuse + specular, u_diffuseColor.a) * u_color;
-				gl_FragColor = v_color;
+				float specAngle = max(dot(R, V), 0.0);
+				specular = pow(specAngle, u_specularExponent);
+				vec4 color = vec4(u_ambientColor.rgb +
+			                   lambertian * u_diffuseColor.rgb +
+			                   specular * u_specularColor.rgb, 1.0);
+				gl_FragColor = color * u_color;
 			}
 		</script>
 	</head>
