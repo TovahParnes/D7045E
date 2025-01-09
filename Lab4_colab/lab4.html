@@ -67,7 +67,7 @@
 				vec3 N, L, R, V;  // vectors for lighting equation
 				N = normalize( v_normal );
 				L = normalize(u_lightPosition.xyz/u_lightPosition.w - cameraPos);
-				R = reflect(L,N);
+				R = reflect(-L,N);
 				V = normalize(-cameraPos);  // (Assumes a perspective projection.)
 				float LdotN = max(0.0, dot(L,N));
 				vec3 amb = (1.0 - LdotN) * u_ambientColor.rgb;
