@@ -624,7 +624,7 @@ function init() {
 	let lightZ = 0.4;
 	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
 	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
-	let specularExponent = 16;
+	let specularExponent = 500;
 
 	let ambientColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
