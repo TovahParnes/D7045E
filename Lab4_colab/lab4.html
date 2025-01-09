@@ -17,15 +17,18 @@
 			varying vec3 v_normal;
 			varying vec4 v_eyeCoords;
 			varying vec3 worldPos;
-			varying vec4 v_lightPosition; // Add this line
+			varying vec3 cameraPos;
 
 			void main()
 			{
-				v_normal = normalize(u_normalMatrix * a_vertexNormal);
-				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
-				gl_Position = u_projectionMatrix * v_eyeCoords;
-				vec3 worldPos = (u_transformMatrix * a_vertexPosition).xyz;
-				v_lightPosition = u_viewMatrix * u_lightPosition; // Add this line
+				//v_normal = normalize(u_normalMatrix * a_vertexNormal);
+				//v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
+				//gl_Position = u_projectionMatrix * v_eyeCoords;
+				//vec3 worldPos = (u_viewMatrix*u_transformMatrix * a_vertexPosition).xyz;
+
+				gl_Position = u_projectionMatrix * u_viewMatrix * u_transformMatrix * a_vertexPosition ; //localspace -> worldSpace -> viewSpace -> clipspace
+			    v_normal = normalize(mat3(u_transformMatrix) * a_vertexNormal.xyz);
+			    cameraPos = (u_transformMatrix * a_vertexPosition).xyz;
 			}
 		</script>
 
@@ -41,25 +44,50 @@
 			uniform float u_specularExponent;
 			uniform vec4 u_color;
 			varying vec3 worldPos;
-			varying vec4 v_lightPosition; // Add this line
+			varying vec3 cameraPos;
 			void main()
 			{
-				vec3 N, L, R, V;  // Vectors for lighting equation.
-				N = normalize(v_normal);
-				L = normalize(v_lightPosition.xyz - v_eyeCoords.xyz); // Modify this line
+				//vec3 N, L, R, V;  // Vectors for lighting equation.
+				//N = normalize(v_normal);
+				//L = (u_lightPosition.xyz / u_lightPosition.w - v_eyeCoords.xyz);
 
-				float lambertian = max(dot(N, L), 0.0);
-				float specular = 0.0;
-				if (lambertian > 0.0) {
-					R = reflect(-L, N);
-					V = normalize(-v_eyeCoords.xyz);  // (Assumes a perspective projection.)
-				}
+				//float lambertian = max(dot(N, L), 0.0);
+				//float specular = 0.0;
+				//if (lambertian > 0.0) {
+					//R = reflect(-L, N);
+					//V = normalize(-v_eyeCoords.xyz);  // (Assumes a perspective projection.)
+				//}
+				//float specAngle = max(dot(R, V), 0.0);
+				//specular = pow(specAngle, u_specularExponent);
+				//vec4 color = vec4(u_ambientColor.rgb * u_ambientColor.a +
+			                   //lambertian * u_diffuseColor.rgb +
+			                   //specular * u_specularColor.rgb, 1.0);
+				//gl_FragColor = color * u_color;
+
+
+				//vec3 N, L, R, V;  // vectors for lighting equation
+				//N = normalize( v_normal );
+				//L = normalize(u_lightPosition.xyz/u_lightPosition.w - cameraPos);
+				//R = reflect(-L,N);
+				//V = normalize(-cameraPos);  // (Assumes a perspective projection.)
+				//float LdotN = max(0.0, dot(L,N));
+				//vec3 amb = (1.0 - LdotN) * u_ambientColor.rgb;
+				//vec3 color = (LdotN * u_diffuseColor.rgb +  amb * u_diffuseColor.rgb);
+				//color += 0.4*pow(max(0.0, dot(R,V)),u_specularExponent) * u_specularColor;
+				//gl_FragColor = vec4(color, 1.0)*u_color;
+
+				vec3 N, L, R, V;  // vectors for lighting equation
+				N = normalize( v_normal );
+				L = normalize(u_lightPosition.xyz/u_lightPosition.w - cameraPos);
+				R = reflect(-L,N);
+				V = normalize(-cameraPos);
+				float LdotN = max(0.0, dot(L,N));
+				vec3 amb = (1.0 - LdotN) * u_ambientColor.rgb;
+				vec3 diff = LdotN * u_diffuseColor.rgb;
 				float specAngle = max(dot(R, V), 0.0);
-				specular = pow(specAngle, u_specularExponent);
-				vec4 color = vec4(u_ambientColor.rgb +
-			                   lambertian * u_diffuseColor.rgb +
-			                   specular * u_specularColor.rgb, 1.0);
-				gl_FragColor = color * u_color;
+				vec3 spec = (pow(specAngle, u_specularExponent)) * u_specularColor.rgb;
+				vec3 color = (amb + diff + spec);
+				gl_FragColor = vec4(color, 1.0)*u_color;
 			}
 		</script>
 	</head>
