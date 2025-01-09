@@ -478,10 +478,10 @@ function init() {
 	// Lights
 
 	let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
-	let diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
+	let diffuseColor = vec4(0.5, 0.5, 0.5, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightPosition = vec4(30.0, 30.0, 30.0, 1.0);
-	let specularExponent = 50.0;
+	let lightPosition = vec4(1.0, 0.5, 2.0, 1.0);
+	let specularExponent = 500.0;
 
 	let ambientColorLoc = gl.getUniformLocation(
 		shader.getProgram(),
