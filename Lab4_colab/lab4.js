@@ -202,8 +202,8 @@ function createScene() {
 
 	let sphereMesh = new Sphere(gl, 0.1, 11, 11, shader);
 	let cubeMesh = new Cuboid(gl, 0.2, 0.2, 0.2, shader);
-	let cylinderMesh = new Cylinder(gl, 0.1, 0.2, 10, shader);
-	let coneMesh = new Cone(gl, 0.1, 0.2, 10, shader);
+	let cylinderMesh = new Cylinder(gl, 0.2, 0.2, 16, shader);
+	let coneMesh = new Cone(gl, 0.15, 0.2, 8, shader);
 	let torusMesh = new Torus(gl, 0.05, 0.1, 8, shader);
 
 	let sphereTransform = mat4(
@@ -619,9 +619,9 @@ function init() {
 	let ambientColor = vec4(0.3, 0.3, 0.3, 1.0);
 	let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
 	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightX = 4;
-	let lightY = 3;
-	let lightZ = 2;
+	let lightX = 0;
+	let lightY = 2;
+	let lightZ = -10;
 	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
 	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
 	let specularExponent = 16;
@@ -658,7 +658,7 @@ function init() {
 
 	rootNode = new GraphicsNode(gl, null, null, mat4(1)); // Root node with identity transform
 
-	let lightMesh = new Sphere(gl, 0.2, 16, 8, shader);
+	let lightMesh = new Sphere(gl, 0.05, 16, 8, shader);
 	let lightMaterial = new MonoMaterial(gl, shader, vec4(1, 1, 1, 1));
 
 	lightSphere = new GraphicsNode(
