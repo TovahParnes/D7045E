@@ -341,7 +341,7 @@ class Cone extends Mesh {
 			if (next >= vertices.length) {
 				next = 2;
 			}
-			indices.push(0, next, i);
+			indices.push(0, i, next);
 			indices.push(1, next, i);
 		}
 
