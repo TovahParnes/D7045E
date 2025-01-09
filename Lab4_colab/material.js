@@ -36,13 +36,11 @@ class MonoMaterial extends material {
 
 		let normalMat = mat3();
 		normalMat = normalMatrix(transformMatrix, true);
+		console.log(normalMat);
 		var normalMatrixLocation = this.gl.getUniformLocation(
 			program,
 			"u_normalMatrix"
 		);
 		this.gl.uniformMatrix3fv(normalMatrixLocation, false, flatten(normalMat));
-
-
-		
 	}
 }
