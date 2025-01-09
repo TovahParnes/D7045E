@@ -11,7 +11,7 @@ class GraphicsNode {
 
 	draw(parentTransform = mat4(1)) {
 
-		if (this.material) {
+		if (this.material && this.mesh) {
 			this.combinedTransform = mult(parentTransform, this.transform);
 
 
@@ -26,10 +26,11 @@ class GraphicsNode {
 			); 
 
 
+
 		}
 
 		for (let i = 0; i < this.children.length; i++) {
-			this.children[i].draw();
+			this.children[i].draw(this.combinedTransform);
 		}
 	}
 
