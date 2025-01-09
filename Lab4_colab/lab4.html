@@ -16,16 +16,14 @@
 			varying vec3 v_normal;
 			varying vec4 v_eyeCoords;
 			varying vec3 worldPos;
-			varying vec3 vertPos;
+
 
 			void main()
 			{
-				//v_normal = normalize(mat3(u_transformMatrix)*a_vertexNormal.xyz);
 				v_normal = normalize(u_normalMatrix * a_vertexNormal);
 				v_eyeCoords = u_viewMatrix * u_transformMatrix * a_vertexPosition;
 				gl_Position = u_projectionMatrix * v_eyeCoords;
 				vec3 worldPos = (u_transformMatrix * a_vertexPosition).xyz;
-				vec3 vertPos = a_vertexPosition.xyz;
 			}
 		</script>
 
