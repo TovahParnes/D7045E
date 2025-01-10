@@ -7,7 +7,6 @@ let shader;
 let rootNode;
 let light;
 
-
 let robotNode;
 let robotBodyNode;
 let robotPosition = 0;
@@ -132,8 +131,8 @@ function createScene() {
 	let wallMaterial = new MonoMaterial(gl, shader, vec4(0.5, 0.5, 0.5, 1)); // Material for walls
 
 	// Create chessboard floor
-	let floorSize = 8;
-	let cubeSize = 0.2;
+	let floorSize = 12;
+	let cubeSize = 0.15;
 	let spacing = 0.001; // Add spacing between cubes
 	let chessboardNode = new GraphicsNode(gl, null, null, mat4(1)); // Parent node for the chessboard
 	let cubiodMesh = new Cuboid(gl, cubeSize, cubeSize, cubeSize, shader);
@@ -611,9 +610,9 @@ function init() {
 	shader.activate(); //TEST
 
 	rootNode = new Node(mat4(1)); // Root node with identity transform
-	
+
 	// Lights
-		
+
 	let lightMesh = new Sphere(gl, 0.05, 16, 8, shader);
 	let lightMaterial = new MonoMaterial(gl, shader, vec4(1, 1, 1, 1));
 
@@ -621,11 +620,16 @@ function init() {
 	let lightX = -0.2;
 	let lightY = -1.6;
 	let lightZ = 0.4;
-	let lightSphere = new Light(gl, shader, lightMesh, lightMaterial, mat4(1, 0, 0, lightX, 0, 1, 0, lightY, 0, 0, 1, lightZ, 0, 0, 0, 1));
+	let lightSphere = new Light(
+		gl,
+		shader,
+		lightMesh,
+		lightMaterial,
+		mat4(1, 0, 0, lightX, 0, 1, 0, lightY, 0, 0, 1, lightZ, 0, 0, 0, 1)
+	);
 	lightSphere.applyLight(lightX, lightY, lightZ);
 
 	rootNode.addChild(lightSphere); // Attach light node to the root node
-
 
 	// Camera
 	cameraTransform = mat4(1);
