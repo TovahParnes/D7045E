@@ -4,7 +4,7 @@ let canvas;
 let gl;
 let camera;
 let shader;
-let rootnode;
+let rootNode;
 let light;
 
 let objects = [];
@@ -614,64 +614,28 @@ function init() {
 	shader = new ShaderProgram(gl, vertexShader, fragmentShader);
 	shader.activate(); //TEST
 
+	rootNode = new Node(mat4(1)); // Root node with identity transform
+	
 	// Lights
-
-	let ambientColor = vec4(0.3, 0.3, 0.3, 1.0);
-	let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
-	let specularColor = vec3(1.0, 1.0, 1.0);
-	let lightX = -0.2;
-	let lightY = -1.6;
-	let lightZ = 0.4;
-	let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
-	//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
-	let specularExponent = 500;
-
-	let ambientColorLoc = gl.getUniformLocation(
-		shader.getProgram(),
-		"u_ambientColor"
-	);
-	gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
-
-	let diffuseColorLoc = gl.getUniformLocation(
-		shader.getProgram(),
-		"u_diffuseColor"
-	);
-	gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
-
-	let specularColorLoc = gl.getUniformLocation(
-		shader.getProgram(),
-		"u_specularColor"
-	);
-	gl.uniform3fv(specularColorLoc, flatten(specularColor));
-
-	let lightPositionLoc = gl.getUniformLocation(
-		shader.getProgram(),
-		"u_lightPosition"
-	);
-	gl.uniform4fv(lightPositionLoc, flatten(lightPosition));
-
-	let specularExponentLoc = gl.getUniformLocation(
-		shader.getProgram(),
-		"u_specularExponent"
-	);
-	gl.uniform1f(specularExponentLoc, specularExponent);
-
-	rootNode = new GraphicsNode(gl, null, null, mat4(1)); // Root node with identity transform
-
+		
 	let lightMesh = new Sphere(gl, 0.05, 16, 8, shader);
 	let lightMaterial = new MonoMaterial(gl, shader, vec4(1, 1, 1, 1));
 
-	lightSphere = new GraphicsNode(
-		gl,
-		lightMesh,
-		lightMaterial,
-		mat4(1, 0, 0, lightX, 0, 1, 0, lightY, 0, 0, 1, lightZ, 0, 0, 0, 1)
-	);
+	//(gl, shaderProgram, mesh, material, transform)
+	let lightX = -0.2;
+	let lightY = -1.6;
+	let lightZ = 0.4;
+	let lightSphere = new Light(gl, shader, lightMesh, lightMaterial, mat4(1, 0, 0, lightX, 0, 1, 0, lightY, 0, 0, 1, lightZ, 0, 0, 0, 1));
+	lightSphere.applyLight(lightX, lightY, lightZ);
 
 	rootNode.addChild(lightSphere); // Attach light node to the root node
 
+
 	// Camera
-	camera = new Camera(gl, shader, canvas);
+	cameraTransform = mat4(1);
+	camera = new Camera(gl, shader, cameraTransform);
+
+	rootNode.addChild(camera); // Attach camera to the root node
 
 	// ColorMaterials
 	let greenMaterial = new MonoMaterial(gl, shader, vec4(0, 1, 0, 1.0));

@@ -10,21 +10,24 @@ class Node{
 		this.children.push(node);
 	}
 
-	draw(){
+	draw(parentTransform = mat4(1)){
+		/* console.log(parentTransform);
+		console.log(this.transform); */
+		this.combinedTransform = mult(parentTransform, this.transform);
 		for (let i = 0; i < this.children.length; i++) {
-			this.children[i].draw();
+			this.children[i].draw(this.combinedTransform);
 		}
-	}
-
-
-	update(transform) {
-		transform = mult(this.transform, transform);
-		this.transform = transform;
 	}
 
 	setTransform(transform){
 		this.transform = transform;
 	}
+
+	/* update(transform) {
+		transform = mult(this.transform, transform);
+		this.transform = transform;
+	} */
+
 } 
 
 
@@ -39,8 +42,8 @@ class GraphicsNode extends Node {
 
 	draw(parentTransform = mat4(1)) {
 
+		this.combinedTransform = mult(parentTransform, this.transform);
 		if (this.material && this.mesh) {
-			this.combinedTransform = mult(parentTransform, this.transform);
 
 
 			this.mesh.activateBuffers();
@@ -52,8 +55,6 @@ class GraphicsNode extends Node {
 				this.gl.UNSIGNED_BYTE,
 				0
 			); 
-
-
 
 		}
 
@@ -72,42 +73,78 @@ class Light extends GraphicsNode {
 		this.shaderProgram = shaderProgram;
 	}
 
-	applyLight() {
+	applyLight(lightX, lightY, lightZ) {
 		let prog = this.shaderProgram.getProgram();
 
-		let ambientColor = vec4(0.2, 0.2, 0.2, 1.0);
-		let diffuseColor = vec4(0.6, 0.6, 0.6, 1.0);
-		let lightPosition = mult(this.transform, vec4(0.0, 0.0, 0.0, 1.0)); // Use transform to get light position
+		let ambientColor = vec4(0.3, 0.3, 0.3, 1.0);
+		let diffuseColor = vec4(0.8, 0.8, 0.8, 1.0);
 		let specularColor = vec3(1.0, 1.0, 1.0);
-		let specularExponent = 500.0;
+		let lightPosition = vec4(lightX, lightY, lightZ, 1.0);
+		//let lightPosition = vec4(0.0, 10, 0.0, 1.0);
+		let specularExponent = 500;
+
+		//console.log(lightPosition);
 
 		let ambientColorLoc = gl.getUniformLocation(
 			shader.getProgram(),
-			"ambientColor"
+			"u_ambientColor"
 		);
+		gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
+	
 		let diffuseColorLoc = gl.getUniformLocation(
 			shader.getProgram(),
-			"diffuseColor"
+			"u_diffuseColor"
 		);
+		gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
+	
 		let specularColorLoc = gl.getUniformLocation(
 			shader.getProgram(),
-			"specularColor"
+			"u_specularColor"
 		);
+		gl.uniform3fv(specularColorLoc, flatten(specularColor));
 	
 		let lightPositionLoc = gl.getUniformLocation(
 			shader.getProgram(),
 			"u_lightPosition"
 		);
-		
+		gl.uniform4fv(lightPositionLoc, flatten(lightPosition));
+	
 		let specularExponentLoc = gl.getUniformLocation(
 			shader.getProgram(),
 			"u_specularExponent"
 		);
-		
-		gl.uniform4fv(lightPositionLoc, flatten(lightPosition));
 		gl.uniform1f(specularExponentLoc, specularExponent);
-		gl.uniform4fv(ambientColorLoc, flatten(ambientColor));
-		gl.uniform4fv(diffuseColorLoc, flatten(diffuseColor));
-		gl.uniform3fv(specularColorLoc, flatten(specularColor));
 	} 
+
+
+	draw(parentTransform = mat4(1)) { //--WIP
+
+		this.combinedTransform = mult(parentTransform, this.transform);
+		let combinedTransformArray = flatten(this.combinedTransform);
+
+		let lightX = combinedTransformArray[12];
+		let lightY = combinedTransformArray[13];
+		let lightZ = combinedTransformArray[14];
+
+		this.applyLight(lightX, lightY, lightZ);
+
+		if (this.material && this.mesh) {
+
+
+			this.mesh.activateBuffers();
+			this.material.applyMaterial(this.combinedTransform);
+			let indicesLength = this.mesh.getIndices().length;
+			this.gl.drawElements(
+				this.gl.TRIANGLES,
+				indicesLength,
+				this.gl.UNSIGNED_BYTE,
+				0
+			); 
+
+		}
+
+		for (let i = 0; i < this.children.length; i++) {
+			this.children[i].draw(this.combinedTransform);
+		}
+	}
 }

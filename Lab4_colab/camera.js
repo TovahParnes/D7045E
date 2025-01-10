@@ -6,6 +6,7 @@
 
 class Camera extends Node {
   constructor(gl, shaderProgram, transform) {
+    console.log(transform);
     super(transform);
     this.gl = gl;
     this.shaderProgram = shaderProgram.getProgram();
@@ -24,7 +25,7 @@ class Camera extends Node {
       this.radius * Math.sin(this.theta) * Math.sin(Math.PI),
       this.radius * Math.cos(this.theta)
     );
-    this.at = vec3(0.0, 0, 0.0);
+    this.at = vec3(0.0, -2, 0.0);
     this.up = vec3(0.0, 1.0, 0.0);
 
     // View and projection matrices
@@ -58,6 +59,16 @@ class Camera extends Node {
      this.lastTime = performance.now();
      this.animate();
   }
+
+  draw(parentTransform = mat4(1)){ //----WIP
+	
+		this.combinedTransform = mult(parentTransform, this.transform);
+   
+
+		for (let i = 0; i < this.children.length; i++) {
+			this.children[i].draw(this.combinedTransform);
+		}
+	}
 
   activate() {
 
