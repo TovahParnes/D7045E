@@ -1,4 +1,5 @@
 <!--- Tovah Parnes - tovpar-9@student.ltu.se  -->
+<!-- Simon Ruskola - russim-1@student.ltu.se  -->
 
 <!DOCTYPE html>
 <html>
@@ -81,7 +82,7 @@
 				L = normalize(u_lightPosition.xyz/u_lightPosition.w - cameraPos);
 				R = reflect(-L,N);
 				V = normalize(-cameraPos);
-				float LdotN = max(0.0, dot(L,N));
+				float LdotN = max(dot(L,N), 0.0);
 				vec3 amb = (1.0 - LdotN) * u_ambientColor.rgb;
 				vec3 diff = LdotN * u_diffuseColor.rgb;
 				float specAngle = max(dot(R, V), 0.0);

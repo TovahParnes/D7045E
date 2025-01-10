@@ -1,4 +1,6 @@
 // Tovah Parnes - tovpar-9@student.ltu.se
+// Simon Ruskola - russim-1@student.ltu.se
+
 class Mesh {
 	constructor(gl, vertices, indices, normals, shaderProgram) {
 		this.vertices = vertices;

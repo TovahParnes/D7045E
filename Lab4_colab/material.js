@@ -1,4 +1,5 @@
 // Tovah Parnes - tovpar-9@student.ltu.se
+// Simon Ruskola - russim-1@student.ltu.se
 
 class material {
 	constructor(gl, shaderProgram) {
@@ -41,8 +42,5 @@ class MonoMaterial extends material {
 			"u_normalMatrix"
 		);
 		this.gl.uniformMatrix3fv(normalMatrixLocation, false, flatten(normalMat));
-
-
-		
 	}
 }
