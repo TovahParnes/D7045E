@@ -7,10 +7,6 @@ let shader;
 let rootNode;
 let light;
 
-let objects = [];
-const numObjects = 30;
-const minSize = 0.3;
-const maxSize = 1.5;
 
 let robotNode;
 let robotBodyNode;
@@ -637,34 +633,7 @@ function init() {
 
 	rootNode.addChild(camera); // Attach camera to the root node
 
-	// ColorMaterials
-	let greenMaterial = new MonoMaterial(gl, shader, vec4(0, 1, 0, 1.0));
-	let redMaterial = new MonoMaterial(gl, shader, vec4(1, 0, 0, 1.0));
-
-	// Shapes
-	let shape = new Cuboid(gl, 0.8, 0.5, 0.5, shader);
-	//let shape = new Sphere(gl, 0.5, 16, 8, shader);
-	//let shape = new Star(gl, 5, 0.8, 0.5, 0.3, shader);
-	//let shape = new Torus(gl, 0.25, 0.5, 15, shader);
-	//let shape = new Cone(gl, 0.5, 2.2, 16, shader);
-	//let shape = new Cylinder(gl, 0.5, 1, 16, shader);
-
-	/* let playerMatrix = mat4(
-		[1, 0, 0, 0],
-		[0, 1, 0, 0],
-		[0, 0, 1, 0],
-		[0, 0, 0, 1]
-	);  */
-
-	let box1Matrix = mat4(1, 0, 0, -0, 0, 1, 0, 3, 0, 0, 1, -0, 0, 0, 0, 1);
-	let box2Matrix = mat4(1, 0, 0, -0, 0, 1, 0, -3, 0, 0, 1, -0, 0, 0, 0, 1);
-
 	createScene();
-
-	box = new GraphicsNode(gl, shape, redMaterial, box1Matrix);
-	box2 = new GraphicsNode(gl, shape, redMaterial, box2Matrix);
-	objects.push(box);
-	objects.push(box2);
 
 	render();
 }
@@ -677,10 +646,6 @@ function render() {
 	camera.activate();
 
 	rootNode.draw();
-
-	for (let object of objects) {
-		object.draw();
-	}
 
 	requestAnimationFrame(render);
 }
