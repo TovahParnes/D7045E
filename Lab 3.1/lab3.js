@@ -37,8 +37,8 @@ function init() {
 	// Shapes
 	//let shape = new cuboid(gl, 0.8, 0.5, 0.5, shaderProgram);
 	//let shape = new Sphere(gl, 0.5, 16, 8, shaderProgram);
-	let shape = new Star(gl, 6, 1, 0.5, 0.1, shaderProgram);
-	//let shape = new Torus(gl, 0.25, 0.5, 15, shaderProgram);
+	//let shape = new Star(gl, 6, 1, 0.5, 0.1, shaderProgram);
+	let shape = new Torus(gl, 0.25, 0.5, 15, shaderProgram);
 	//let shape = new Cone(gl, 0.5, 1, 10, shaderProgram);
 	//let shape = new Cylinder(gl, 0.5, 1, 16, shaderProgram);
 

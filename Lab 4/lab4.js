@@ -75,9 +75,9 @@ function init() {
 	// Shapes
 	//let shape = new cuboid(gl, 0.8, 0.5, 0.5, shader);
 	//let shape = new Sphere(gl, 0.5, 16, 8, shader);
-	//let shape = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
+	let shape = new Star(gl, 5, 0.8, 0.5, 0.1, shader);
 	//let shape = new Torus(gl, 0.25, 0.5, 15, shader);
-	let shape = new Cone(gl, 0.5, 2.2, 16, shader);
+	//let shape = new Cone(gl, 0.5, 2.2, 16, shader);
 	//let shape = new Cylinder(gl, 0.5, 1, 16, shader);
 
 	let playerMatrix = mat4(
